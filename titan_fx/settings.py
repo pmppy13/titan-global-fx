@@ -7,17 +7,17 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ============================================================
-# SECURITY - Using Environment Variables
+# SECURITY
 # ============================================================
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-this-in-production')
 
 # ============================================================
-# DEBUG - True for demo, False for production
+# DEBUG - Set to False in production
 # ============================================================
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # ============================================================
-# ALLOWED HOSTS - Allow all for demo
+# ALLOWED HOSTS
 # ============================================================
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
@@ -102,7 +102,7 @@ USE_I18N = True
 USE_TZ = True
 
 # ============================================================
-# STATIC & MEDIA FILES
+# STATIC & MEDIA FILES - FIXED FOR RENDER
 # ============================================================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -111,8 +111,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Whitenoise for static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# ===== FIX: Use this for Render (no manifest) =====
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # ============================================================
 # DEFAULT PRIMARY KEY
@@ -138,20 +138,19 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # ============================================================
-# RENDER-SPECIFIC: Allow admin access (Demo Only)
+# RENDER-SPECIFIC
 # ============================================================
 INTERNAL_IPS = ['*']
 
 # ============================================================
-# SECURITY - Relaxed for demo on Render free tier
+# SECURITY - Relaxed for demo
 # ============================================================
-# For production, set these to True
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 SECURE_SSL_REDIRECT = False
 
 # ============================================================
-# LOGGING (Optional - for debugging on Render)
+# LOGGING
 # ============================================================
 LOGGING = {
     'version': 1,
