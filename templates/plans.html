@@ -1,0 +1,670 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Titan Global FX | Investment Plans{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-hero {
+        padding-top: 140px;
+        padding-bottom: 80px;
+        position: relative;
+        overflow: hidden;
+        background: var(--navy);
+    }
+    .page-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 80% 60% at 20% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
+            radial-gradient(ellipse 60% 50% at 80% 20%, rgba(212, 175, 55, 0.04) 0%, transparent 60%);
+        z-index: 1;
+    }
+    .page-hero .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.15;
+        animation: orbFloat 12s ease-in-out infinite alternate;
+        z-index: 0;
+    }
+    .page-hero .hero-orb.orb1 {
+        width: 400px;
+        height: 400px;
+        background: var(--gold);
+        top: -10%;
+        right: -5%;
+        animation-delay: 0s;
+    }
+    .page-hero .hero-orb.orb2 {
+        width: 300px;
+        height: 300px;
+        background: #d4af37;
+        bottom: -10%;
+        left: -5%;
+        animation-delay: -4s;
+        opacity: 0.08;
+    }
+    @keyframes orbFloat {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(40px, -30px) scale(1.1); }
+    }
+    .page-hero .container {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+    .page-hero .breadcrumb {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        margin-bottom: 16px;
+    }
+    .page-hero .breadcrumb a { color: var(--gray-400); transition: var(--transition); }
+    .page-hero .breadcrumb a:hover { color: var(--gold); }
+    .page-hero .breadcrumb .sep { margin: 0 8px; color: var(--gray-600); }
+    .page-hero h1 {
+        font-size: 3.2rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 16px;
+    }
+    .page-hero h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .page-hero p {
+        font-size: 1.2rem;
+        color: var(--gray-400);
+        max-width: 640px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+    .page-hero .hero-highlight {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 24px;
+        border-radius: 50px;
+        background: rgba(212, 175, 55, 0.08);
+        border: 1px solid rgba(212, 175, 55, 0.1);
+        font-size: 0.9rem;
+        color: var(--gold);
+    }
+    .page-hero .hero-highlight strong { font-weight: 700; color: var(--gold-light); }
+
+    .section { padding: 80px 0; opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .section.is-visible { opacity: 1; transform: translateY(0); }
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        margin-bottom: 16px;
+    }
+    .section-title .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+    }
+    .section-title .highlight::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        opacity: 0.3;
+        transform: scaleX(0);
+        transition: transform 0.6s ease;
+    }
+    .section.is-visible .section-title .highlight::after { transform: scaleX(1); }
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--gray-400);
+        max-width: 600px;
+        line-height: 1.7;
+    }
+    .text-center { text-align: center; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+
+    .plans-section { background: var(--navy-light); }
+    .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-top: 16px;
+    }
+    .plan-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 28px 22px 24px;
+        text-align: center;
+        transition: var(--transition);
+        backdrop-filter: blur(4px);
+        position: relative;
+        overflow: hidden;
+    }
+    .plan-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        opacity: 0;
+        transition: var(--transition);
+    }
+    .plan-card:hover::before { opacity: 1; }
+    .plan-card:hover {
+        border-color: rgba(212, 175, 55, 0.2);
+        transform: translateY(-6px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 175, 55, 0.02);
+        background: rgba(255, 255, 255, 0.04);
+    }
+    .plan-card .plan-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 3px 12px;
+        border-radius: 50px;
+        background: rgba(212, 175, 55, 0.08);
+        color: var(--gold);
+        border: 1px solid rgba(212, 175, 55, 0.04);
+    }
+    .plan-card .plan-badge.popular {
+        background: rgba(212, 175, 55, 0.15);
+        color: var(--gold-light);
+        border-color: rgba(212, 175, 55, 0.15);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
+    }
+    .plan-card .plan-badge.best-value {
+        background: rgba(0, 200, 151, 0.12);
+        color: var(--green);
+        border-color: rgba(0, 200, 151, 0.08);
+    }
+    .plan-card .plan-icon { font-size: 2.4rem; margin-bottom: 8px; display: block; }
+    .plan-card .plan-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 2px; }
+    .plan-card .plan-sub { font-size: 0.8rem; color: var(--gray-500); margin-bottom: 12px; }
+    .plan-card .plan-price {
+        font-size: 2.6rem;
+        font-weight: 800;
+        color: var(--gold);
+        letter-spacing: -0.02em;
+        margin-bottom: 2px;
+    }
+    .plan-card .plan-price .currency { font-size: 1.2rem; font-weight: 600; color: var(--gray-400); }
+    .plan-card .plan-min { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 16px; }
+    .plan-card .plan-divider { height: 1px; background: rgba(255, 255, 255, 0.04); margin: 12px 0 16px; }
+    .plan-card .plan-features { list-style: none; text-align: left; margin-bottom: 20px; }
+    .plan-card .plan-features li {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+        padding: 4px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .plan-card .plan-features li .check { color: var(--gold); font-weight: 700; }
+    .plan-card .plan-features li .muted { color: var(--gray-500); }
+    .plan-card .btn { width: 100%; justify-content: center; padding: 12px 20px; font-size: 0.85rem; }
+
+    .features-section {
+        background: var(--navy);
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 16px;
+    }
+    .feature-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 28px 24px;
+        text-align: center;
+        transition: var(--transition);
+    }
+    .feature-card:hover {
+        border-color: rgba(212, 175, 55, 0.1);
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.03);
+    }
+    .feature-card .feature-icon { font-size: 2.4rem; margin-bottom: 10px; display: block; }
+    .feature-card .feature-name { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+    .feature-card .feature-desc { font-size: 0.85rem; color: var(--gray-400); line-height: 1.6; }
+
+    .comparison-section { background: var(--navy-light); }
+    .comparison-table-wrapper {
+        overflow-x: auto;
+        margin-top: 16px;
+        border-radius: var(--radius);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        min-width: 700px;
+    }
+    .comparison-table thead tr {
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .comparison-table thead th {
+        padding: 16px 20px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--gray-300);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .comparison-table thead th:first-child { min-width: 160px; }
+    .comparison-table thead th .plan-label {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 50px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        background: rgba(212, 175, 55, 0.08);
+        color: var(--gold);
+    }
+    .comparison-table thead th .plan-label.starter { background: rgba(52, 152, 219, 0.12); color: #3498db; }
+    .comparison-table thead th .plan-label.pro { background: rgba(212, 175, 55, 0.12); color: var(--gold); }
+    .comparison-table thead th .plan-label.vip { background: rgba(155, 89, 182, 0.12); color: #9b59b6; }
+    .comparison-table thead th .plan-label.inst { background: rgba(46, 204, 113, 0.12); color: #2ecc71; }
+    .comparison-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        transition: var(--transition);
+    }
+    .comparison-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .comparison-table tbody tr:last-child { border-bottom: none; }
+    .comparison-table tbody td {
+        padding: 14px 20px;
+        color: var(--gray-300);
+    }
+    .comparison-table tbody td:first-child { font-weight: 600; color: var(--white); }
+    .comparison-table tbody td .check-mark { color: var(--green); font-weight: 700; }
+    .comparison-table tbody td .cross-mark { color: var(--gray-500); }
+    .comparison-table tbody td .highlight-text { color: var(--gold); }
+
+    .faq-section { background: var(--navy); border-top: 1px solid rgba(255, 255, 255, 0.04); }
+    .faq-list {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
+    }
+    .faq-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: var(--transition);
+        backdrop-filter: blur(4px);
+    }
+    .faq-item:hover { border-color: rgba(212, 175, 55, 0.1); }
+    .faq-item .faq-question {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 24px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        background: none;
+        border: none;
+        color: var(--white);
+        text-align: left;
+        transition: var(--transition);
+    }
+    .faq-item .faq-question:hover { color: var(--gold); }
+    .faq-item .faq-question .icon {
+        font-size: 1.2rem;
+        transition: var(--transition);
+        flex-shrink: 0;
+        margin-left: 16px;
+        color: var(--gold);
+    }
+    .faq-item.active .faq-question .icon { transform: rotate(45deg); }
+    .faq-item .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.4s ease;
+        padding: 0 24px;
+        color: var(--gray-400);
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+    .faq-item.active .faq-answer {
+        max-height: 300px;
+        padding: 0 24px 20px;
+    }
+
+    .cta-section {
+        background: var(--navy-light);
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        text-align: center;
+        padding: 60px 0;
+    }
+    .cta-section h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; }
+    .cta-section p { color: var(--gray-400); font-size: 1.05rem; max-width: 500px; margin: 0 auto 28px; }
+    .cta-section .btn-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    @media (max-width: 1024px) {
+        .plans-grid { grid-template-columns: repeat(2, 1fr); }
+        .feature-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .page-hero h1 { font-size: 2.4rem; }
+        .page-hero p { font-size: 1rem; }
+        .section-title { font-size: 2rem; }
+        .plans-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .feature-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .section { padding: 56px 0; }
+        .page-hero { padding-top: 120px; padding-bottom: 56px; }
+        .comparison-table-wrapper { font-size: 0.75rem; }
+        .comparison-table thead th, .comparison-table tbody td { padding: 10px 14px; }
+        .cta-section h2 { font-size: 1.8rem; }
+    }
+    @media (max-width: 480px) {
+        .page-hero h1 { font-size: 1.9rem; }
+        .page-hero .hero-highlight { font-size: 0.75rem; padding: 6px 16px; }
+        .comparison-table-wrapper { font-size: 0.7rem; }
+        .comparison-table thead th, .comparison-table tbody td { padding: 8px 10px; }
+        .cta-section .btn-group { flex-direction: column; align-items: center; }
+        .cta-section .btn-group .btn { width: 100%; justify-content: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ===== PAGE HERO ===== -->
+<section class="page-hero">
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{% url 'core:home' %}">Home</a>
+            <span class="sep">/</span>
+            <span>Investment Plans</span>
+        </div>
+        <h1>Investment <span class="highlight">Plans</span></h1>
+        <p>Choose the plan that fits your trading goals and budget. Minimum investment starts at <strong class="highlight">$100</strong>.</p>
+        <div class="hero-highlight">⚡ <strong>Flexible</strong> • <strong>Transparent</strong> • <strong>Institutional-Grade</strong></div>
+    </div>
+</section>
+
+<!-- ===== PLANS ===== -->
+<section class="section plans-section" id="plans">
+    <div class="container">
+        <div class="text-center" style="margin-bottom:40px;">
+            <h2 class="section-title">Choose Your <span class="highlight">Plan</span></h2>
+            <p class="section-subtitle mx-auto">Four tiers designed to match your experience level and investment goals. Upgrade anytime.</p>
+        </div>
+        <div class="plans-grid">
+            <div class="plan-card">
+                <span class="plan-badge">Starter</span>
+                <span class="plan-icon">🌱</span>
+                <div class="plan-name">Starter</div>
+                <div class="plan-sub">Beginner friendly</div>
+                <div class="plan-price"><span class="currency">$</span>100</div>
+                <div class="plan-min">Minimum Investment</div>
+                <div class="plan-divider"></div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> Access to 50+ Markets</li>
+                    <li><span class="check">✓</span> Basic Charting Tools</li>
+                    <li><span class="check">✓</span> Email Support</li>
+                    <li><span class="muted">—</span> Advanced Indicators</li>
+                    <li><span class="muted">—</span> Priority Support</li>
+                    <li><span class="muted">—</span> Dedicated Account Manager</li>
+                </ul>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
+            </div>
+            <div class="plan-card">
+                <span class="plan-badge popular">★ Popular</span>
+                <span class="plan-icon">📈</span>
+                <div class="plan-name">Professional</div>
+                <div class="plan-sub">For serious traders</div>
+                <div class="plan-price"><span class="currency">$</span>500</div>
+                <div class="plan-min">Minimum Investment</div>
+                <div class="plan-divider"></div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> Access to 100+ Markets</li>
+                    <li><span class="check">✓</span> Advanced Charting &amp; Indicators</li>
+                    <li><span class="check">✓</span> Priority Email &amp; Chat Support</li>
+                    <li><span class="check">✓</span> Daily Market Analysis</li>
+                    <li><span class="muted">—</span> Dedicated Account Manager</li>
+                    <li><span class="muted">—</span> 24/7 Support</li>
+                </ul>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-sm">Get Started</a>
+            </div>
+            <div class="plan-card">
+                <span class="plan-badge best-value">★ Best Value</span>
+                <span class="plan-icon">👑</span>
+                <div class="plan-name">VIP</div>
+                <div class="plan-sub">Premium experience</div>
+                <div class="plan-price"><span class="currency">$</span>2,500</div>
+                <div class="plan-min">Minimum Investment</div>
+                <div class="plan-divider"></div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> Access to 150+ Markets</li>
+                    <li><span class="check">✓</span> Professional Charting Suite</li>
+                    <li><span class="check">✓</span> 24/7 Priority Support</li>
+                    <li><span class="check">✓</span> Daily Expert Analysis &amp; Signals</li>
+                    <li><span class="check">✓</span> Dedicated Account Manager</li>
+                    <li><span class="muted">—</span> Institutional-Grade Tools</li>
+                </ul>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
+            </div>
+            <div class="plan-card">
+                <span class="plan-badge">Institutional</span>
+                <span class="plan-icon">🏛️</span>
+                <div class="plan-name">Institutional</div>
+                <div class="plan-sub">For funds &amp; firms</div>
+                <div class="plan-price"><span class="currency">$</span>10,000</div>
+                <div class="plan-min">Minimum Investment</div>
+                <div class="plan-divider"></div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> Full Market Access</li>
+                    <li><span class="check">✓</span> Institutional-Grade Tools</li>
+                    <li><span class="check">✓</span> 24/7 Dedicated Support Team</li>
+                    <li><span class="check">✓</span> Custom Analytics &amp; Reporting</li>
+                    <li><span class="check">✓</span> Dedicated Relationship Manager</li>
+                    <li><span class="check">✓</span> White-Label Options</li>
+                </ul>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section features-section" id="features">
+    <div class="container">
+        <div class="text-center" style="margin-bottom:40px;">
+            <h2 class="section-title">Why Choose <span class="highlight">Titan Global FX</span></h2>
+            <p class="section-subtitle mx-auto">Every plan comes with these premium features designed to give you a competitive edge.</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <div class="feature-name">Lightning Execution</div>
+                <div class="feature-desc">Sub-10ms execution with direct market access. No dealing desk intervention.</div>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔒</span>
+                <div class="feature-name">Bank-Grade Security</div>
+                <div class="feature-desc">256-bit encryption, multi-factor authentication, and segregated client accounts.</div>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📊</span>
+                <div class="feature-name">Advanced Tools</div>
+                <div class="feature-desc">Professional charting, 100+ indicators, and algorithmic trading capabilities.</div>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🌐</span>
+                <div class="feature-name">Global Access</div>
+                <div class="feature-desc">Trade 150+ markets across forex, stocks, commodities, indices, and crypto.</div>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎓</span>
+                <div class="feature-name">Trader Education</div>
+                <div class="feature-desc">Comprehensive learning center with courses, webinars, and daily analysis.</div>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🤝</span>
+                <div class="feature-name">Dedicated Support</div>
+                <div class="feature-desc">24/7 multilingual support team ready to assist you with any questions.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== COMPARISON ===== -->
+<section class="section comparison-section" id="comparison">
+    <div class="container">
+        <div class="text-center" style="margin-bottom:40px;">
+            <h2 class="section-title">Plan <span class="highlight">Comparison</span></h2>
+            <p class="section-subtitle mx-auto">Compare features across all four plans to find the perfect fit for your trading style.</p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th><span class="plan-label starter">Starter</span></th>
+                        <th><span class="plan-label pro">Professional</span></th>
+                        <th><span class="plan-label vip">VIP</span></th>
+                        <th><span class="plan-label inst">Institutional</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Minimum Investment</td><td>$100</td><td><span class="highlight-text">$500</span></td><td>$2,500</td><td>$10,000</td></tr>
+                    <tr><td>Markets Access</td><td>50+</td><td>100+</td><td><span class="highlight-text">150+</span></td><td><span class="highlight-text">150+</span></td></tr>
+                    <tr><td>Charting Tools</td><td>Basic</td><td>Advanced</td><td><span class="highlight-text">Professional</span></td><td><span class="highlight-text">Professional</span></td></tr>
+                    <tr><td>Technical Indicators</td><td>30+</td><td>50+</td><td><span class="highlight-text">100+</span></td><td><span class="highlight-text">100+</span></td></tr>
+                    <tr><td>Email Support</td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td></tr>
+                    <tr><td>Priority Support</td><td><span class="cross-mark">—</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td></tr>
+                    <tr><td>24/7 Support</td><td><span class="cross-mark">—</span></td><td><span class="cross-mark">—</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td></tr>
+                    <tr><td>Daily Market Analysis</td><td><span class="cross-mark">—</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td></tr>
+                    <tr><td>Expert Trading Signals</td><td><span class="cross-mark">—</span></td><td><span class="cross-mark">—</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td></tr>
+                    <tr><td>Dedicated Account Manager</td><td><span class="cross-mark">—</span></td><td><span class="cross-mark">—</span></td><td><span class="check-mark">✓</span></td><td><span class="check-mark">✓</span></td></tr>
+                    <tr><td>Custom Analytics &amp; Reporting</td><td><span class="cross-mark">—</span></td><td><span class="cross-mark">—</span></td><td><span class="cross-mark">—</span></td><td><span class="check-mark">✓</span></td></tr>
+                    <tr><td>White-Label Options</td><td><span class="cross-mark">—</span></td><td><span class="cross-mark">—</span></td><td><span class="cross-mark">—</span></td><td><span class="check-mark">✓</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section faq-section" id="faq">
+    <div class="container">
+        <div class="text-center" style="margin-bottom:40px;">
+            <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
+            <p class="section-subtitle mx-auto">Everything you need to know about our investment plans.</p>
+        </div>
+        <div class="faq-list" id="faqList">
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What is the minimum investment for each plan?
+                    <span class="icon">+</span>
+                </button>
+                <div class="faq-answer">Our plans start at $100 for the Starter plan. Professional ($500), VIP ($2,500), and Institutional ($10,000) plans are available for traders seeking additional features, markets, and dedicated support.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Can I upgrade my plan later?
+                    <span class="icon">+</span>
+                </button>
+                <div class="faq-answer">Yes, you can upgrade your plan at any time. Simply contact our support team or use the upgrade option in your account dashboard. The new features will be activated immediately.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Are there any hidden fees?
+                    <span class="icon">+</span>
+                </button>
+                <div class="faq-answer">No. We pride ourselves on transparent pricing. All fees are clearly disclosed in our pricing schedule. There are no hidden charges or surprise fees.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What payment methods are accepted?
+                    <span class="icon">+</span>
+                </button>
+                <div class="faq-answer">We accept bank wire transfers, credit/debit cards, and major e-wallets including PayPal, Skrill, and Neteller. Cryptocurrency payments are also available.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Is there a withdrawal fee?
+                    <span class="icon">+</span>
+                </button>
+                <div class="faq-answer">Withdrawals are processed free of charge for all plans. Bank transfer fees may apply based on your bank's policies. E-wallet withdrawals are typically processed within 24 hours.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What markets can I trade with each plan?
+                    <span class="icon">+</span>
+                </button>
+                <div class="faq-answer">Starter plans include access to 50+ markets including major forex pairs and indices. Professional plans add 100+ markets with stocks and commodities. VIP and Institutional plans offer full access to all 150+ markets including crypto and ETFs.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section" id="cta">
+    <div class="container">
+        <h2>Ready to Start Your <span class="highlight">Investment Journey</span>?</h2>
+        <p>Choose your plan and start trading with institutional-grade execution today.</p>
+        <div class="btn-group">
+            <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">Get Started Now</a>
+            <a href="#plans" class="btn btn-secondary btn-lg">View Plans</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ===== FAQ ACCORDION =====
+const faqItems = document.querySelectorAll('.faq-item');
+faqItems.forEach(function(item) {
+    const btn = item.querySelector('.faq-question');
+    btn.addEventListener('click', function() {
+        const isActive = item.classList.contains('active');
+        faqItems.forEach(function(f) { f.classList.remove('active'); });
+        if (!isActive) { item.classList.add('active'); }
+    });
+});
+if (faqItems.length) { faqItems[0].classList.add('active'); }
+
+// ===== INTERSECTION OBSERVER =====
+document.querySelectorAll('.section').forEach(function(section) {
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    observer.observe(section);
+});
+</script>
+{% endblock %}

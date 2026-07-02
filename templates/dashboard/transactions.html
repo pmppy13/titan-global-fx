@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Titan Global FX | Transaction History{% endblock %}
+
+{% block extra_css %}
+<style>
+    .transactions-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+        background: var(--navy-light);
+        min-height: 100vh;
+    }
+    .transactions-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .transactions-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    .transactions-header h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .transactions-table-wrapper {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        overflow: hidden;
+        overflow-x: auto;
+    }
+    .transactions-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        min-width: 700px;
+    }
+    .transactions-table thead {
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .transactions-table thead th {
+        padding: 14px 20px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--gray-400);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .transactions-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        transition: var(--transition);
+    }
+    .transactions-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .transactions-table tbody tr:last-child { border-bottom: none; }
+    .transactions-table tbody td {
+        padding: 12px 20px;
+        color: var(--gray-300);
+    }
+    .transactions-table .tx-type { font-weight: 600; }
+    .transactions-table .tx-type.deposit { color: var(--green); }
+    .transactions-table .tx-type.withdraw { color: var(--red); }
+    .transactions-table .tx-amount.positive { color: var(--green); }
+    .transactions-table .tx-amount.negative { color: var(--red); }
+    .transactions-table .tx-status {
+        font-size: 0.7rem;
+        padding: 3px 12px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+    .transactions-table .tx-status.pending { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
+    .transactions-table .tx-status.completed { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .transactions-table .tx-status.rejected { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+    .transactions-table .tx-status.approved { background: rgba(52, 152, 219, 0.12); color: #3498db; }
+    .transactions-table .tx-status.cancelled { background: rgba(255, 255, 255, 0.05); color: var(--gray-500); }
+    .no-transactions {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--gray-400);
+    }
+    .no-transactions .icon { font-size: 3rem; display: block; margin-bottom: 12px; }
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: var(--gray-400);
+        transition: var(--transition);
+    }
+    .back-link:hover { color: var(--gold); }
+    .filter-bar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .filter-bar select, .filter-bar input {
+        padding: 8px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--white);
+        font-size: 0.85rem;
+        outline: none;
+    }
+    .filter-bar select:focus, .filter-bar input:focus {
+        border-color: rgba(212, 175, 55, 0.3);
+    }
+    .filter-bar select option {
+        background: var(--navy);
+        color: var(--white);
+    }
+    @media (max-width: 768px) {
+        .transactions-section { padding-top: 100px; }
+        .transactions-header { flex-direction: column; align-items: flex-start; }
+        .transactions-header h1 { font-size: 1.6rem; }
+        .filter-bar { width: 100%; }
+        .filter-bar select, .filter-bar input { flex: 1; min-width: 120px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="transactions-section">
+    <div class="container">
+        <div class="transactions-header">
+            <h1>Transaction <span class="highlight">History</span></h1>
+            <div class="filter-bar">
+                <select id="filterType">
+                    <option value="">All Types</option>
+                    <option value="deposit">Deposits</option>
+                    <option value="withdraw">Withdrawals</option>
+                </select>
+                <select id="filterStatus">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="completed">Completed</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="transactions-table-wrapper">
+            {% if transactions %}
+            <table class="transactions-table" id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                    <tr class="tx-row" data-type="{{ tx.transaction_type }}" data-status="{{ tx.status }}">
+                        <td style="font-weight:600;color:var(--gold);">#{{ tx.id }}</td>
+                        <td><span class="tx-type {{ tx.transaction_type }}">{{ tx.get_transaction_type_display }}</span></td>
+                        <td class="tx-amount {% if tx.transaction_type == 'deposit' %}positive{% else %}negative{% endif %}">
+                            {% if tx.transaction_type == 'deposit' %}+{% else %}-{% endif %}${{ tx.amount|floatformat:2 }}
+                        </td>
+                        <td>{{ tx.method_name }}</td>
+                        <td><span class="tx-status {{ tx.status }}">{{ tx.status }}</span></td>
+                        <td style="font-size:0.8rem;color:var(--gray-500);">{{ tx.created_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="no-transactions">
+                <span class="icon">📭</span>
+                <p>No transactions found.</p>
+                <p style="font-size:0.85rem;margin-top:4px;">Start trading and your transactions will appear here.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'dashboard:index' %}" class="back-link">← Back to Dashboard</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('filterType').addEventListener('change', filterTable);
+    document.getElementById('filterStatus').addEventListener('change', filterTable);
+    function filterTable() {
+        const type = document.getElementById('filterType').value;
+        const status = document.getElementById('filterStatus').value;
+        document.querySelectorAll('.tx-row').forEach(function(row) {
+            let show = true;
+            if (type && row.dataset.type !== type) show = false;
+            if (status && row.dataset.status !== status) show = false;
+            row.style.display = show ? '' : 'none';
+        });
+    }
+</script>
+{% endblock %}

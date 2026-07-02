@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Titan Global FX | Deposit Options{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+        background: var(--navy-light);
+        min-height: 100vh;
+    }
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .admin-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    .admin-header h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .admin-nav {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+    .admin-nav a {
+        padding: 10px 24px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--gray-300);
+        transition: var(--transition);
+        font-size: 0.9rem;
+    }
+    .admin-nav a:hover {
+        border-color: rgba(212, 175, 55, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--white);
+    }
+    .admin-nav a.active {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.06);
+        color: var(--gold);
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+    .options-list {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 24px;
+    }
+    .options-list h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    .option-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .option-item:last-child { border-bottom: none; }
+    .option-item .info .name { font-weight: 600; }
+    .option-item .info .method { font-size: 0.75rem; color: var(--gray-500); text-transform: uppercase; }
+    .option-item .actions { display: flex; gap: 8px; }
+    .option-item .actions a { color: var(--gray-400); font-size: 0.8rem; transition: var(--transition); }
+    .option-item .actions a:hover { color: var(--gold); }
+    .option-item .status-badge {
+        font-size: 0.6rem;
+        padding: 2px 10px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .option-item .status-badge.active { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .option-item .status-badge.inactive { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+    .options-form {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 24px;
+    }
+    .options-form h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    .options-form .form-group {
+        margin-bottom: 14px;
+    }
+    .options-form .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--gray-300);
+        margin-bottom: 4px;
+    }
+    .options-form .form-group input,
+    .options-form .form-group select,
+    .options-form .form-group textarea {
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--white);
+        font-size: 0.9rem;
+        font-family: inherit;
+        outline: none;
+    }
+    .options-form .form-group input:focus,
+    .options-form .form-group select:focus,
+    .options-form .form-group textarea:focus {
+        border-color: rgba(212, 175, 55, 0.3);
+    }
+    .options-form .form-group select option {
+        background: var(--navy);
+        color: var(--white);
+    }
+    .options-form .form-group .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .options-form .form-group .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--gold);
+    }
+    .options-form .btn { margin-top: 8px; }
+    .options-form .method-details {
+        border: 1px solid rgba(212,175,55,0.2);
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 14px;
+        display: none;
+    }
+    .options-form .method-details h4 {
+        color: var(--gold);
+        margin-bottom: 10px;
+    }
+    @media (max-width: 1024px) { .options-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+        .admin-section { padding-top: 100px; }
+        .admin-header h1 { font-size: 1.6rem; }
+        .admin-nav { flex-direction: column; }
+        .admin-nav a { text-align: center; }
+        .option-item { flex-direction: column; gap: 8px; align-items: flex-start; }
+        .option-item .actions { width: 100%; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-header">
+            <h1>Deposit <span class="highlight">Options</span></h1>
+            <span style="color:var(--gray-400);font-size:0.9rem;">Manage deposit methods</span>
+        </div>
+
+        <div class="admin-nav">
+            <a href="{% url 'admin_dashboard:index' %}">📊 Overview</a>
+            <a href="{% url 'admin_dashboard:users' %}">👥 Users</a>
+            <a href="{% url 'admin_dashboard:transactions' %}">💳 Transactions</a>
+            <a href="{% url 'admin_dashboard:deposit_options' %}" class="active">💰 Deposit Options</a>
+            <a href="{% url 'admin_dashboard:withdraw_options' %}">🏦 Withdraw Options</a>
+            <a href="{% url 'admin_dashboard:terms' %}">📜 Terms & Conditions</a>
+        </div>
+
+        <div class="options-grid">
+            <div class="options-list">
+                <h3>Available Deposit Methods</h3>
+                {% if options %}
+                    {% for option in options %}
+                    <div class="option-item">
+                        <div class="info">
+                            <div class="name">{{ option.name }}</div>
+                            <div class="method">{{ option.get_method_display }}</div>
+                            <span class="status-badge {% if option.is_active %}active{% else %}inactive{% endif %}">
+                                {% if option.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                            <div style="font-size:0.7rem;color:var(--gray-500);margin-top:2px;">
+                                Min: ${{ option.min_amount|floatformat:0 }} | Max: ${{ option.max_amount|floatformat:0 }}
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <a href="{% url 'admin_dashboard:edit_deposit_option' option.id %}">✏️ Edit</a>
+                            <a href="{% url 'admin_dashboard:delete_deposit_option' option.id %}" onclick="return confirm('Are you sure?')">🗑️ Delete</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color:var(--gray-400);text-align:center;padding:20px 0;">No deposit options configured.</p>
+                {% endif %}
+            </div>
+
+            <div class="options-form">
+                <h3>{% if edit_mode %}Edit{% else %}Add New{% endif %} Deposit Option</h3>
+                <form method="post" id="depositOptionForm">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">Name</label>
+                        {{ form.name }}
+                        {{ form.name.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.method.id_for_label }}">Method Type</label>
+                        {{ form.method }}
+                        {{ form.method.errors }}
+                    </div>
+
+                    <!-- Bank Details -->
+                    <div id="bankDetails" class="method-details">
+                        <h4>🏦 Bank Account Details</h4>
+                        <div class="form-group">
+                            <label for="{{ form.bank_name.id_for_label }}">Bank Name</label>
+                            {{ form.bank_name }}
+                            {{ form.bank_name.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.account_name.id_for_label }}">Account Name</label>
+                            {{ form.account_name }}
+                            {{ form.account_name.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.account_number.id_for_label }}">Account Number</label>
+                            {{ form.account_number }}
+                            {{ form.account_number.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.routing_number.id_for_label }}">Routing Number</label>
+                            {{ form.routing_number }}
+                            {{ form.routing_number.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.swift_code.id_for_label }}">SWIFT Code</label>
+                            {{ form.swift_code }}
+                            {{ form.swift_code.errors }}
+                        </div>
+                    </div>
+
+                    <!-- Crypto Details -->
+                    <div id="cryptoDetails" class="method-details">
+                        <h4>₿ Cryptocurrency Details</h4>
+                        <div class="form-group">
+                            <label for="{{ form.coin_name.id_for_label }}">Coin Name</label>
+                            {{ form.coin_name }}
+                            {{ form.coin_name.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.wallet_address.id_for_label }}">Wallet Address</label>
+                            {{ form.wallet_address }}
+                            {{ form.wallet_address.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.network.id_for_label }}">Network (optional)</label>
+                            {{ form.network }}
+                            {{ form.network.errors }}
+                        </div>
+                    </div>
+
+                    <!-- PayPal Details -->
+                    <div id="paypalDetails" class="method-details">
+                        <h4>💳 PayPal Details</h4>
+                        <div class="form-group">
+                            <label for="{{ form.paypal_email.id_for_label }}">PayPal Email</label>
+                            {{ form.paypal_email }}
+                            {{ form.paypal_email.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.paypal_link.id_for_label }}">Payment Link (optional)</label>
+                            {{ form.paypal_link }}
+                            {{ form.paypal_link.errors }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}">Description</label>
+                        {{ form.description }}
+                        {{ form.description.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.instructions.id_for_label }}">Instructions</label>
+                        {{ form.instructions }}
+                        {{ form.instructions.errors }}
+                    </div>
+
+                    <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                        <div class="form-group">
+                            <label for="{{ form.min_amount.id_for_label }}">Minimum Amount ($)</label>
+                            {{ form.min_amount }}
+                            {{ form.min_amount.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.max_amount.id_for_label }}">Maximum Amount ($)</label>
+                            {{ form.max_amount }}
+                            {{ form.max_amount.errors }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            {{ form.is_active }}
+                            <label for="{{ form.is_active.id_for_label }}">Active</label>
+                        </div>
+                        {{ form.is_active.errors }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">{% if edit_mode %}Update{% else %}Add{% endif %} Option</button>
+                    {% if edit_mode %}
+                    <a href="{% url 'admin_dashboard:deposit_options' %}" class="btn btn-secondary" style="margin-left:8px;">Cancel</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function() {
+        const methodSelect = document.getElementById('id_method');
+        const bankDiv = document.getElementById('bankDetails');
+        const cryptoDiv = document.getElementById('cryptoDetails');
+        const paypalDiv = document.getElementById('paypalDetails');
+
+        function toggleDetails() {
+            const method = methodSelect.value;
+            bankDiv.style.display = method === 'bank' ? 'block' : 'none';
+            cryptoDiv.style.display = method === 'crypto' ? 'block' : 'none';
+            paypalDiv.style.display = method === 'paypal' ? 'block' : 'none';
+        }
+
+        methodSelect.addEventListener('change', toggleDetails);
+        toggleDetails(); // on load
+    })();
+</script>
+{% endblock %}

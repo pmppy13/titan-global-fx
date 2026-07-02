@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Titan Global FX | Terms & Conditions{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+        background: var(--navy-light);
+        min-height: 100vh;
+    }
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .admin-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    .admin-header h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .admin-nav {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+    .admin-nav a {
+        padding: 10px 24px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--gray-300);
+        transition: var(--transition);
+        font-size: 0.9rem;
+    }
+    .admin-nav a:hover {
+        border-color: rgba(212, 175, 55, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--white);
+    }
+    .admin-nav a.active {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.06);
+        color: var(--gold);
+    }
+    .terms-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+    .terms-list {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 24px;
+    }
+    .terms-list h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    .terms-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .terms-item:last-child { border-bottom: none; }
+    .terms-item .info .version { font-weight: 600; }
+    .terms-item .info .date { font-size: 0.75rem; color: var(--gray-500); }
+    .terms-item .actions { display: flex; gap: 8px; }
+    .terms-item .actions a { color: var(--gray-400); font-size: 0.8rem; transition: var(--transition); }
+    .terms-item .actions a:hover { color: var(--gold); }
+    .terms-item .status-badge {
+        font-size: 0.6rem;
+        padding: 2px 10px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .terms-item .status-badge.active { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .terms-item .status-badge.inactive { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+    .terms-form {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 24px;
+    }
+    .terms-form h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    .terms-form .form-group {
+        margin-bottom: 14px;
+    }
+    .terms-form .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--gray-300);
+        margin-bottom: 4px;
+    }
+    .terms-form .form-group textarea,
+    .terms-form .form-group input {
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--white);
+        font-size: 0.9rem;
+        font-family: inherit;
+        outline: none;
+    }
+    .terms-form .form-group textarea:focus,
+    .terms-form .form-group input:focus {
+        border-color: rgba(212, 175, 55, 0.3);
+    }
+    .terms-form .form-group .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .terms-form .form-group .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--gold);
+    }
+    .terms-form .btn { margin-top: 8px; }
+    @media (max-width: 1024px) { .terms-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+        .admin-section { padding-top: 100px; }
+        .admin-header h1 { font-size: 1.6rem; }
+        .admin-nav { flex-direction: column; }
+        .admin-nav a { text-align: center; }
+        .terms-item { flex-direction: column; gap: 8px; align-items: flex-start; }
+        .terms-item .actions { width: 100%; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-header">
+            <h1>Terms & <span class="highlight">Conditions</span></h1>
+            <span style="color:var(--gray-400);font-size:0.9rem;">Manage legal agreements</span>
+        </div>
+
+        <div class="admin-nav">
+            <a href="{% url 'admin_dashboard:index' %}">📊 Overview</a>
+            <a href="{% url 'admin_dashboard:users' %}">👥 Users</a>
+            <a href="{% url 'admin_dashboard:transactions' %}">💳 Transactions</a>
+            <a href="{% url 'admin_dashboard:deposit_options' %}">💰 Deposit Options</a>
+            <a href="{% url 'admin_dashboard:withdraw_options' %}">🏦 Withdraw Options</a>
+            <a href="{% url 'admin_dashboard:terms' %}" class="active">📜 Terms & Conditions</a>
+        </div>
+
+        <div class="terms-grid">
+            <div class="terms-list">
+                <h3>Terms Versions</h3>
+                {% if terms %}
+                    {% for term in terms %}
+                    <div class="terms-item">
+                        <div class="info">
+                            <div class="version">v{{ term.version }}</div>
+                            <div class="date">{{ term.created_at|date:"M d, Y" }}</div>
+                            <span class="status-badge {% if term.is_active %}active{% else %}inactive{% endif %}">
+                                {% if term.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </div>
+                        <div class="actions">
+                            <a href="{% url 'admin_dashboard:edit_terms' term.id %}">✏️ Edit</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color:var(--gray-400);text-align:center;padding:20px 0;">No terms created yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="terms-form">
+                <h3>{% if edit_mode %}Edit{% else %}Add New{% endif %} Terms</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="form-group">
+                        <label for="{{ form.content.id_for_label }}">Content</label>
+                        {{ form.content }}
+                        {{ form.content.errors }}
+                        <small style="color:var(--gray-500);font-size:0.75rem;">HTML or Markdown supported for formatting.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.version.id_for_label }}">Version</label>
+                        {{ form.version }}
+                        {{ form.version.errors }}
+                        <small style="color:var(--gray-500);font-size:0.75rem;">Format: 1.0, 1.1, 2.0, etc.</small>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            {{ form.is_active }}
+                            <label for="{{ form.is_active.id_for_label }}">Set as Active Version</label>
+                        </div>
+                        {{ form.is_active.errors }}
+                        <small style="color:var(--gray-500);font-size:0.75rem;">Only one version can be active at a time.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{% if edit_mode %}Update{% else %}Create{% endif %} Terms</button>
+                    {% if edit_mode %}
+                    <a href="{% url 'admin_dashboard:terms' %}" class="btn btn-secondary" style="margin-left:8px;">Cancel</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

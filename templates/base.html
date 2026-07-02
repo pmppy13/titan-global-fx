@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Titan Global FX{% endblock %}</title>
+    <meta name="description" content="{% block description %}Institutional-grade trading infrastructure{% endblock %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- ===== PRELOADER ===== -->
+    <div id="preloader">
+        <div class="loader-ring">
+            <span class="loader-logo">T</span>
+        </div>
+        <div class="loader-text">Titan Global FX</div>
+    </div>
+
+    <!-- ===== MESSAGES ===== -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="message message-{{ message.tags }}">
+            {{ message }}
+            <button class="message-close">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <a href="{% url 'core:home' %}" class="logo">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="28" height="28" rx="8" stroke="#C9A84C" stroke-width="2.5" />
+                    <path d="M10 22L16 10L22 22L19 22L16 16L13 22L10 22Z" fill="#C9A84C" />
+                    <path d="M16 22L16 26" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" />
+                    <path d="M12 22L20 22" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Titan<span class="gold">GlobalFX</span>
+            </a>
+
+            <ul class="nav-links" id="navLinks" role="menubar">
+                <li role="none"><a href="{% url 'core:home' %}" role="menuitem">Home</a></li>
+                <li role="none"><a href="{% url 'core:about' %}" role="menuitem">About</a></li>
+                <li role="none"><a href="{% url 'core:platforms' %}" role="menuitem">Platforms</a></li>
+                <li role="none"><a href="{% url 'core:markets' %}" role="menuitem">Markets</a></li>
+                <li role="none"><a href="{% url 'core:plans' %}" role="menuitem">Plans</a></li>
+                <li role="none"><a href="{% url 'core:contact' %}" role="menuitem">Contact</a></li>
+                {% if user.is_authenticated %}
+                <li role="none"><a href="{% url 'dashboard:index' %}" role="menuitem">Dashboard</a></li>
+                {% endif %}
+            </ul>
+
+            <div class="nav-actions">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard:index' %}" class="btn btn-secondary btn-sm">Dashboard</a>
+                    <a href="{% url 'accounts:logout' %}" class="btn btn-secondary btn-sm">Logout</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-secondary btn-sm">Log In</a>
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-sm">Open Account</a>
+                {% endif %}
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:8px;">
+                            <rect x="2" y="2" width="28" height="28" rx="8" stroke="#C9A84C" stroke-width="2.5" />
+                            <path d="M10 22L16 10L22 22L19 22L16 16L13 22L10 22Z" fill="#C9A84C" />
+                            <path d="M16 22L16 26" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" />
+                            <path d="M12 22L20 22" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                        Titan<span class="gold">GlobalFX</span>
+                    </div>
+                    <p>Institutional-grade trading infrastructure for the modern investor. SEC-compliant and built for performance.</p>
+                    <div class="footer-socials" style="margin-top:16px;">
+                        <a href="#" aria-label="Twitter">🐦</a>
+                        <a href="#" aria-label="LinkedIn">🔗</a>
+                        <a href="#" aria-label="YouTube">▶️</a>
+                        <a href="#" aria-label="Telegram">✈️</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="{% url 'core:about' %}">About Us</a></li>
+                        <li><a href="{% url 'core:about' %}#leadership">Leadership</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="{% url 'core:about' %}#regulatory">Regulatory</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Trading</h4>
+                    <ul>
+                        <li><a href="{% url 'core:platforms' %}">Platforms</a></li>
+                        <li><a href="{% url 'core:markets' %}">Markets</a></li>
+                        <li><a href="{% url 'core:plans' %}">Investment Plans</a></li>
+                        <li><a href="#">Account Types</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Market Analysis</a></li>
+                        <li><a href="#">Economic Calendar</a></li>
+                        <li><a href="{% url 'core:contact' %}">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 Titan Global FX. All rights reserved.</span>
+                <div class="legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Risk Disclosure</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // ===== PRELOADER =====
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            setTimeout(function() {
+                preloader.classList.add('hide');
+            }, 800);
+        });
+
+        // ===== NAVBAR SCROLL =====
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 30) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ===== MOBILE NAV TOGGLE =====
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('open');
+            navToggle.classList.toggle('active');
+        });
+        navLinks.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('open');
+                navToggle.classList.remove('active');
+            });
+        });
+
+        // ===== MESSAGE CLOSE =====
+        document.querySelectorAll('.message-close').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                this.parentElement.style.display = 'none';
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

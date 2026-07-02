@@ -1,0 +1,568 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Titan Global FX | User Detail{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+        background: var(--navy-light);
+        min-height: 100vh;
+    }
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .admin-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    .admin-header h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .admin-nav {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+    .admin-nav a {
+        padding: 10px 24px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--gray-300);
+        transition: var(--transition);
+        font-size: 0.9rem;
+    }
+    .admin-nav a:hover {
+        border-color: rgba(212, 175, 55, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--white);
+    }
+    .admin-nav a.active {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.06);
+        color: var(--gold);
+    }
+    .user-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    .info-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 24px;
+    }
+    .info-card h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: var(--gold);
+    }
+    .info-card .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .info-card .info-row:last-child { border-bottom: none; }
+    .info-card .info-row .label { color: var(--gray-400); font-size: 0.85rem; }
+    .info-card .info-row .value { font-weight: 500; }
+    .balance-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    .balance-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        text-align: center;
+    }
+    .balance-item .label { font-size: 0.7rem; color: var(--gray-500); text-transform: uppercase; }
+    .balance-item .amount { font-size: 1.2rem; font-weight: 700; color: var(--gold); }
+    
+    /* ===== ACTION CARDS ===== */
+    .action-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    .action-card h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    .action-card .form-group {
+        margin-bottom: 14px;
+    }
+    .action-card .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--gray-300);
+        margin-bottom: 4px;
+    }
+    .action-card .form-group textarea,
+    .action-card .form-group input,
+    .action-card .form-group select {
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--white);
+        font-size: 0.9rem;
+        font-family: inherit;
+        outline: none;
+    }
+    .action-card .form-group textarea:focus,
+    .action-card .form-group input:focus,
+    .action-card .form-group select:focus {
+        border-color: rgba(212, 175, 55, 0.3);
+    }
+    .action-card .form-group select option {
+        background: var(--navy);
+        color: var(--white);
+    }
+    .action-card .form-group .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .action-card .form-group .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--gold);
+    }
+    .action-card .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+    .action-card .btn {
+        margin-top: 8px;
+        padding: 12px 28px;
+    }
+    .action-card .btn-danger {
+        background: linear-gradient(135deg, #ff6b6b, #c0392b);
+        color: var(--white);
+        border-color: #ff6b6b;
+    }
+    .action-card .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(255, 107, 107, 0.3);
+    }
+    .action-card .btn-success {
+        background: linear-gradient(135deg, var(--green), #00a67a);
+        color: var(--white);
+        border-color: var(--green);
+    }
+    .action-card .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 200, 151, 0.3);
+    }
+    .action-card .btn-primary {
+        background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+        color: var(--navy);
+        border-color: var(--gold);
+    }
+    .action-card .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+    }
+
+    .unlock-code-display {
+        background: rgba(212, 175, 55, 0.08);
+        border: 2px solid rgba(212, 175, 55, 0.2);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+    .unlock-code-display .label {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .unlock-code-display .code {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--gold);
+        letter-spacing: 6px;
+        font-family: monospace;
+        margin: 8px 0;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 8px 16px;
+        border-radius: 8px;
+        display: inline-block;
+    }
+    .unlock-code-display .copy-btn {
+        background: rgba(212, 175, 55, 0.12);
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        color: var(--gold);
+        padding: 6px 20px;
+        border-radius: 50px;
+        cursor: pointer;
+        margin-top: 8px;
+        font-size: 0.85rem;
+        transition: var(--transition);
+    }
+    .unlock-code-display .copy-btn:hover {
+        background: rgba(212, 175, 55, 0.2);
+    }
+    .unlock-code-display .note {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-top: 8px;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 16px;
+        color: var(--gray-400);
+        transition: var(--transition);
+    }
+    .back-link:hover { color: var(--gold); }
+
+    .status-badge {
+        font-size: 0.65rem;
+        padding: 2px 12px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+    .status-badge.pending { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
+    .status-badge.completed { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .status-badge.rejected { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+    .status-badge.approved { background: rgba(52, 152, 219, 0.12); color: #3498db; }
+
+    .recent-table-wrapper {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        overflow: hidden;
+        overflow-x: auto;
+    }
+    .recent-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        min-width: 600px;
+    }
+    .recent-table thead {
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .recent-table thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--gray-400);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .recent-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .recent-table tbody tr:last-child { border-bottom: none; }
+    .recent-table tbody td {
+        padding: 10px 16px;
+        color: var(--gray-300);
+        font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+        .admin-section { padding-top: 100px; }
+        .admin-header h1 { font-size: 1.6rem; }
+        .user-info-grid { grid-template-columns: 1fr; }
+        .balance-grid { grid-template-columns: repeat(2, 1fr); }
+        .admin-nav { flex-direction: column; }
+        .admin-nav a { text-align: center; }
+        .action-card .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) { 
+        .balance-grid { grid-template-columns: 1fr; }
+        .unlock-code-display .code { font-size: 1.4rem; letter-spacing: 3px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-header">
+            <h1>User: <span class="highlight">{{ user.username }}</span></h1>
+            <span style="color:var(--gray-400);font-size:0.9rem;">ID: #{{ user.id }}</span>
+        </div>
+
+        <!-- ===== ADMIN NAVIGATION ===== -->
+        <div class="admin-nav">
+            <a href="{% url 'admin_dashboard:index' %}">📊 Overview</a>
+            <a href="{% url 'admin_dashboard:users' %}" class="active">👥 Users</a>
+            <a href="{% url 'admin_dashboard:transactions' %}">💳 Transactions</a>
+            <a href="{% url 'admin_dashboard:deposit_options' %}">💰 Deposit Options</a>
+            <a href="{% url 'admin_dashboard:withdraw_options' %}">🏦 Withdraw Options</a>
+            <a href="{% url 'admin_dashboard:terms' %}">📜 Terms & Conditions</a>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- ===== USER INFORMATION ===== -->
+        <!-- ================================================================ -->
+        <div class="user-info-grid">
+            <div class="info-card">
+                <h3>👤 Personal Information</h3>
+                <div class="info-row">
+                    <span class="label">Full Name</span>
+                    <span class="value">{{ user.get_full_name|default:"Not set" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Email</span>
+                    <span class="value">{{ user.email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Phone</span>
+                    <span class="value">{{ user.phone|default:"Not set" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Country</span>
+                    <span class="value">{{ user.country|default:"Not set" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Username</span>
+                    <span class="value">{{ user.username }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Member Since</span>
+                    <span class="value">{{ user.date_joined|date:"F d, Y" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Last Login</span>
+                    <span class="value">{{ user.last_login|date:"F d, Y H:i"|default:"Never" }}</span>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3>💰 Balances</h3>
+                <div class="balance-grid">
+                    <div class="balance-item">
+                        <div class="label">USD</div>
+                        <div class="amount">${{ user.usd_balance|floatformat:2 }}</div>
+                    </div>
+                    <div class="balance-item">
+                        <div class="label">BTC</div>
+                        <div class="amount">₿{{ user.btc_balance|floatformat:8 }}</div>
+                    </div>
+                    <div class="balance-item">
+                        <div class="label">ETH</div>
+                        <div class="amount">⟠{{ user.eth_balance|floatformat:8 }}</div>
+                    </div>
+                    <div class="balance-item">
+                        <div class="label">USDT</div>
+                        <div class="amount">₮{{ user.usdt_balance|floatformat:2 }}</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <span class="label">Account Status</span>
+                    <span class="value">
+                        {% if user.can_withdraw %}
+                        <span style="color:var(--green);">✅ Active</span>
+                        {% else %}
+                        <span style="color:var(--red);">🔒 Restricted</span>
+                        {% endif %}
+                    </span>
+                </div>
+                {% if not user.can_withdraw and user.withdraw_disabled_at %}
+                <div class="info-row">
+                    <span class="label">Disabled Since</span>
+                    <span class="value" style="color:var(--red);">{{ user.withdraw_disabled_at|date:"F d, Y H:i" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Reason</span>
+                    <span class="value" style="font-size:0.85rem;color:var(--gray-400);">{{ user.withdraw_disable_reason }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- ===== BALANCE MANAGEMENT ===== -->
+        <!-- ================================================================ -->
+        <div class="action-card" style="border-color: rgba(0, 200, 151, 0.2);">
+            <h3>💰 Manage Balance</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ balance_form.non_field_errors }}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ balance_form.action.id_for_label }}">Action</label>
+                        {{ balance_form.action }}
+                        {{ balance_form.action.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ balance_form.currency.id_for_label }}">Currency</label>
+                        {{ balance_form.currency }}
+                        {{ balance_form.currency.errors }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ balance_form.amount.id_for_label }}">Amount</label>
+                    {{ balance_form.amount }}
+                    {{ balance_form.amount.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ balance_form.reason.id_for_label }}">Reason (Optional)</label>
+                    {{ balance_form.reason }}
+                    {{ balance_form.reason.errors }}
+                </div>
+                <button type="submit" name="balance_action" class="btn btn-primary">💰 Update Balance</button>
+            </form>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- ===== DISABLE WITHDRAWALS ===== -->
+        <!-- ================================================================ -->
+        <div class="action-card">
+            <h3>🔒 Disable Withdrawals</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    <label for="{{ form.reason.id_for_label }}">Reason for Disabling</label>
+                    {{ form.reason }}
+                    {{ form.reason.errors }}
+                    <small style="color:var(--gray-500);font-size:0.75rem;">This reason will be shown to the user.</small>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        {{ form.generate_code }}
+                        <label for="{{ form.generate_code.id_for_label }}">Generate unlock code for user</label>
+                    </div>
+                    {{ form.generate_code.errors }}
+                    <small style="color:var(--gray-500);font-size:0.75rem;">The user will need this code to re-enable withdrawals.</small>
+                </div>
+                <button type="submit" name="disable_withdraw" class="btn btn-danger">🔒 Disable Withdrawals</button>
+            </form>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- ===== ENABLE WITHDRAWALS ===== -->
+        <!-- ================================================================ -->
+        {% if not user.can_withdraw %}
+        <div class="action-card" style="border-color: rgba(212, 175, 55, 0.2);">
+            <h3>🔓 Enable Withdrawals</h3>
+            
+            {% if user.unlock_code %}
+            <div class="unlock-code-display">
+                <div class="label">🔑 Unlock Code</div>
+                <div class="code">{{ user.unlock_code }}</div>
+                <button class="copy-btn" onclick="copyCode('{{ user.unlock_code }}')">📋 Copy Code</button>
+                <div class="note">⚠️ Give this code to the user so they can re-enable withdrawals.</div>
+            </div>
+            {% else %}
+            <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.1);border-radius:var(--radius);padding:16px;text-align:center;margin-bottom:16px;color:var(--gray-400);">
+                No unlock code generated. Please disable withdrawals first.
+            </div>
+            {% endif %}
+            
+            <form method="post" action="{% url 'admin_dashboard:enable_withdraw' user.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="unlock_code">Enter Unlock Code to Enable</label>
+                    <input type="text" name="unlock_code" id="unlock_code" placeholder="Enter the unlock code" required />
+                    <small style="color:var(--gray-500);font-size:0.75rem;">Enter the unlock code that was shown above.</small>
+                </div>
+                <button type="submit" class="btn btn-success">🔓 Enable Withdrawals</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- ================================================================ -->
+        <!-- ===== RECENT TRANSACTIONS ===== -->
+        <!-- ================================================================ -->
+        <h3 style="margin:24px 0 16px;font-weight:600;">📋 Recent Transactions</h3>
+        <div class="recent-table-wrapper">
+            {% if transactions %}
+            <table class="recent-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions|slice:":10" %}
+                    <tr>
+                        <td style="font-weight:600;color:var(--gold);">#{{ tx.id }}</td>
+                        <td>{{ tx.get_transaction_type_display }}</td>
+                        <td>${{ tx.amount|floatformat:2 }}</td>
+                        <td>{{ tx.method_name }}</td>
+                        <td><span class="status-badge {{ tx.status }}">{{ tx.status }}</span></td>
+                        <td style="font-size:0.75rem;color:var(--gray-500);">{{ tx.created_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div style="text-align:center;padding:40px;color:var(--gray-400);">No transactions for this user.</div>
+            {% endif %}
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- ===== BACK LINK ===== -->
+        <!-- ================================================================ -->
+        <a href="{% url 'admin_dashboard:users' %}" class="back-link">← Back to Users</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyCode(code) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(code).then(() => {
+            const btn = document.querySelector('.unlock-code-display .copy-btn');
+            if (btn) {
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => btn.textContent = '📋 Copy Code', 2000);
+            }
+        });
+    } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        const btn = document.querySelector('.unlock-code-display .copy-btn');
+        if (btn) {
+            btn.textContent = '✅ Copied!';
+            setTimeout(() => btn.textContent = '📋 Copy Code', 2000);
+        }
+    }
+}
+</script>
+{% endblock %}

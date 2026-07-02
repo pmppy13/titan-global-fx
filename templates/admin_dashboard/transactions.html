@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Titan Global FX | Admin Transactions{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Include the exact same styles as previously provided for transactions */
+    .admin-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+        background: var(--navy-light);
+        min-height: 100vh;
+    }
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .admin-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    .admin-header h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .admin-nav {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+    .admin-nav a {
+        padding: 10px 24px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--gray-300);
+        transition: var(--transition);
+        font-size: 0.9rem;
+    }
+    .admin-nav a:hover {
+        border-color: rgba(212, 175, 55, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--white);
+    }
+    .admin-nav a.active {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.06);
+        color: var(--gold);
+    }
+    .transactions-table-wrapper {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        overflow: hidden;
+        overflow-x: auto;
+    }
+    .transactions-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        min-width: 1000px;
+    }
+    .transactions-table thead {
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .transactions-table thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--gray-400);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .transactions-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        transition: var(--transition);
+    }
+    .transactions-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .transactions-table tbody tr:last-child { border-bottom: none; }
+    .transactions-table tbody td {
+        padding: 10px 16px;
+        color: var(--gray-300);
+        font-size: 0.85rem;
+        vertical-align: middle;
+    }
+    .transactions-table .status-badge {
+        font-size: 0.65rem;
+        padding: 2px 12px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+    .transactions-table .status-badge.pending { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
+    .transactions-table .status-badge.approved { background: rgba(52, 152, 219, 0.12); color: #3498db; }
+    .transactions-table .status-badge.completed { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .transactions-table .status-badge.rejected { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+    .transactions-table .status-badge.cancelled { background: rgba(255, 255, 255, 0.05); color: var(--gray-500); }
+    .action-form {
+        display: inline-flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+    .action-form button {
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+    }
+    .action-form button.btn-approve { background: rgba(52, 152, 219, 0.12); color: #3498db; }
+    .action-form button.btn-approve:hover { background: rgba(52, 152, 219, 0.2); }
+    .action-form button.btn-complete { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .action-form button.btn-complete:hover { background: rgba(0, 200, 151, 0.2); }
+    .action-form button.btn-reject { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+    .action-form button.btn-reject:hover { background: rgba(255, 107, 107, 0.2); }
+    .action-form button.btn-cancel { background: rgba(255, 255, 255, 0.05); color: var(--gray-500); }
+    .action-form button.btn-cancel:hover { background: rgba(255, 255, 255, 0.1); }
+    .tx-type.deposit { color: var(--green); font-weight: 600; }
+    .tx-type.withdraw { color: var(--red); font-weight: 600; }
+    .copy-btn {
+        background: none;
+        border: none;
+        color: var(--gold);
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: var(--transition);
+        padding: 2px 6px;
+    }
+    .copy-btn:hover { transform: scale(1.1); }
+    @media (max-width: 768px) {
+        .admin-section { padding-top: 100px; }
+        .admin-header h1 { font-size: 1.6rem; }
+        .admin-nav { flex-direction: column; }
+        .admin-nav a { text-align: center; }
+        .action-form { flex-direction: column; }
+        .action-form button { width: 100%; text-align: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-header">
+            <h1>Transaction <span class="highlight">Management</span></h1>
+            <span style="color:var(--gray-400);font-size:0.9rem;">Total: {{ transactions.count }} transactions</span>
+        </div>
+
+        <div class="admin-nav">
+            <a href="{% url 'admin_dashboard:index' %}">📊 Overview</a>
+            <a href="{% url 'admin_dashboard:users' %}">👥 Users</a>
+            <a href="{% url 'admin_dashboard:transactions' %}" class="active">💳 Transactions</a>
+            <a href="{% url 'admin_dashboard:deposit_options' %}">💰 Deposit Options</a>
+            <a href="{% url 'admin_dashboard:withdraw_options' %}">🏦 Withdraw Options</a>
+            <a href="{% url 'admin_dashboard:terms' %}">📜 Terms & Conditions</a>
+        </div>
+
+        <div class="transactions-table-wrapper">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Account Details</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                    <tr>
+                        <td style="font-weight:600;color:var(--gold);">#{{ tx.id }}</td>
+                        <td><strong>{{ tx.user.username }}</strong></td>
+                        <td><span class="tx-type {{ tx.transaction_type }}">{{ tx.get_transaction_type_display }}</span></td>
+                        <td>${{ tx.amount|floatformat:2 }}</td>
+                        <td>{{ tx.method_name }}</td>
+                        <td>
+                            {% if tx.account_details %}
+                                <span style="font-size:0.75rem;display:flex;align-items:center;gap:4px;">
+                                    <span>{{ tx.account_details|truncatechars:30 }}</span>
+                                    <button class="copy-btn" data-value="{{ tx.account_details }}" title="Copy details">📋</button>
+                                </span>
+                            {% else %}
+                                <span style="color:var(--gray-500);font-size:0.7rem;">—</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="status-badge {{ tx.status }}">{{ tx.status }}</span></td>
+                        <td style="font-size:0.75rem;color:var(--gray-500);">{{ tx.created_at|date:"M d, Y H:i" }}</td>
+                        <td>
+                            <form method="post" action="{% url 'admin_dashboard:transaction_action' tx.id %}" class="action-form">
+                                {% csrf_token %}
+                                {% if tx.status == 'pending' %}
+                                <button type="submit" name="action" value="approve" class="btn-approve">Approve</button>
+                                <button type="submit" name="action" value="complete" class="btn-complete">Complete</button>
+                                <button type="submit" name="action" value="reject" class="btn-reject">Reject</button>
+                                {% elif tx.status == 'approved' %}
+                                <button type="submit" name="action" value="complete" class="btn-complete">Complete</button>
+                                <button type="submit" name="action" value="reject" class="btn-reject">Reject</button>
+                                {% elif tx.status == 'completed' or tx.status == 'rejected' %}
+                                <span style="font-size:0.7rem;color:var(--gray-500);">No actions</span>
+                                {% endif %}
+                                <button type="submit" name="action" value="cancel" class="btn-cancel">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" style="text-align:center;padding:40px;color:var(--gray-400);">No transactions found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('.copy-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const text = this.dataset.value;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
+                    btn.textContent = '✅';
+                    setTimeout(function() { btn.textContent = '📋'; }, 2000);
+                });
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                btn.textContent = '✅';
+                setTimeout(function() { btn.textContent = '📋'; }, 2000);
+            }
+        });
+    });
+</script>
+{% endblock %}

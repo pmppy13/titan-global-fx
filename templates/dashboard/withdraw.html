@@ -1,0 +1,455 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Titan Global FX | Withdraw{% endblock %}
+
+{% block extra_css %}
+<style>
+    .withdraw-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+        background: var(--navy-light);
+        min-height: 100vh;
+    }
+    .withdraw-wrapper {
+        max-width: 640px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius-lg);
+        padding: 40px 44px;
+    }
+    .withdraw-wrapper h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    .withdraw-wrapper h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .withdraw-wrapper .subtitle {
+        color: var(--gray-400);
+        margin-bottom: 28px;
+    }
+    .balance-display {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .balance-display .label { color: var(--gray-400); font-size: 0.85rem; }
+    .balance-display .amount { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+
+    .withdraw-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .withdraw-option-btn {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        padding: 16px 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition);
+        color: var(--gray-300);
+        font-size: 0.85rem;
+    }
+    .withdraw-option-btn:hover {
+        border-color: rgba(212, 175, 55, 0.15);
+        background: rgba(255, 255, 255, 0.04);
+    }
+    .withdraw-option-btn.active {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.06);
+        color: var(--white);
+    }
+    .withdraw-option-btn .icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+    .withdraw-option-btn .limits { font-size: 0.7rem; color: var(--gray-500); display: block; margin-top: 4px; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--gray-300);
+        margin-bottom: 4px;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--white);
+        font-size: 0.95rem;
+        transition: var(--transition);
+        outline: none;
+        font-family: inherit;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        border-color: rgba(212, 175, 55, 0.3);
+        background: rgba(255, 255, 255, 0.06);
+    }
+    .form-group select option {
+        background: var(--navy);
+        color: var(--white);
+    }
+
+    .form-submit {
+        width: 100%;
+        justify-content: center;
+        padding: 16px;
+        font-size: 1rem;
+        margin-top: 8px;
+    }
+    .form-submit:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 16px;
+        color: var(--gray-400);
+        transition: var(--transition);
+    }
+    .back-link:hover { color: var(--gold); }
+
+    .help-text {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-top: 4px;
+    }
+
+    /* ===== DISABLED STATE WITH UNLOCK FORM ===== */
+    .disabled-container {
+        text-align: center;
+        padding: 40px;
+        max-width: 640px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius-lg);
+    }
+    .disabled-container .lock-icon {
+        font-size: 4rem;
+        display: block;
+        margin-bottom: 20px;
+    }
+    .disabled-container h1 {
+        color: var(--red);
+        margin-bottom: 12px;
+        font-size: 2rem;
+    }
+    .disabled-container .reason {
+        color: var(--gray-400);
+        font-size: 1rem;
+        max-width: 500px;
+        margin: 0 auto 20px;
+        line-height: 1.8;
+    }
+    .disabled-container .divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+        margin: 24px 0;
+    }
+    .disabled-container .unlock-section h3 {
+        color: var(--gold);
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+    .disabled-container .unlock-section p {
+        color: var(--gray-500);
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+    .disabled-container .unlock-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    .disabled-container .unlock-form input {
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--white);
+        font-size: 1.1rem;
+        text-align: center;
+        letter-spacing: 4px;
+        font-family: monospace;
+        outline: none;
+        transition: var(--transition);
+    }
+    .disabled-container .unlock-form input:focus {
+        border-color: rgba(212, 175, 55, 0.3);
+        background: rgba(255, 255, 255, 0.06);
+    }
+    .disabled-container .unlock-form .btn-unlock {
+        background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+        color: var(--navy);
+        border-color: var(--gold);
+        padding: 14px;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 1rem;
+    }
+    .disabled-container .unlock-form .btn-unlock:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+    }
+    .disabled-container .unlock-form .btn-unlock:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+    .disabled-container .error-message {
+        color: var(--red);
+        font-size: 0.85rem;
+        margin-top: 8px;
+        display: none;
+    }
+    .disabled-container .success-message {
+        color: var(--green);
+        font-size: 0.85rem;
+        margin-top: 8px;
+        display: none;
+    }
+    .disabled-container .back-btn {
+        margin-top: 20px;
+        display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+        .withdraw-section { padding-top: 100px; }
+        .withdraw-wrapper { padding: 24px 20px; }
+        .withdraw-options { grid-template-columns: 1fr 1fr; }
+        .withdraw-wrapper h1 { font-size: 1.6rem; }
+        .disabled-container { padding: 30px 20px; }
+        .disabled-container h1 { font-size: 1.6rem; }
+        .disabled-container .unlock-form { max-width: 100%; }
+    }
+    @media (max-width: 480px) {
+        .withdraw-options { grid-template-columns: 1fr; }
+        .balance-display { flex-direction: column; gap: 8px; text-align: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="withdraw-section">
+    <div class="container">
+
+        {% if not user.can_withdraw %}
+        <!-- ===== DISABLED - User must enter unlock code (they get from admin) ===== -->
+        <div class="disabled-container">
+            <span class="lock-icon">🔒</span>
+            <h1>Withdrawals Disabled</h1>
+            <div class="reason">{{ user.withdraw_disable_reason|default:"Your withdrawal privileges have been temporarily disabled. Please contact support." }}</div>
+
+            <div class="divider"></div>
+
+            <div class="unlock-section">
+                <h3>🔑 Enter Unlock Code</h3>
+                <p>Please contact support to get your unlock code, then enter it below to re-enable withdrawals.</p>
+
+                <form method="post" class="unlock-form" id="unlockForm">
+                    {% csrf_token %}
+                    <input type="text" 
+                           name="unlock_code" 
+                           id="unlockCode" 
+                           placeholder="Enter unlock code" 
+                           maxlength="20" 
+                           autocomplete="off" 
+                           required />
+                    <button type="submit" class="btn-unlock" id="unlockBtn">🔓 Unlock Withdrawals</button>
+                </form>
+
+                <div class="error-message" id="errorMessage">❌ Invalid unlock code. Please try again.</div>
+                <div class="success-message" id="successMessage">✅ Withdrawals re-enabled! Redirecting...</div>
+            </div>
+
+            <a href="{% url 'dashboard:index' %}" class="back-link back-btn">← Back to Dashboard</a>
+        </div>
+        {% else %}
+
+        <!-- ===== NORMAL WITHDRAW PAGE ===== -->
+        <div class="withdraw-wrapper">
+            <h1>Make a <span class="highlight">Withdrawal</span></h1>
+            <p class="subtitle">Withdraw your funds securely to your preferred payment method.</p>
+
+            <div class="balance-display">
+                <span class="label">Available Balance (USD)</span>
+                <span class="amount">${{ user_balance|floatformat:2 }}</span>
+            </div>
+
+            <div class="withdraw-options">
+                {% for option in withdraw_options %}
+                <button type="button" class="withdraw-option-btn"
+                    data-method="{{ option.method }}"
+                    data-name="{{ option.name }}"
+                    data-min="{{ option.min_amount }}"
+                    data-max="{{ option.max_amount }}">
+                    <span class="icon">
+                        {% if option.method == 'bank' %}🏦{% elif option.method == 'crypto' %}₿{% elif option.method == 'paypal' %}💳{% endif %}
+                    </span>
+                    {{ option.name }}
+                    <span class="limits">Min: ${{ option.min_amount }} | Max: ${{ option.max_amount }}</span>
+                </button>
+                {% empty %}
+                <p style="color:var(--gray-500);grid-column:1/-1;text-align:center;">No withdrawal options available.</p>
+                {% endfor %}
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="form-group">
+                    <label for="{{ form.amount.id_for_label }}">Amount (USD)</label>
+                    {{ form.amount }}
+                    {{ form.amount.errors }}
+                    <small class="help-text" id="amountHint">Min: ${{ withdraw_options.first.min_amount|default:"50" }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.method.id_for_label }}">Withdrawal Method</label>
+                    {{ form.method }}
+                    {{ form.method.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.method_name.id_for_label }}">Method Name</label>
+                    {{ form.method_name }}
+                    {{ form.method_name.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.account_details.id_for_label }}">Your Account Details</label>
+                    {{ form.account_details }}
+                    {{ form.account_details.errors }}
+                    <small class="help-text">Enter the bank account, wallet address, or PayPal email where you want to receive funds.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.notes.id_for_label }}">Additional Notes (Optional)</label>
+                    {{ form.notes }}
+                    {{ form.notes.errors }}
+                </div>
+
+                <button type="submit" class="btn btn-primary form-submit">
+                    Submit Withdrawal Request
+                </button>
+            </form>
+
+            <a href="{% url 'dashboard:index' %}" class="back-link">← Back to Dashboard</a>
+        </div>
+
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // ===== Withdraw option selection =====
+    document.querySelectorAll('.withdraw-option-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.withdraw-option-btn').forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            const method = this.dataset.method;
+            const name = this.dataset.name;
+            const min = this.dataset.min;
+            const max = this.dataset.max;
+            document.getElementById('id_method').value = method;
+            document.getElementById('id_method_name').value = name;
+            const hint = document.getElementById('amountHint');
+            if (hint) {
+                hint.textContent = `Min: $${min} | Max: $${max}`;
+            }
+        });
+    });
+
+    // ===== Unlock Form Handler =====
+    const unlockForm = document.getElementById('unlockForm');
+    const unlockInput = document.getElementById('unlockCode');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const errorMsg = document.getElementById('errorMessage');
+    const successMsg = document.getElementById('successMessage');
+
+    if (unlockForm) {
+        unlockForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const code = unlockInput.value.trim();
+            if (!code) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = '❌ Please enter an unlock code.';
+                return;
+            }
+
+            // Disable button and show loading
+            unlockBtn.disabled = true;
+            unlockBtn.textContent = '⏳ Verifying...';
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            // Send POST request
+            const formData = new FormData();
+            formData.append('unlock_code', code);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            fetch('{% url "transactions:withdraw" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    successMsg.style.display = 'block';
+                    successMsg.textContent = '✅ ' + data.message;
+                    setTimeout(() => {
+                        window.location.href = '{% url "transactions:withdraw" %}';
+                    }, 1500);
+                } else {
+                    errorMsg.style.display = 'block';
+                    errorMsg.textContent = '❌ ' + data.message;
+                    unlockBtn.disabled = false;
+                    unlockBtn.textContent = '🔓 Unlock Withdrawals';
+                    unlockInput.value = '';
+                    unlockInput.focus();
+                }
+            })
+            .catch(error => {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = '❌ An error occurred. Please try again.';
+                unlockBtn.disabled = false;
+                unlockBtn.textContent = '🔓 Unlock Withdrawals';
+            });
+        });
+
+        unlockInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                unlockForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    }
+</script>
+{% endblock %}

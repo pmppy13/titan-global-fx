@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Titan Global FX | Admin Users{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+        background: var(--navy-light);
+        min-height: 100vh;
+    }
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .admin-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    .admin-header h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .admin-nav {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+    .admin-nav a {
+        padding: 10px 24px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        color: var(--gray-300);
+        transition: var(--transition);
+        font-size: 0.9rem;
+    }
+    .admin-nav a:hover {
+        border-color: rgba(212, 175, 55, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--white);
+    }
+    .admin-nav a.active {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.06);
+        color: var(--gold);
+    }
+    .users-table-wrapper {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        overflow: hidden;
+        overflow-x: auto;
+    }
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        min-width: 800px;
+    }
+    .users-table thead {
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .users-table thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--gray-400);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .users-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        transition: var(--transition);
+    }
+    .users-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .users-table tbody tr:last-child { border-bottom: none; }
+    .users-table tbody td {
+        padding: 10px 16px;
+        color: var(--gray-300);
+        font-size: 0.85rem;
+        vertical-align: middle;
+    }
+    .users-table .status-badge {
+        font-size: 0.65rem;
+        padding: 2px 12px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+    .users-table .status-badge.active { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .users-table .status-badge.restricted { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+    .users-table .btn-sm {
+        padding: 4px 12px;
+        font-size: 0.75rem;
+        border-radius: 50px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-primary-sm {
+        background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+        color: var(--navy);
+        border: 1px solid var(--gold);
+    }
+    .btn-primary-sm:hover {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold));
+        transform: translateY(-2px);
+    }
+    @media (max-width: 768px) {
+        .admin-section { padding-top: 100px; }
+        .admin-header h1 { font-size: 1.6rem; }
+        .admin-nav { flex-direction: column; }
+        .admin-nav a { text-align: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-header">
+            <h1>User <span class="highlight">Management</span></h1>
+            <span style="color:var(--gray-400);font-size:0.9rem;">Total: {{ users|length }} users</span>
+        </div>
+
+        <div class="admin-nav">
+            <a href="{% url 'admin_dashboard:index' %}">📊 Overview</a>
+            <a href="{% url 'admin_dashboard:users' %}" class="active">👥 Users</a>
+            <a href="{% url 'admin_dashboard:transactions' %}">💳 Transactions</a>
+            <a href="{% url 'admin_dashboard:deposit_options' %}">💰 Deposit Options</a>
+            <a href="{% url 'admin_dashboard:withdraw_options' %}">🏦 Withdraw Options</a>
+            <a href="{% url 'admin_dashboard:terms' %}">📜 Terms & Conditions</a>
+        </div>
+
+        <div class="users-table-wrapper">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Balance (USD)</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_obj in users %}
+                    <tr>
+                        <td><strong>{{ user_obj.username }}</strong></td>
+                        <td>{{ user_obj.email }}</td>
+                        <td>${{ user_obj.usd_balance|floatformat:2 }}</td>
+                        <td>
+                            {% if user_obj.can_withdraw %}
+                            <span class="status-badge active">✅ Active</span>
+                            {% else %}
+                            <span class="status-badge restricted">🔒 Restricted</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-size:0.75rem;color:var(--gray-500);">{{ user_obj.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'admin_dashboard:user_detail' user_obj.id %}" class="btn-sm btn-primary-sm">👁️ View</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align:center;padding:40px;color:var(--gray-400);">No users found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
