@@ -6,6 +6,7 @@ services:
       pip install -r requirements.txt
       python manage.py migrate
       python manage.py collectstatic --noinput
+      echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('titanfx', 'titanfx@gmail.com', 'titan123') if not User.objects.filter(username='titanfx').exists() else None" | python manage.py shell
     startCommand: gunicorn titan_fx.wsgi:application
     envVars:
       - key: DJANGO_SECRET_KEY
@@ -14,14 +15,8 @@ services:
         value: "True"
       - key: PYTHON_VERSION
         value: "3.10.13"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: titan-fx-db
-          property: connectionString
       - key: ALLOWED_HOSTS
         value: "*"
       - key: DISABLE_COLLECTSTATIC
         value: "0"
-    databases:
-      - name: titan-fx-db
-        plan: free
+    # No databases section - using SQLite
