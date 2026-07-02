@@ -16,7 +16,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap5',
-    'whitenoise.runserver_nostatic',  # ← ADD THIS
+    'whitenoise.runserver_nostatic',
     'accounts',
     'core',
     'dashboard',
@@ -26,7 +26,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← ADD THIS
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,9 +75,6 @@ TIME_ZONE = 'Africa/Lagos'
 USE_I18N = True
 USE_TZ = True
 
-# ============================================================
-# STATIC & MEDIA FILES - WITH WHITENOISE
-# ============================================================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -85,12 +82,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ===== WHITENOISE CONFIGURATION =====
-# Use Whitenoise to serve static files in production
+# ===== WHITENOISE =====
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-
-# ===== COMPRESSION (Optional but recommended) =====
-WHITENOISE_MAX_AGE = 31536000  # 1 year cache for browsers
+WHITENOISE_MAX_AGE = 31536000
 WHITENOISE_COMPRESS = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
