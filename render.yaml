@@ -4,9 +4,8 @@ services:
     env: python
     buildCommand: |
       pip install -r requirements.txt
-      python manage.py collectstatic --noinput
       python manage.py migrate
-      echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('titanfx', 'titanfx@gmail.com', 'titan123') if not User.objects.filter(username='titanfx').exists() else None" | python manage.py shell
+      python manage.py collectstatic --noinput
     startCommand: gunicorn titan_fx.wsgi:application
     envVars:
       - key: DJANGO_SECRET_KEY
@@ -21,6 +20,8 @@ services:
           property: connectionString
       - key: ALLOWED_HOSTS
         value: "*"
+      - key: DISABLE_COLLECTSTATIC
+        value: "0"
     databases:
       - name: titan-fx-db
         plan: free
