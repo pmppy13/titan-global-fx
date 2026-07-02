@@ -2,25 +2,21 @@ services:
   - type: web
     name: titan-global-fx
     env: python
-    buildCommand: |
-      pip install -r requirements.txt
-      python manage.py collectstatic --noinput
-      python manage.py migrate
-      echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('titanfx', 'titanfx@gmail.com', 'titan123') if not User.objects.filter(username='titanfx').exists() else None" | python manage.py shell
-    startCommand: gunicorn titan_fx.wsgi:application
-    envVars:
-      - key: DJANGO_SECRET_KEY
-        generateValue: true
-      - key: DEBUG
-        value: "True"
-      - key: PYTHON_VERSION
-        value: "3.10.13"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: titan-fx-db
-          property: connectionString
-      - key: ALLOWED_HOSTS
-        value: "*"
-    databases:
-      - name: titan-fx-db
-        plan: free
+   buildCommand: |
+  apt-get update && apt-get install -y \
+    gcc \
+    python3-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libpng-dev \
+    libwebp-dev \
+    libtiff-dev \
+    libfreetype6-dev \
+    liblcms2-dev \
+    libopenjp2-7-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+  && pip install -r requirements.txt \
+  && python manage.py collectstatic --noinput \
+  && python manage.py migrate \
+  && echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('titanfx', 'titanfx@gmail.com', 'titan123') if not User.objects.filter(username='titanfx').exists() else None" | python manage.py shell
