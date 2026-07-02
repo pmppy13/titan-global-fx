@@ -1,7 +1,5 @@
 import os
-import dj_database_url
 from pathlib import Path
-from decouple import config
 
 # ============================================================
 # BASE DIRECTORY
@@ -11,17 +9,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ============================================================
 # SECURITY - Using Environment Variables
 # ============================================================
-SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-change-this-in-production')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-this-in-production')
 
 # ============================================================
 # DEBUG - True for demo, False for production
 # ============================================================
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # ============================================================
 # ALLOWED HOSTS - Allow all for demo
 # ============================================================
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # ============================================================
 # APPLICATION DEFINITION
@@ -76,14 +74,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'titan_fx.wsgi.application'
 
 # ============================================================
-# DATABASE - PostgreSQL on Render
+# DATABASE - SQLite (Works on Render Free Tier)
 # ============================================================
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # ============================================================
@@ -141,16 +138,17 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # ============================================================
-# RENDER-SPECIFIC: Allow admin access from any IP (Demo Only)
+# RENDER-SPECIFIC: Allow admin access (Demo Only)
 # ============================================================
 INTERNAL_IPS = ['*']
 
 # ============================================================
 # SECURITY - Relaxed for demo on Render free tier
 # ============================================================
-SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
-CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
-SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
+# For production, set these to True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
 
 # ============================================================
 # LOGGING (Optional - for debugging on Render)
