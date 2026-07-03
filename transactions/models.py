@@ -26,10 +26,9 @@ class Transaction(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     
     reference = models.CharField(max_length=100, blank=True)
-    # proof_image = models.ImageField(upload_to='transaction_proofs/', blank=True, null=True)  # REMOVED
+    proof_image = models.ImageField(upload_to='transaction_proofs/', blank=True, null=True)  # ADDED BACK
     notes = models.TextField(blank=True)
     
-    # User's account details for withdrawals
     account_details = models.TextField(blank=True, help_text="User's bank account, wallet address, or PayPal email")
     
     created_at = models.DateTimeField(auto_now_add=True)
