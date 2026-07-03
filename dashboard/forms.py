@@ -1,6 +1,6 @@
 from django import forms
-from transactions.models import Transaction  # Changed from apps.transactions.models
-from core.models import DepositOption, WithdrawOption  # Changed from apps.core.models
+from transactions.models import Transaction
+from core.models import DepositOption, WithdrawOption
 
 class DepositForm(forms.ModelForm):
     method = forms.ChoiceField(choices=[], required=True)
@@ -8,10 +8,11 @@ class DepositForm(forms.ModelForm):
     
     class Meta:
         model = Transaction
-        fields = ['amount', 'method', 'method_name', 'reference', 'notes']
+        fields = ['amount', 'method', 'method_name', 'reference', 'proof_image', 'notes']  # ADDED proof_image
         widgets = {
             'amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '1'}),
             'reference': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Transaction reference number'}),
+            'proof_image': forms.FileInput(attrs={'class': 'form-control'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Additional notes...'}),
         }
     
