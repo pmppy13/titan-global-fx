@@ -13,7 +13,7 @@ def deposit_view(request):
     deposit_options = DepositOption.objects.filter(is_active=True)
     
     if request.method == 'POST':
-        form = DepositForm(request.POST)  # Removed request.FILES
+        form = DepositForm(request.POST, request.FILES)  # ADDED request.FILES
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.user = request.user
