@@ -68,8 +68,6 @@
         flex-wrap: wrap;
     }
     .dashboard-actions .btn { padding: 12px 28px; }
-    
-    /* Hide the withdraw button completely when disabled */
     .hidden {
         display: none !important;
     }
@@ -120,7 +118,6 @@
     .transaction-item .tx-status.rejected { background: rgba(255, 107, 107, 0.12); color: var(--red); }
     .transaction-item .tx-status.approved { background: rgba(52, 152, 219, 0.12); color: #3498db; }
 
-    /* ===== WITHDRAWAL WARNING ===== */
     .withdraw-warning {
         background: rgba(255, 107, 107, 0.08);
         border: 1px solid rgba(255, 107, 107, 0.1);
@@ -134,7 +131,6 @@
     .withdraw-warning .icon { font-size: 1.5rem; }
     .withdraw-warning .text { color: var(--gray-300); font-size: 0.9rem; }
     .withdraw-warning .text strong { color: var(--red); }
-    /* User does NOT see the unlock code - only admin sees it */
     .withdraw-warning .text .unlock-note {
         font-size: 0.8rem;
         color: var(--gray-500);
@@ -200,16 +196,11 @@
         <!-- ===== DASHBOARD ACTIONS ===== -->
         <div class="dashboard-actions">
             <a href="{% url 'transactions:deposit' %}" class="btn btn-primary">💰 Deposit</a>
-            
-            <!-- Withdraw Button - COMPLETELY HIDDEN when disabled -->
-            <a href="{% url 'transactions:withdraw' %}" class="btn btn-secondary {% if not user.can_withdraw %}hidden{% endif %}">
-                🏦 Withdraw
-            </a>
-            
+            <a href="{% url 'transactions:withdraw' %}" class="btn btn-secondary {% if not user.can_withdraw %}hidden{% endif %}">🏦 Withdraw</a>
             <a href="{% url 'transactions:list' %}" class="btn btn-secondary">📊 Transaction History</a>
         </div>
 
-        <!-- ===== RECENT TRANSACTIONS ===== -->
+        <!-- ===== RECENT TRANSACTIONS & ACCOUNT SUMMARY ===== -->
         <div class="dashboard-grid">
             <div class="dashboard-card">
                 <h3>Recent <span class="highlight">Transactions</span></h3>
@@ -233,6 +224,7 @@
                 {% endif %}
             </div>
 
+            <!-- ===== ACCOUNT SUMMARY WITH ACTIVITIES ===== -->
             <div class="dashboard-card">
                 <h3>Account <span class="highlight">Summary</span></h3>
                 <div style="display:flex;flex-direction:column;gap:16px;">
@@ -259,15 +251,4 @@
         </div>
     </div>
 </section>
-<!-- ===== WITHDRAWAL WARNING ===== -->
-{% if not user.can_withdraw %}
-<div class="withdraw-warning" style="background: rgba(255, 107, 107, 0.08); border: 1px solid rgba(255, 107, 107, 0.1); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-    <span class="icon" style="font-size: 1.5rem;">🔒</span>
-    <div class="text" style="color: var(--gray-300); font-size: 0.9rem;">
-        <strong style="color: var(--red);">Withdrawals Disabled:</strong> 
-        {{ user.withdraw_disable_reason|default:"Your withdrawal privileges have been temporarily disabled." }}
-        <br /><span style="font-size:0.8rem;color:var(--gray-500);">📋 Please contact support for assistance.</span>
-    </div>
-</div>
-{% endif %}
 {% endblock %}
