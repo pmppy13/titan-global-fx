@@ -631,26 +631,79 @@
         </div>
     </section>
 
-    <!-- ===== CERTIFICATES ===== -->
-    <section class="section certificates-section" id="certificates">
-        <div class="container">
-            <div class="text-center" style="margin-bottom:48px;">
-                <h2 class="section-title">Trading <span class="highlight">Certifications</span></h2>
-                <p class="section-subtitle mx-auto">Industry-recognized credentials that validate our expertise and commitment to excellence.</p>
+    <!-- ===== CERTIFICATES SECTION ===== -->
+<section class="section certificates-section" id="certificates">
+    <div class="container">
+        <div class="text-center" style="margin-bottom:48px;">
+            <h2 class="section-title">Trading <span class="highlight">Certifications</span></h2>
+            <p class="section-subtitle mx-auto">Industry-recognized credentials that validate our expertise and commitment to excellence.</p>
+        </div>
+
+        <!-- Featured Certificate Image -->
+        <div style="text-align:center;margin-bottom:48px;">
+            <img src="{% static 'img/companycert.jpeg' %}" alt="Company Certificate" style="max-width:400px;width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+        </div>
+
+        <div class="grid-4 cert-grid">
+            <div class="cert-card">
+                <span class="cert-icon">📜</span>
+                <div class="cert-name">CFA Charterholder</div>
+                <div class="cert-issuer">CFA Institute</div>
+                <div class="cert-desc">Rigorous curriculum covering investment management, financial analysis, and ethical standards.</div>
+                <span class="cert-badge">● Active</span>
             </div>
-            <div class="grid-4 cert-grid">
-                <div class="cert-card"><span class="cert-icon">📜</span><div class="cert-name">CFA Charterholder</div><div class="cert-issuer">CFA Institute</div><div class="cert-desc">Rigorous curriculum covering investment management, financial analysis, and ethical standards.</div><span class="cert-badge">● Active</span></div>
-                <div class="cert-card"><span class="cert-icon">⚖️</span><div class="cert-name">Series 7 &amp; 63</div><div class="cert-issuer">FINRA</div><div class="cert-desc">General Securities Representative and Uniform Securities Agent licenses for US markets.</div><span class="cert-badge">● Active</span></div>
-                <div class="cert-card"><span class="cert-icon">📊</span><div class="cert-name">CMT Charter</div><div class="cert-issuer">CMT Association</div><div class="cert-desc">Chartered Market Technician — advanced mastery of technical analysis and market behavior.</div><span class="cert-badge">● Active</span></div>
-                <div class="cert-card"><span class="cert-icon">🛡️</span><div class="cert-name">CIPM</div><div class="cert-issuer">CFA Institute</div><div class="cert-desc">Certificate in Investment Performance Measurement — global standard for performance evaluation.</div><span class="cert-badge">● Active</span></div>
-                <div class="cert-card"><span class="cert-icon">🌐</span><div class="cert-name">FRM</div><div class="cert-issuer">GARP</div><div class="cert-desc">Financial Risk Manager — expertise in risk management, derivatives, and portfolio construction.</div><span class="cert-badge">● Active</span></div>
-                <div class="cert-card"><span class="cert-icon">💹</span><div class="cert-name">CAIA</div><div class="cert-issuer">CAIA Association</div><div class="cert-desc">Chartered Alternative Investment Analyst — specialization in alternative investments and hedge funds.</div><span class="cert-badge">● Active</span></div>
-                <div class="cert-card"><span class="cert-icon">🔐</span><div class="cert-name">CISSP</div><div class="cert-issuer">ISC²</div><div class="cert-desc">Certified Information Systems Security Professional — enterprise-grade cybersecurity certification.</div><span class="cert-badge">● Active</span></div>
-                <div class="cert-card"><span class="cert-icon">📘</span><div class="cert-name">CCO</div><div class="cert-issuer">NFA</div><div class="cert-desc">Chief Compliance Officer certification — ensuring regulatory adherence and best execution practices.</div><span class="cert-badge">● Active</span></div>
+            <div class="cert-card">
+                <span class="cert-icon">⚖️</span>
+                <div class="cert-name">Series 7 &amp; 63</div>
+                <div class="cert-issuer">FINRA</div>
+                <div class="cert-desc">General Securities Representative and Uniform Securities Agent licenses for US markets.</div>
+                <span class="cert-badge">● Active</span>
+            </div>
+            <div class="cert-card">
+                <span class="cert-icon">📊</span>
+                <div class="cert-name">CMT Charter</div>
+                <div class="cert-issuer">CMT Association</div>
+                <div class="cert-desc">Chartered Market Technician — advanced mastery of technical analysis and market behavior.</div>
+                <span class="cert-badge">● Active</span>
+            </div>
+            <div class="cert-card">
+                <span class="cert-icon">🛡️</span>
+                <div class="cert-name">CIPM</div>
+                <div class="cert-issuer">CFA Institute</div>
+                <div class="cert-desc">Certificate in Investment Performance Measurement — global standard for performance evaluation.</div>
+                <span class="cert-badge">● Active</span>
+            </div>
+            <div class="cert-card">
+                <span class="cert-icon">🌐</span>
+                <div class="cert-name">FRM</div>
+                <div class="cert-issuer">GARP</div>
+                <div class="cert-desc">Financial Risk Manager — expertise in risk management, derivatives, and portfolio construction.</div>
+                <span class="cert-badge">● Active</span>
+            </div>
+            <div class="cert-card">
+                <span class="cert-icon">💹</span>
+                <div class="cert-name">CAIA</div>
+                <div class="cert-issuer">CAIA Association</div>
+                <div class="cert-desc">Chartered Alternative Investment Analyst — specialization in alternative investments and hedge funds.</div>
+                <span class="cert-badge">● Active</span>
+            </div>
+            <div class="cert-card">
+                <span class="cert-icon">🔐</span>
+                <div class="cert-name">CISSP</div>
+                <div class="cert-issuer">ISC²</div>
+                <div class="cert-desc">Certified Information Systems Security Professional — enterprise-grade cybersecurity certification.</div>
+                <span class="cert-badge">● Active</span>
+            </div>
+            <div class="cert-card">
+                <span class="cert-icon">📘</span>
+                <div class="cert-name">CCO</div>
+                <div class="cert-issuer">NFA</div>
+                <div class="cert-desc">Chief Compliance Officer certification — ensuring regulatory adherence and best execution practices.</div>
+                <span class="cert-badge">● Active</span>
             </div>
         </div>
-    </section>
-
+    </div>
+</section>
     <!-- ===== FAQ ===== -->
     <section class="section faq-section" id="faq">
         <div class="container">
