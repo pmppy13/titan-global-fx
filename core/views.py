@@ -1,19 +1,16 @@
-from django.views.generic import TemplateView
+from django.shortcuts import render
 
-class HomeView(TemplateView):
-    template_name = 'index.html'
+def home_view(request):
+    return render(request, 'index.html')
 
-class AboutView(TemplateView):
-    template_name = 'about.html'
+def about_view(request):
+    return render(request, 'about.html')
 
-class ContactView(TemplateView):
-    template_name = 'contact.html'
+def contact_view(request):
+    return render(request, 'contact.html')
 
-class PlatformsView(TemplateView):
-    template_name = 'platforms.html'
+def login_view(request):
+    return render(request, 'login.html')
 
-class MarketsView(TemplateView):
-    template_name = 'markets.html'
-
-class PlansView(TemplateView):
-    template_name = 'plans.html'
+def signup_view(request):
+    return render(request, 'signup.html')
