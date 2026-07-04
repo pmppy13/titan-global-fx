@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard | Transaction #{{ transaction.id }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-section {
+        padding-top: 120px;
+        padding-bottom: 60px;
+        background: var(--navy-light);
+        min-height: 100vh;
+    }
+    .detail-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius-lg);
+        padding: 40px;
+    }
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .detail-header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+    .detail-header h1 .highlight {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .detail-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+    }
+    .detail-item .label {
+        font-size: 0.7rem;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .detail-item .value {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    .detail-item .value .status-badge {
+        padding: 2px 12px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .detail-item .value .status-badge.pending { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
+    .detail-item .value .status-badge.approved { background: rgba(52, 152, 219, 0.12); color: #3498db; }
+    .detail-item .value .status-badge.completed { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .detail-item .value .status-badge.rejected { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+
+    .proof-section {
+        margin-top: 24px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        text-align: center;
+    }
+    .proof-section img {
+        max-width: 100%;
+        max-height: 500px;
+        border-radius: var(--radius);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .proof-section .no-proof {
+        color: var(--gray-500);
+        padding: 40px 0;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: var(--gray-400);
+        transition: var(--transition);
+    }
+    .back-link:hover {
+        color: var(--gold);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+        .admin-section { padding-top: 100px; }
+        .detail-wrapper { padding: 20px; }
+        .detail-grid { grid-template-columns: 1fr; }
+        .detail-header { flex-direction: column; align-items: flex-start; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="detail-wrapper">
+            <div class="detail-header">
+                <h1>Transaction <span class="highlight">#{{ transaction.id }}</span></h1>
+                <span class="status-badge {{ transaction.status }}">{{ transaction.status|upper }}</span>
+            </div>
+
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="label">User</div>
+                    <div class="value">
+                        <strong>{{ transaction.user.username }}</strong>
+                        <br /><span style="font-weight:400;color:var(--gray-400);">{{ transaction.user.email }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Type</div>
+                    <div class="value" style="color:{% if transaction.transaction_type == 'deposit' %}var(--green){% else %}var(--red){% endif %};">
+                        {{ transaction.get_transaction_type_display|upper }}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Amount</div>
+                    <div class="value" style="color:var(--gold);">
+                        ${{ transaction.amount|floatformat:2 }} {{ transaction.currency }}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Method</div>
+                    <div class="value">
+                        {{ transaction.method_name }}
+                        <br /><span style="font-weight:400;color:var(--gray-400);">{{ transaction.method }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Reference</div>
+                    <div class="value" style="font-weight:400;font-family:monospace;">
+                        {{ transaction.reference|default:'—' }}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Date</div>
+                    <div class="value" style="font-weight:400;">
+                        {{ transaction.created_at|date:"F d, Y H:i" }}
+                    </div>
+                </div>
+                {% if transaction.notes %}
+                <div class="detail-item" style="grid-column:1/-1;">
+                    <div class="label">Notes</div>
+                    <div class="value" style="font-weight:400;color:var(--gray-400);">
+                        {{ transaction.notes }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Proof of Payment -->
+            <div class="proof-section">
+                <div class="label" style="margin-bottom:12px;">Proof of Payment</div>
+                {% if transaction.proof_image %}
+                    <a href="{{ transaction.proof_image.url }}" target="_blank">
+                        <img src="{{ transaction.proof_image.url }}" alt="Proof of Payment" />
+                    </a>
+                    <br /><br />
+                    <a href="{{ transaction.proof_image.url }}" target="_blank" class="btn btn-primary btn-sm">
+                        📥 Download Proof
+                    </a>
+                {% else %}
+                    <div class="no-proof">No proof uploaded</div>
+                {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="action-buttons">
+                {% if transaction.status == 'pending' %}
+                    <form method="post" action="{% url 'admin_dashboard:transaction_action' transaction.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="approve">
+                        <button type="submit" class="btn btn-primary">✅ Approve</button>
+                    </form>
+                    <form method="post" action="{% url 'admin_dashboard:transaction_action' transaction.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="reject">
+                        <button type="submit" class="btn btn-secondary" style="border-color:var(--red);color:var(--red);">❌ Reject</button>
+                    </form>
+                {% endif %}
+                {% if transaction.status == 'approved' %}
+                    <form method="post" action="{% url 'admin_dashboard:transaction_action' transaction.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="complete">
+                        <button type="submit" class="btn btn-primary">✅ Complete</button>
+                    </form>
+                    <form method="post" action="{% url 'admin_dashboard:transaction_action' transaction.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="reject">
+                        <button type="submit" class="btn btn-secondary" style="border-color:var(--red);color:var(--red);">❌ Reject</button>
+                    </form>
+                {% endif %}
+                {% if transaction.status == 'pending' or transaction.status == 'approved' %}
+                    <form method="post" action="{% url 'admin_dashboard:transaction_action' transaction.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="cancel">
+                        <button type="submit" class="btn btn-secondary">🗑️ Cancel</button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <a href="{% url 'admin_dashboard:transactions' %}" class="back-link">← Back to Transactions</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
