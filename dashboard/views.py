@@ -23,25 +23,23 @@ def dashboard_index(request):
         status='completed'
     ).aggregate(total=Sum('amount'))['total'] or 0
     
-    # Trading stats (can be stored in User model or separate TradingStats model)
-    # For now using defaults that admin can override via admin panel
-    
+    # Get trading stats from user model (admin controlled)
     context = {
         'user': user,
         'recent_transactions': recent_transactions,
         'total_deposits': total_deposits,
         'total_withdrawals': total_withdrawals,
-        'total_pnl': getattr(user, 'total_pnl', 2450),
-        'win_rate': getattr(user, 'win_rate', 68),
-        'total_trades': getattr(user, 'total_trades', 142),
-        'roi': getattr(user, 'roi', 18.5),
-        'trade_progress': getattr(user, 'trade_progress', 68),
-        'signal_strength': getattr(user, 'signal_strength', 82),
-        'signal_direction': getattr(user, 'signal_direction', '📈 Bullish'),
-        'signal_direction_class': getattr(user, 'signal_direction_class', 'bullish'),
-        'signal_risk': getattr(user, 'signal_risk', '🟡 Medium'),
-        'signal_timeframe': getattr(user, 'signal_timeframe', '4H'),
-        'signal_active_bars': getattr(user, 'signal_active_bars', 5),
+        'total_pnl': user.total_pnl,
+        'win_rate': user.win_rate,
+        'total_trades': user.total_trades,
+        'roi': user.roi,
+        'trade_progress': user.trade_progress,
+        'signal_strength': user.signal_strength,
+        'signal_direction': user.signal_direction,
+        'signal_direction_class': user.signal_direction_class,
+        'signal_risk': user.signal_risk,
+        'signal_timeframe': user.signal_timeframe,
+        'signal_active_bars': user.signal_active_bars,
     }
     
     return render(request, 'dashboard/index.html', context)
