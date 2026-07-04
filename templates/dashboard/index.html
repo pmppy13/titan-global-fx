@@ -12,7 +12,7 @@
         min-height: 100vh;
     }
     .dashboard-header {
-        margin-bottom: 32px;
+        margin-bottom: 24px;
     }
     .dashboard-header h1 {
         font-size: 2rem;
@@ -28,6 +28,246 @@
         color: var(--gray-400);
     }
 
+    /* ===== PROGRESS ROW ===== */
+    .progress-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .progress-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 24px;
+        transition: var(--transition);
+    }
+    .progress-card:hover {
+        border-color: rgba(212, 175, 55, 0.15);
+    }
+    .progress-card .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+    .progress-card .card-header h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    .progress-card .card-header h3 .highlight { color: var(--gold); }
+    .progress-card .card-header .badge {
+        font-size: 0.7rem;
+        padding: 4px 14px;
+        border-radius: 50px;
+        font-weight: 600;
+        background: rgba(212, 175, 55, 0.08);
+        color: var(--gold);
+        border: 1px solid rgba(212, 175, 55, 0.04);
+    }
+    .progress-card .card-header .badge.active {
+        background: rgba(0, 200, 151, 0.08);
+        color: var(--green);
+        border-color: rgba(0, 200, 151, 0.08);
+        animation: pulseBadge 2s ease-in-out infinite;
+    }
+    @keyframes pulseBadge {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .trade-progress-bar {
+        margin: 8px 0 12px;
+    }
+    .trade-progress-bar .progress-track {
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50px;
+        overflow: hidden;
+        position: relative;
+    }
+    .trade-progress-bar .progress-track .progress-fill {
+        height: 100%;
+        border-radius: 50px;
+        background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+        width: 0%;
+        transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+    }
+    .trade-progress-bar .progress-track .progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        animation: shimmer 2s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .trade-progress-bar .progress-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: var(--gray-400);
+    }
+    .trade-progress-bar .progress-stats .current {
+        color: var(--gold);
+        font-weight: 600;
+    }
+
+    .trade-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .trade-stats-grid .ts-item {
+        text-align: center;
+    }
+    .trade-stats-grid .ts-item .ts-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--white);
+    }
+    .trade-stats-grid .ts-item .ts-value.green { color: var(--green); }
+    .trade-stats-grid .ts-item .ts-value.red { color: var(--red); }
+    .trade-stats-grid .ts-item .ts-value.gold { color: var(--gold); }
+    .trade-stats-grid .ts-item .ts-label {
+        font-size: 0.6rem;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    /* ===== SIGNAL CARD ===== */
+    .signal-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 24px;
+        transition: var(--transition);
+    }
+    .signal-card:hover {
+        border-color: rgba(212, 175, 55, 0.15);
+    }
+    .signal-card .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+    .signal-card .card-header h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    .signal-card .card-header h3 .highlight { color: var(--gold); }
+    .signal-card .card-header .signal-value {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--gold);
+    }
+
+    .signal-meter {
+        display: flex;
+        gap: 6px;
+        height: 40px;
+        align-items: flex-end;
+        margin: 8px 0 12px;
+    }
+    .signal-meter .bar {
+        flex: 1;
+        border-radius: 4px 4px 0 0;
+        background: rgba(255, 255, 255, 0.06);
+        transition: height 0.8s ease, background 0.8s ease;
+        height: 20%;
+        min-height: 8px;
+        position: relative;
+    }
+    .signal-meter .bar.active {
+        background: linear-gradient(180deg, var(--gold-light), var(--gold-dark));
+    }
+    .signal-meter .bar.active.strong {
+        background: linear-gradient(180deg, var(--green), #00a67a);
+    }
+    .signal-meter .bar.active.moderate {
+        background: linear-gradient(180deg, var(--orange), #d68910);
+    }
+    .signal-meter .bar.active.weak {
+        background: linear-gradient(180deg, var(--red), #c0392b);
+    }
+    .signal-meter .bar:nth-child(1) { height: 30%; }
+    .signal-meter .bar:nth-child(2) { height: 45%; }
+    .signal-meter .bar:nth-child(3) { height: 60%; }
+    .signal-meter .bar:nth-child(4) { height: 75%; }
+    .signal-meter .bar:nth-child(5) { height: 85%; }
+    .signal-meter .bar:nth-child(6) { height: 95%; }
+    .signal-meter .bar:nth-child(7) { height: 90%; }
+    .signal-meter .bar:nth-child(8) { height: 70%; }
+    .signal-meter .bar:nth-child(9) { height: 50%; }
+    .signal-meter .bar:nth-child(10) { height: 35%; }
+
+    .signal-details {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .signal-details .sd-item {
+        text-align: center;
+        flex: 1;
+        min-width: 60px;
+    }
+    .signal-details .sd-item .sd-label {
+        font-size: 0.6rem;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .signal-details .sd-item .sd-value {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--white);
+    }
+    .signal-details .sd-item .sd-value.bullish { color: var(--green); }
+    .signal-details .sd-item .sd-value.bearish { color: var(--red); }
+    .signal-details .sd-item .sd-value.neutral { color: var(--gold); }
+
+    .signal-strength-label {
+        text-align: center;
+        margin-top: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 6px 16px;
+        border-radius: 50px;
+        display: inline-block;
+        width: 100%;
+    }
+    .signal-strength-label.strong {
+        color: var(--green);
+        background: rgba(0, 200, 151, 0.08);
+    }
+    .signal-strength-label.moderate {
+        color: var(--orange);
+        background: rgba(243, 156, 18, 0.08);
+    }
+    .signal-strength-label.weak {
+        color: var(--red);
+        background: rgba(255, 107, 107, 0.08);
+    }
+
+    /* ===== BALANCES ===== */
     .balance-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -58,9 +298,10 @@
     }
     .balance-card .balance-amount.gold { color: var(--gold); }
     .balance-card .balance-amount.green { color: var(--green); }
-    .balance-card .balance-amount.blue { color: #3498db; }
-    .balance-card .balance-amount.purple { color: #9b59b6; }
+    .balance-card .balance-amount.blue { color: var(--blue); }
+    .balance-card .balance-amount.purple { color: var(--purple); }
 
+    /* ===== ACTIONS ===== */
     .dashboard-actions {
         display: flex;
         gap: 16px;
@@ -68,10 +309,27 @@
         flex-wrap: wrap;
     }
     .dashboard-actions .btn { padding: 12px 28px; }
-    .hidden {
-        display: none !important;
+
+    /* ===== WITHDRAWAL WARNING ===== */
+    .withdraw-warning {
+        background: rgba(255, 107, 107, 0.08);
+        border: 1px solid rgba(255, 107, 107, 0.1);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .withdraw-warning .icon { font-size: 1.5rem; }
+    .withdraw-warning .text { color: var(--gray-300); font-size: 0.9rem; }
+    .withdraw-warning .text strong { color: var(--red); }
+    .withdraw-warning .text .unlock-note {
+        font-size: 0.8rem;
+        color: var(--gray-500);
     }
 
+    /* ===== TRANSACTIONS ===== */
     .dashboard-grid {
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -116,29 +374,14 @@
     .transaction-item .tx-status.pending { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
     .transaction-item .tx-status.completed { background: rgba(0, 200, 151, 0.12); color: var(--green); }
     .transaction-item .tx-status.rejected { background: rgba(255, 107, 107, 0.12); color: var(--red); }
-    .transaction-item .tx-status.approved { background: rgba(52, 152, 219, 0.12); color: #3498db; }
+    .transaction-item .tx-status.approved { background: rgba(52, 152, 219, 0.12); color: var(--blue); }
 
-    .withdraw-warning {
-        background: rgba(255, 107, 107, 0.08);
-        border: 1px solid rgba(255, 107, 107, 0.1);
-        border-radius: var(--radius);
-        padding: 16px 20px;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .withdraw-warning .icon { font-size: 1.5rem; }
-    .withdraw-warning .text { color: var(--gray-300); font-size: 0.9rem; }
-    .withdraw-warning .text strong { color: var(--red); }
-    .withdraw-warning .text .unlock-note {
-        font-size: 0.8rem;
-        color: var(--gray-500);
-    }
-
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
         .balance-grid { grid-template-columns: repeat(2, 1fr); }
         .dashboard-grid { grid-template-columns: 1fr; }
+        .progress-row { grid-template-columns: 1fr; }
+        .trade-stats-grid { grid-template-columns: repeat(4, 1fr); }
     }
     @media (max-width: 768px) {
         .dashboard-section { padding-top: 100px; }
@@ -147,108 +390,249 @@
         .dashboard-actions { flex-direction: column; }
         .dashboard-actions .btn { width: 100%; justify-content: center; }
         .dashboard-header h1 { font-size: 1.6rem; }
+        .trade-stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .signal-details { flex-direction: column; gap: 4px; }
+        .signal-details .sd-item { flex: none; }
     }
     @media (max-width: 480px) {
         .balance-grid { grid-template-columns: 1fr; }
+        .trade-stats-grid { grid-template-columns: 1fr 1fr; }
+        .signal-meter { height: 30px; }
+        .signal-meter .bar { min-height: 6px; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="dashboard-section">
-    <div class="container">
-        <div class="dashboard-header">
-            <h1>Welcome, <span class="highlight">{{ user.first_name|default:user.username }}</span></h1>
-            <p>Manage your account, view balances, and track transactions.</p>
-        </div>
+    <section class="dashboard-section">
+        <div class="container">
 
-        <!-- ===== WITHDRAWAL WARNING ===== -->
-        {% if not user.can_withdraw %}
-        <div class="withdraw-warning">
-            <span class="icon">🔒</span>
-            <div class="text">
-                <strong>Withdrawals Disabled:</strong> {{ user.withdraw_disable_reason|default:"Your withdrawal privileges have been temporarily disabled." }}
-                <br /><span class="unlock-note">📋 Please contact support for assistance.</span>
+            <!-- ===== HEADER ===== -->
+            <div class="dashboard-header">
+                <h1>Welcome, <span class="highlight">{{ user.first_name|default:user.username }}</span></h1>
+                <p>Manage your account, view balances, and track your trading performance.</p>
             </div>
-        </div>
-        {% endif %}
 
-        <!-- ===== BALANCES ===== -->
-        <div class="balance-grid">
-            <div class="balance-card">
-                <div class="balance-label">USD Balance</div>
-                <div class="balance-amount gold">${{ user.usd_balance|floatformat:2 }}</div>
-            </div>
-            <div class="balance-card">
-                <div class="balance-label">BTC Balance</div>
-                <div class="balance-amount green">₿{{ user.btc_balance|floatformat:8 }}</div>
-            </div>
-            <div class="balance-card">
-                <div class="balance-label">ETH Balance</div>
-                <div class="balance-amount blue">⟠{{ user.eth_balance|floatformat:8 }}</div>
-            </div>
-            <div class="balance-card">
-                <div class="balance-label">USDT Balance</div>
-                <div class="balance-amount purple">₮{{ user.usdt_balance|floatformat:2 }}</div>
-            </div>
-        </div>
+            <!-- ============================================================
+            TRADE PROGRESS & SIGNAL STRENGTH (Admin controlled)
+            ============================================================ -->
+            <div class="progress-row">
+                <!-- ===== TRADE PROGRESS CARD ===== -->
+                <div class="progress-card">
+                    <div class="card-header">
+                        <h3>📈 Trade <span class="highlight">Progress</span></h3>
+                        <span class="badge active">● Live</span>
+                    </div>
 
-        <!-- ===== DASHBOARD ACTIONS ===== -->
-        <div class="dashboard-actions">
-            <a href="{% url 'transactions:deposit' %}" class="btn btn-primary">💰 Deposit</a>
-            <a href="{% url 'transactions:withdraw' %}" class="btn btn-secondary {% if not user.can_withdraw %}hidden{% endif %}">🏦 Withdraw</a>
-            <a href="{% url 'transactions:list' %}" class="btn btn-secondary">📊 Transaction History</a>
-        </div>
-
-        <!-- ===== RECENT TRANSACTIONS & ACCOUNT SUMMARY ===== -->
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <h3>Recent <span class="highlight">Transactions</span></h3>
-                {% if recent_transactions %}
-                    {% for tx in recent_transactions %}
-                    <div class="transaction-item">
-                        <div class="tx-info">
-                            <span class="tx-type {{ tx.transaction_type }}">{{ tx.get_transaction_type_display }}</span>
-                            <span class="tx-date">{{ tx.created_at|date:"M d, Y H:i" }}</span>
+                    <div class="trade-progress-bar">
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: {{ trade_progress|default:68 }}%;"></div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:12px;">
-                            <span class="tx-amount {% if tx.transaction_type == 'deposit' %}positive{% else %}negative{% endif %}">
-                                {% if tx.transaction_type == 'deposit' %}+{% else %}-{% endif %}${{ tx.amount|floatformat:2 }}
-                            </span>
-                            <span class="tx-status {{ tx.status }}">{{ tx.status }}</span>
+                        <div class="progress-stats">
+                            <span>Progress</span>
+                            <span class="current">{{ trade_progress|default:68 }}%</span>
                         </div>
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <p style="color:var(--gray-400);text-align:center;padding:20px 0;">No transactions yet.</p>
-                {% endif %}
-            </div>
 
-            <!-- ===== ACCOUNT SUMMARY WITH ACTIVITIES ===== -->
-            <div class="dashboard-card">
-                <h3>Account <span class="highlight">Summary</span></h3>
-                <div style="display:flex;flex-direction:column;gap:16px;">
-                    <div>
-                        <div style="font-size:0.8rem;color:var(--gray-500);">Total Deposits</div>
-                        <div style="font-size:1.4rem;font-weight:700;color:var(--green);">${{ total_deposits|floatformat:2 }}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.8rem;color:var(--gray-500);">Total Withdrawals</div>
-                        <div style="font-size:1.4rem;font-weight:700;color:var(--red);">${{ total_withdrawals|floatformat:2 }}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.8rem;color:var(--gray-500);">Account Status</div>
-                        <div style="font-size:1.1rem;font-weight:600;color:var(--gold);">
-                            {% if user.can_withdraw %}✅ Active{% else %}🔒 Restricted{% endif %}
+                    <div class="trade-stats-grid">
+                        <div class="ts-item">
+                            <div class="ts-value {% if total_pnl >= 0 %}green{% else %}red{% endif %}">
+                                {% if total_pnl >= 0 %}+{% endif %}${{ total_pnl|default:2450|floatformat:0 }}
+                            </div>
+                            <div class="ts-label">Total P&L</div>
+                        </div>
+                        <div class="ts-item">
+                            <div class="ts-value gold">{{ win_rate|default:68 }}%</div>
+                            <div class="ts-label">Win Rate</div>
+                        </div>
+                        <div class="ts-item">
+                            <div class="ts-value">{{ total_trades|default:142 }}</div>
+                            <div class="ts-label">Total Trades</div>
+                        </div>
+                        <div class="ts-item">
+                            <div class="ts-value {% if roi >= 0 %}green{% else %}red{% endif %}">
+                                {% if roi >= 0 %}+{% endif %}{{ roi|default:18.5 }}%
+                            </div>
+                            <div class="ts-label">ROI</div>
                         </div>
                     </div>
-                    <div>
-                        <div style="font-size:0.8rem;color:var(--gray-500);">Member Since</div>
-                        <div style="font-size:1rem;font-weight:500;">{{ user.date_joined|date:"F d, Y" }}</div>
+                </div>
+
+                <!-- ===== SIGNAL STRENGTH CARD (Admin controlled) ===== -->
+                <div class="signal-card">
+                    <div class="card-header">
+                        <h3>📶 Signal <span class="highlight">Strength</span></h3>
+                        <span class="signal-value" id="signalValue">{{ signal_strength|default:82 }}%</span>
+                    </div>
+
+                    <div class="signal-meter" id="signalMeter">
+                        {% for i in "1234567890"|make_list %}
+                            {% with bar_index=forloop.counter0 %}
+                                {% if bar_index < signal_active_bars|default:5 %}
+                                    <div class="bar active 
+                                        {% if signal_strength|default:82 >= 75 %}strong
+                                        {% elif signal_strength|default:82 >= 55 %}moderate
+                                        {% else %}weak{% endif %}">
+                                    </div>
+                                {% else %}
+                                    <div class="bar"></div>
+                                {% endif %}
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+
+                    <div style="text-align: center;">
+                        <span class="signal-strength-label 
+                            {% if signal_strength|default:82 >= 75 %}strong
+                            {% elif signal_strength|default:82 >= 55 %}moderate
+                            {% else %}weak{% endif %}" id="signalLabel">
+                            ● 
+                            {% if signal_strength|default:82 >= 75 %}Strong Signal
+                            {% elif signal_strength|default:82 >= 55 %}Moderate Signal
+                            {% else %}Weak Signal{% endif %}
+                        </span>
+                    </div>
+
+                    <div class="signal-details">
+                        <div class="sd-item">
+                            <div class="sd-label">Direction</div>
+                            <div class="sd-value {{ signal_direction_class|default:'bullish' }}">
+                                {{ signal_direction|default:'📈 Bullish' }}
+                            </div>
+                        </div>
+                        <div class="sd-item">
+                            <div class="sd-label">Confidence</div>
+                            <div class="sd-value gold">{{ signal_strength|default:82 }}%</div>
+                        </div>
+                        <div class="sd-item">
+                            <div class="sd-label">Risk Level</div>
+                            <div class="sd-value">{{ signal_risk|default:'🟡 Medium' }}</div>
+                        </div>
+                        <div class="sd-item">
+                            <div class="sd-label">Timeframe</div>
+                            <div class="sd-value">{{ signal_timeframe|default:'4H' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== WITHDRAWAL WARNING ===== -->
+            {% if not user.can_withdraw %}
+            <div class="withdraw-warning">
+                <span class="icon">🔒</span>
+                <div class="text">
+                    <strong>Withdrawals Disabled:</strong> {{ user.withdraw_disable_reason|default:"Your withdrawal privileges have been temporarily disabled." }}
+                    <br /><span class="unlock-note">📋 {{ user.unlock_code|default:"Please contact support for assistance." }}</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ===== BALANCES ===== -->
+            <div class="balance-grid">
+                <div class="balance-card">
+                    <div class="balance-label">USD Balance</div>
+                    <div class="balance-amount gold">${{ user.usd_balance|default:12450.75|floatformat:2 }}</div>
+                </div>
+                <div class="balance-card">
+                    <div class="balance-label">BTC Balance</div>
+                    <div class="balance-amount green">₿{{ user.btc_balance|default:0.045|floatformat:8 }}</div>
+                </div>
+                <div class="balance-card">
+                    <div class="balance-label">ETH Balance</div>
+                    <div class="balance-amount blue">⟠{{ user.eth_balance|default:2.5|floatformat:8 }}</div>
+                </div>
+                <div class="balance-card">
+                    <div class="balance-label">USDT Balance</div>
+                    <div class="balance-amount purple">₮{{ user.usdt_balance|default:5000|floatformat:2 }}</div>
+                </div>
+            </div>
+
+            <!-- ===== DASHBOARD ACTIONS ===== -->
+            <div class="dashboard-actions">
+                <a href="{% url 'transactions:deposit' %}" class="btn btn-primary">💰 Deposit</a>
+                <a href="{% url 'transactions:withdraw' %}" class="btn btn-secondary {% if not user.can_withdraw %}disabled{% endif %}">🏦 Withdraw</a>
+                <a href="{% url 'transactions:list' %}" class="btn btn-secondary">📊 Transaction History</a>
+            </div>
+
+            <!-- ===== RECENT TRANSACTIONS & ACCOUNT SUMMARY ===== -->
+            <div class="dashboard-grid">
+                <!-- Recent Transactions -->
+                <div class="dashboard-card">
+                    <h3>Recent <span class="highlight">Transactions</span></h3>
+                    {% if recent_transactions %}
+                        {% for tx in recent_transactions %}
+                        <div class="transaction-item">
+                            <div class="tx-info">
+                                <span class="tx-type {{ tx.transaction_type }}">{{ tx.get_transaction_type_display }}</span>
+                                <span class="tx-date">{{ tx.created_at|date:"M d, Y H:i" }}</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <span class="tx-amount {% if tx.transaction_type == 'deposit' %}positive{% else %}negative{% endif %}">
+                                    {% if tx.transaction_type == 'deposit' %}+{% else %}-{% endif %}${{ tx.amount|floatformat:2 }}
+                                </span>
+                                <span class="tx-status {{ tx.status }}">{{ tx.status }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color:var(--gray-400);text-align:center;padding:20px 0;">No transactions yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Account Summary -->
+                <div class="dashboard-card">
+                    <h3>Account <span class="highlight">Summary</span></h3>
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+                        <div>
+                            <div style="font-size:0.8rem;color:var(--gray-500);">Total Deposits</div>
+                            <div style="font-size:1.4rem;font-weight:700;color:var(--green);">${{ total_deposits|default:8450|floatformat:2 }}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:0.8rem;color:var(--gray-500);">Total Withdrawals</div>
+                            <div style="font-size:1.4rem;font-weight:700;color:var(--red);">${{ total_withdrawals|default:4200|floatformat:2 }}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:0.8rem;color:var(--gray-500);">Account Status</div>
+                            <div style="font-size:1.1rem;font-weight:600;color:var(--gold);">
+                                {% if user.can_withdraw %}✅ Active{% else %}🔒 Restricted{% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size:0.8rem;color:var(--gray-500);">Member Since</div>
+                            <div style="font-size:1rem;font-weight:500;">{{ user.date_joined|date:"F d, Y" }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <script>
+        // ===== SIGNAL STRENGTH ANIMATION (Optional frontend effects) =====
+        (function() {
+            'use strict';
+
+            // Only animate if not admin-controlled static values
+            const signalValueEl = document.getElementById('signalValue');
+            const signalLabelEl = document.getElementById('signalLabel');
+            const signalMeterEl = document.getElementById('signalMeter');
+
+            // If the values come from backend, we can still add subtle animations
+            // or we can skip and let admin control everything.
+
+            // ===== TRADE PROGRESS ANIMATION =====
+            const progressFill = document.querySelector('.progress-fill');
+            const progressText = document.querySelector('.progress-stats .current');
+
+            // Animate progress bar on load
+            if (progressFill && progressText) {
+                const targetWidth = progressFill.style.width || '68%';
+                progressFill.style.width = '0%';
+                setTimeout(function() {
+                    progressFill.style.width = targetWidth;
+                }, 300);
+            }
+
+        })();
+    </script>
 {% endblock %}
