@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Titan Global FX | Admin Transactions{% endblock %}
+{% block title %}Admin Dashboard | Transactions{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Include the exact same styles as previously provided for transactions */
     .admin-section {
         padding-top: 120px;
         padding-bottom: 60px;
@@ -16,7 +15,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 32px;
+        margin-bottom: 24px;
         flex-wrap: wrap;
         gap: 16px;
     }
@@ -30,124 +29,181 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
-    .admin-nav {
+    .admin-header .stats {
         display: flex;
-        gap: 12px;
-        margin-bottom: 32px;
+        gap: 20px;
         flex-wrap: wrap;
     }
-    .admin-nav a {
-        padding: 10px 24px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: var(--radius);
-        color: var(--gray-300);
-        transition: var(--transition);
-        font-size: 0.9rem;
-    }
-    .admin-nav a:hover {
-        border-color: rgba(212, 175, 55, 0.15);
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--white);
-    }
-    .admin-nav a.active {
-        border-color: var(--gold);
-        background: rgba(212, 175, 55, 0.06);
-        color: var(--gold);
-    }
-    .transactions-table-wrapper {
+    .admin-header .stats .stat-item {
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(255, 255, 255, 0.04);
         border-radius: var(--radius);
-        overflow: hidden;
-        overflow-x: auto;
+        padding: 12px 20px;
+        text-align: center;
     }
-    .transactions-table {
+    .admin-header .stats .stat-item .num {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--gold);
+    }
+    .admin-header .stats .stat-item .label {
+        font-size: 0.7rem;
+        color: var(--gray-500);
+        text-transform: uppercase;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius);
+        padding: 20px;
+    }
+    table {
         width: 100%;
         border-collapse: collapse;
         font-size: 0.85rem;
-        min-width: 1000px;
     }
-    .transactions-table thead {
-        background: rgba(255, 255, 255, 0.03);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
-    .transactions-table thead th {
-        padding: 12px 16px;
+    thead th {
         text-align: left;
-        font-weight: 600;
+        padding: 12px 16px;
         color: var(--gray-400);
+        font-weight: 600;
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
-    .transactions-table tbody tr {
+    tbody td {
+        padding: 12px 16px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        transition: var(--transition);
-    }
-    .transactions-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
-    .transactions-table tbody tr:last-child { border-bottom: none; }
-    .transactions-table tbody td {
-        padding: 10px 16px;
-        color: var(--gray-300);
-        font-size: 0.85rem;
         vertical-align: middle;
     }
-    .transactions-table .status-badge {
-        font-size: 0.65rem;
+    tbody tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .status-badge {
         padding: 2px 12px;
         border-radius: 50px;
+        font-size: 0.65rem;
         font-weight: 600;
         text-transform: uppercase;
-        display: inline-block;
     }
-    .transactions-table .status-badge.pending { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
-    .transactions-table .status-badge.approved { background: rgba(52, 152, 219, 0.12); color: #3498db; }
-    .transactions-table .status-badge.completed { background: rgba(0, 200, 151, 0.12); color: var(--green); }
-    .transactions-table .status-badge.rejected { background: rgba(255, 107, 107, 0.12); color: var(--red); }
-    .transactions-table .status-badge.cancelled { background: rgba(255, 255, 255, 0.05); color: var(--gray-500); }
-    .action-form {
-        display: inline-flex;
-        gap: 4px;
-        flex-wrap: wrap;
+    .status-badge.pending { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
+    .status-badge.approved { background: rgba(52, 152, 219, 0.12); color: #3498db; }
+    .status-badge.completed { background: rgba(0, 200, 151, 0.12); color: var(--green); }
+    .status-badge.rejected { background: rgba(255, 107, 107, 0.12); color: var(--red); }
+    .status-badge.cancelled { background: rgba(255, 255, 255, 0.06); color: var(--gray-500); }
+
+    .type-badge {
+        font-weight: 600;
     }
-    .action-form button {
+    .type-badge.deposit { color: var(--green); }
+    .type-badge.withdraw { color: var(--red); }
+
+    .proof-thumb {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .proof-thumb:hover {
+        transform: scale(1.1);
+        border-color: var(--gold);
+    }
+    .no-proof {
+        color: var(--gray-500);
+        font-size: 0.75rem;
+    }
+
+    .btn-sm {
+        padding: 4px 12px;
+        font-size: 0.7rem;
+        border-radius: 50px;
+    }
+    .btn-action {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: var(--gray-300);
         padding: 4px 12px;
         border-radius: 50px;
         font-size: 0.7rem;
-        font-weight: 600;
-        border: none;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+    .btn-action:hover {
+        border-color: var(--gold);
+        color: var(--white);
+    }
+    .btn-action.approve { color: var(--green); }
+    .btn-action.approve:hover { background: rgba(0, 200, 151, 0.1); border-color: var(--green); }
+    .btn-action.reject { color: var(--red); }
+    .btn-action.reject:hover { background: rgba(255, 107, 107, 0.1); border-color: var(--red); }
+    .btn-action.complete { color: var(--gold); }
+    .btn-action.complete:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+    .btn-action.view { color: var(--blue); }
+    .btn-action.view:hover { background: rgba(52, 152, 219, 0.1); border-color: var(--blue); }
+
+    .action-group {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .modal.active {
+        display: flex;
+    }
+    .modal-content {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        box-shadow: var(--shadow-lg);
+    }
+    .modal-content img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: var(--radius-lg);
+    }
+    .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 2rem;
+        color: var(--white);
         cursor: pointer;
         transition: var(--transition);
-        font-family: inherit;
     }
-    .action-form button.btn-approve { background: rgba(52, 152, 219, 0.12); color: #3498db; }
-    .action-form button.btn-approve:hover { background: rgba(52, 152, 219, 0.2); }
-    .action-form button.btn-complete { background: rgba(0, 200, 151, 0.12); color: var(--green); }
-    .action-form button.btn-complete:hover { background: rgba(0, 200, 151, 0.2); }
-    .action-form button.btn-reject { background: rgba(255, 107, 107, 0.12); color: var(--red); }
-    .action-form button.btn-reject:hover { background: rgba(255, 107, 107, 0.2); }
-    .action-form button.btn-cancel { background: rgba(255, 255, 255, 0.05); color: var(--gray-500); }
-    .action-form button.btn-cancel:hover { background: rgba(255, 255, 255, 0.1); }
-    .tx-type.deposit { color: var(--green); font-weight: 600; }
-    .tx-type.withdraw { color: var(--red); font-weight: 600; }
-    .copy-btn {
-        background: none;
-        border: none;
+    .modal-close:hover {
         color: var(--gold);
-        cursor: pointer;
-        font-size: 0.8rem;
-        transition: var(--transition);
-        padding: 2px 6px;
+        transform: rotate(90deg);
     }
-    .copy-btn:hover { transform: scale(1.1); }
+    .modal-wrapper {
+        position: relative;
+    }
+
     @media (max-width: 768px) {
         .admin-section { padding-top: 100px; }
-        .admin-header h1 { font-size: 1.6rem; }
-        .admin-nav { flex-direction: column; }
-        .admin-nav a { text-align: center; }
-        .action-form { flex-direction: column; }
-        .action-form button { width: 100%; text-align: center; }
+        .admin-header { flex-direction: column; align-items: flex-start; }
+        .admin-header .stats { width: 100%; }
+        .admin-header .stats .stat-item { flex: 1; min-width: 80px; }
+        table { font-size: 0.7rem; }
+        thead th, tbody td { padding: 8px 10px; }
+        .action-group { flex-direction: column; gap: 4px; }
+        .btn-sm { padding: 2px 8px; font-size: 0.6rem; }
     }
 </style>
 {% endblock %}
@@ -155,22 +211,32 @@
 {% block content %}
 <section class="admin-section">
     <div class="container">
+        <!-- Header -->
         <div class="admin-header">
-            <h1>Transaction <span class="highlight">Management</span></h1>
-            <span style="color:var(--gray-400);font-size:0.9rem;">Total: {{ transactions.count }} transactions</span>
+            <h1>📋 <span class="highlight">Transactions</span></h1>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="num">{{ transactions|length }}</div>
+                    <div class="label">Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num" style="color:#f39c12;">{{ transactions|length|default:0 }}</div>
+                    <div class="label">Pending</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num" style="color:var(--green);">0</div>
+                    <div class="label">Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num" style="color:var(--red);">0</div>
+                    <div class="label">Rejected</div>
+                </div>
+            </div>
         </div>
 
-        <div class="admin-nav">
-            <a href="{% url 'admin_dashboard:index' %}">📊 Overview</a>
-            <a href="{% url 'admin_dashboard:users' %}">👥 Users</a>
-            <a href="{% url 'admin_dashboard:transactions' %}" class="active">💳 Transactions</a>
-            <a href="{% url 'admin_dashboard:deposit_options' %}">💰 Deposit Options</a>
-            <a href="{% url 'admin_dashboard:withdraw_options' %}">🏦 Withdraw Options</a>
-            <a href="{% url 'admin_dashboard:terms' %}">📜 Terms & Conditions</a>
-        </div>
-
-        <div class="transactions-table-wrapper">
-            <table class="transactions-table">
+        <!-- Table -->
+        <div class="table-wrapper">
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -178,52 +244,96 @@
                         <th>Type</th>
                         <th>Amount</th>
                         <th>Method</th>
-                        <th>Account Details</th>
+                        <th>Reference</th>
+                        <th>Proof</th>
                         <th>Status</th>
-                        <th>Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for tx in transactions %}
                     <tr>
-                        <td style="font-weight:600;color:var(--gold);">#{{ tx.id }}</td>
-                        <td><strong>{{ tx.user.username }}</strong></td>
-                        <td><span class="tx-type {{ tx.transaction_type }}">{{ tx.get_transaction_type_display }}</span></td>
-                        <td>${{ tx.amount|floatformat:2 }}</td>
-                        <td>{{ tx.method_name }}</td>
+                        <td>#{{ tx.id }}</td>
                         <td>
-                            {% if tx.account_details %}
-                                <span style="font-size:0.75rem;display:flex;align-items:center;gap:4px;">
-                                    <span>{{ tx.account_details|truncatechars:30 }}</span>
-                                    <button class="copy-btn" data-value="{{ tx.account_details }}" title="Copy details">📋</button>
-                                </span>
+                            <strong>{{ tx.user.username }}</strong>
+                            <br /><small style="color:var(--gray-500);">{{ tx.user.email }}</small>
+                        </td>
+                        <td>
+                            <span class="type-badge {{ tx.transaction_type }}">
+                                {{ tx.get_transaction_type_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <strong>${{ tx.amount|floatformat:2 }}</strong>
+                            <br /><small style="color:var(--gray-500);">{{ tx.currency }}</small>
+                        </td>
+                        <td>
+                            {{ tx.method_name }}
+                            <br /><small style="color:var(--gray-500);">{{ tx.method }}</small>
+                        </td>
+                        <td>
+                            <span style="font-size:0.75rem;color:var(--gray-400);">
+                                {{ tx.reference|default:'—' }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if tx.proof_image %}
+                                <img src="{{ tx.proof_image.url }}" alt="Proof" class="proof-thumb" onclick="openModal('{{ tx.proof_image.url }}')" />
                             {% else %}
-                                <span style="color:var(--gray-500);font-size:0.7rem;">—</span>
+                                <span class="no-proof">No proof</span>
                             {% endif %}
                         </td>
-                        <td><span class="status-badge {{ tx.status }}">{{ tx.status }}</span></td>
-                        <td style="font-size:0.75rem;color:var(--gray-500);">{{ tx.created_at|date:"M d, Y H:i" }}</td>
                         <td>
-                            <form method="post" action="{% url 'admin_dashboard:transaction_action' tx.id %}" class="action-form">
-                                {% csrf_token %}
-                                {% if tx.status == 'pending' %}
-                                <button type="submit" name="action" value="approve" class="btn-approve">Approve</button>
-                                <button type="submit" name="action" value="complete" class="btn-complete">Complete</button>
-                                <button type="submit" name="action" value="reject" class="btn-reject">Reject</button>
-                                {% elif tx.status == 'approved' %}
-                                <button type="submit" name="action" value="complete" class="btn-complete">Complete</button>
-                                <button type="submit" name="action" value="reject" class="btn-reject">Reject</button>
-                                {% elif tx.status == 'completed' or tx.status == 'rejected' %}
-                                <span style="font-size:0.7rem;color:var(--gray-500);">No actions</span>
+                            <span class="status-badge {{ tx.status }}">
+                                {{ tx.status }}
+                            </span>
+                            <br /><small style="color:var(--gray-500);font-size:0.6rem;">
+                                {{ tx.created_at|date:"M d, H:i" }}
+                            </small>
+                        </td>
+                        <td>
+                            <div class="action-group">
+                                {% if tx.proof_image %}
+                                    <button class="btn-action view" onclick="openModal('{{ tx.proof_image.url }}')">👁️ View</button>
                                 {% endif %}
-                                <button type="submit" name="action" value="cancel" class="btn-cancel">Cancel</button>
-                            </form>
+                                
+                                {% if tx.status == 'pending' %}
+                                    <form method="post" action="{% url 'admin_dashboard:transaction_action' tx.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="approve">
+                                        <button type="submit" class="btn-action approve">✅ Approve</button>
+                                    </form>
+                                    <form method="post" action="{% url 'admin_dashboard:transaction_action' tx.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="reject">
+                                        <button type="submit" class="btn-action reject">❌ Reject</button>
+                                    </form>
+                                {% endif %}
+                                
+                                {% if tx.status == 'approved' %}
+                                    <form method="post" action="{% url 'admin_dashboard:transaction_action' tx.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="complete">
+                                        <button type="submit" class="btn-action complete">✅ Complete</button>
+                                    </form>
+                                    <form method="post" action="{% url 'admin_dashboard:transaction_action' tx.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="reject">
+                                        <button type="submit" class="btn-action reject">❌ Reject</button>
+                                    </form>
+                                {% endif %}
+                                
+                                {% if tx.status == 'completed' or tx.status == 'rejected' or tx.status == 'cancelled' %}
+                                    <span style="color:var(--gray-500);font-size:0.7rem;">Processed</span>
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="9" style="text-align:center;padding:40px;color:var(--gray-400);">No transactions found.</td>
+                        <td colspan="9" style="text-align:center;padding:40px 0;color:var(--gray-500);">
+                            No transactions found.
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -231,30 +341,36 @@
         </div>
     </div>
 </section>
-{% endblock %}
 
-{% block extra_js %}
+<!-- ===== IMAGE MODAL ===== -->
+<div class="modal" id="imageModal" onclick="closeModal()">
+    <div class="modal-wrapper">
+        <span class="modal-close" onclick="closeModal()">✕</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Proof of Payment" />
+        </div>
+    </div>
+</div>
+
 <script>
-    document.querySelectorAll('.copy-btn').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const text = this.dataset.value;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(function() {
-                    btn.textContent = '✅';
-                    setTimeout(function() { btn.textContent = '📋'; }, 2000);
-                });
-            } else {
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                btn.textContent = '✅';
-                setTimeout(function() { btn.textContent = '📋'; }, 2000);
-            }
-        });
+    function openModal(src) {
+        const modal = document.getElementById('imageModal');
+        const img = document.getElementById('modalImage');
+        img.src = src;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
     });
 </script>
 {% endblock %}
