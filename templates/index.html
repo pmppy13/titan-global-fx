@@ -3,1537 +3,813 @@
 
 {% block title %}Titan Global FX | Premium Forex & Trading{% endblock %}
 
-{% block extra_css %}
-<style>
-    /* ===== HERO ===== */
-    .hero {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        padding-top: 80px;
-        background: var(--navy);
-    }
-    .hero::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(ellipse 80% 60% at 20% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 70%),
-            radial-gradient(ellipse 60% 50% at 80% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
-            radial-gradient(ellipse 100% 80% at 50% 50%, rgba(10, 15, 31, 0.95) 0%, var(--navy) 100%);
-        z-index: 1;
-    }
-    .hero-orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.2;
-        animation: orbFloat 12s ease-in-out infinite alternate;
-        z-index: 0;
-    }
-    .hero-orb.orb1 {
-        width: 400px;
-        height: 400px;
-        background: var(--gold);
-        top: -10%;
-        right: -5%;
-        animation-delay: 0s;
-    }
-    .hero-orb.orb2 {
-        width: 300px;
-        height: 300px;
-        background: #d4af37;
-        bottom: -10%;
-        left: -5%;
-        animation-delay: -4s;
-        opacity: 0.1;
-    }
-    @keyframes orbFloat {
-        0% { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(40px, -30px) scale(1.1); }
-    }
-    .hero-bg-grid {
-        position: absolute;
-        inset: 0;
-        background-image:
-            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-        background-size: 60px 60px;
-        z-index: 0;
-        animation: gridPulse 10s ease-in-out infinite alternate;
-    }
-    @keyframes gridPulse {
-        0% { opacity: 0.3; }
-        100% { opacity: 0.8; }
-    }
-    .hero .container {
-        position: relative;
-        z-index: 2;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        align-items: center;
-        padding-top: 40px;
-        padding-bottom: 40px;
-    }
-    .hero-content h1 {
-        font-size: 3.8rem;
-        font-weight: 800;
-        line-height: 1.08;
-        letter-spacing: -0.04em;
-        margin-bottom: 20px;
-    }
-    .hero-content h1 .gold {
-        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    .hero-content p {
-        font-size: 1.2rem;
-        color: var(--gray-400);
-        max-width: 480px;
-        line-height: 1.8;
-        margin-bottom: 32px;
-    }
-    .hero-buttons {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-    .hero-stats {
-        display: flex;
-        gap: 48px;
-        margin-top: 48px;
-        padding-top: 32px;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .hero-stats .stat h3 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--gold);
-        text-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
-    }
-    .hero-stats .stat p {
-        font-size: 0.85rem;
-        color: var(--gray-500);
-        margin: 0;
-    }
-    .hero-chart-card {
-        background: rgba(17, 27, 47, 0.7);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: var(--radius-lg);
-        padding: 24px 28px;
-        width: 100%;
-        max-width: 580px;
-        box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        transition: var(--transition);
-        position: relative;
-        overflow: hidden;
-    }
-    .hero-chart-card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.03), transparent 60%);
-        pointer-events: none;
-    }
-    .hero-chart-card:hover {
-        border-color: rgba(212, 175, 55, 0.15);
-        box-shadow: var(--shadow-lg), 0 0 60px rgba(212, 175, 55, 0.04);
-    }
-    .chart-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 16px;
-    }
-    .chart-header-left {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
-    .chart-header-left .pair {
-        font-size: 1rem;
-        font-weight: 500;
-        color: var(--gray-300);
-    }
-    .chart-header-left .pair .flag {
-        margin-right: 6px;
-    }
-    .chart-price-section {
-        display: flex;
-        align-items: baseline;
-        gap: 12px;
-    }
-    .chart-price-section .price {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--white);
-        letter-spacing: -0.02em;
-    }
-    .chart-price-section .change {
-        font-weight: 600;
-        font-size: 0.85rem;
-        padding: 2px 12px;
-        border-radius: 50px;
-    }
-    .chart-price-section .change.up {
-        color: var(--green);
-        background: rgba(0, 200, 151, 0.1);
-    }
-    .chart-price-section .change.down {
-        color: var(--red);
-        background: rgba(255, 107, 107, 0.1);
-    }
-    .chart-header-right {
-        text-align: right;
-    }
-    .chart-header-right .label {
-        font-size: 0.65rem;
-        color: var(--gray-500);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    .chart-header-right .value {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--gray-300);
-    }
-    .chart-area {
-        position: relative;
-        margin: 8px 0 12px;
-        height: 180px;
-    }
-    .chart-canvas-wrapper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-    .chart-canvas-wrapper canvas {
-        width: 100%;
-        height: 100%;
-        display: block;
-        border-radius: 4px;
-    }
-    .chart-glow-line {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        pointer-events: none;
-        overflow: hidden;
-    }
-    .chart-glow-line::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.3;
-        animation: glowSweep 3s ease-in-out infinite;
-    }
-    @keyframes glowSweep {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-    }
-    .chart-timeframes {
-        display: flex;
-        gap: 8px;
-        margin-top: 8px;
-    }
-    .chart-timeframes button {
-        padding: 3px 12px;
-        font-size: 0.7rem;
-        font-weight: 500;
-        color: var(--gray-500);
-        border-radius: 4px;
-        transition: var(--transition);
-        background: transparent;
-        border: 1px solid transparent;
-    }
-    .chart-timeframes button:hover {
-        color: var(--gray-300);
-    }
-    .chart-timeframes button.active {
-        color: var(--gold);
-        border-color: rgba(212, 175, 55, 0.2);
-        background: rgba(212, 175, 55, 0.06);
-    }
-    .chart-indicators {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 14px;
-        padding-top: 14px;
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .chart-indicators .indicator {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.75rem;
-        color: var(--gray-400);
-    }
-    .chart-indicators .indicator .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-    }
-    .chart-indicators .indicator .dot.green {
-        background: var(--green);
-    }
-    .chart-indicators .indicator .dot.red {
-        background: var(--red);
-    }
-    .chart-indicators .indicator .dot.gold {
-        background: var(--gold);
-    }
-    .chart-indicators .indicator .ind-value {
-        font-weight: 600;
-        color: var(--gray-300);
-    }
-    .trade-feed {
-        margin-top: 14px;
-        padding-top: 14px;
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-    .trade-feed .trade-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.7rem;
-        color: var(--gray-400);
-        animation: tradePulse 2s ease-in-out infinite;
-    }
-    .trade-feed .trade-item .trade-amount {
-        font-weight: 600;
-        color: var(--green);
-    }
-    .trade-feed .trade-item .trade-amount.sell {
-        color: var(--red);
-    }
-    @keyframes tradePulse {
-        0%, 100% { opacity: 0.6; }
-        50% { opacity: 1; }
-    }
-
-    /* ===== TICKER ===== */
-    .ticker {
-        background: rgba(17, 27, 47, 0.5);
-        backdrop-filter: blur(4px);
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        padding: 12px 0;
-        overflow: hidden;
-        position: relative;
-        z-index: 2;
-    }
-    .ticker-track {
-        display: flex;
-        animation: tickerScroll 30s linear infinite;
-        width: max-content;
-    }
-    .ticker-track .ticker-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 0 32px;
-        font-size: 0.85rem;
-        white-space: nowrap;
-    }
-    .ticker-track .ticker-item .symbol {
-        font-weight: 600;
-        color: var(--white);
-    }
-    .ticker-track .ticker-item .price {
-        color: var(--gray-300);
-    }
-    .ticker-track .ticker-item .change {
-        font-weight: 600;
-    }
-    .ticker-track .ticker-item .change.up {
-        color: #4caf50;
-    }
-    .ticker-track .ticker-item .change.down {
-        color: #ef5350;
-    }
-    @keyframes tickerScroll {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-    }
-
-    /* ===== SECTIONS ===== */
-    .section { padding: 80px 0; opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
-    .section.is-visible { opacity: 1; transform: translateY(0); }
-    .section-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        line-height: 1.15;
-        margin-bottom: 16px;
-    }
-    .section-title .highlight {
-        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        position: relative;
-    }
-    .section-title .highlight::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.3;
-        transform: scaleX(0);
-        transition: transform 0.6s ease;
-    }
-    .section.is-visible .section-title .highlight::after { transform: scaleX(1); }
-    .section-subtitle {
-        font-size: 1.1rem;
-        color: var(--gray-400);
-        max-width: 600px;
-        line-height: 1.7;
-    }
-    .text-center { text-align: center; }
-    .mx-auto { margin-left: auto; margin-right: auto; }
-
-    /* ===== WHY CHOOSE US ===== */
-    .why-section { background: var(--navy-light); }
-    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 16px; }
-    .why-grid .why-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        border-radius: var(--radius);
-        padding: 32px 28px;
-        transition: var(--transition);
-        backdrop-filter: blur(4px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    .why-grid .why-card:hover {
-        background: rgba(255, 255, 255, 0.05);
-        transform: translateY(-6px);
-        border-color: rgba(212, 175, 55, 0.2);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 175, 55, 0.03);
-    }
-    .why-grid .why-card .icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        background: rgba(212, 175, 55, 0.08);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-        font-size: 1.4rem;
-        transition: var(--transition);
-    }
-    .why-grid .why-card:hover .icon { background: rgba(212, 175, 55, 0.15); transform: scale(1.05); }
-    .why-grid .why-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
-    .why-grid .why-card p { color: var(--gray-400); font-size: 0.95rem; line-height: 1.7; }
-
-    /* ===== STATS ===== */
-    .stats-section {
-        background: var(--navy);
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 32px;
-        text-align: center;
-    }
-    .stats-grid .stat-item h2 {
-        font-size: 3rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.02em;
-    }
-    .stats-grid .stat-item p { color: var(--gray-400); font-size: 0.95rem; margin-top: 4px; }
-
-    /* ===== PLANS ===== */
-    .plans-section {
-        background: var(--navy-light);
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
-    .plans-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 24px;
-        margin-top: 16px;
-    }
-    .plan-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        border-radius: var(--radius);
-        padding: 28px 22px 24px;
-        text-align: center;
-        transition: var(--transition);
-        backdrop-filter: blur(4px);
-        position: relative;
-        overflow: hidden;
-    }
-    .plan-card:hover {
-        border-color: rgba(212, 175, 55, 0.2);
-        transform: translateY(-6px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 175, 55, 0.02);
-        background: rgba(255, 255, 255, 0.04);
-    }
-    .plan-card .plan-badge {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        font-size: 0.6rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        padding: 3px 12px;
-        border-radius: 50px;
-        background: rgba(212, 175, 55, 0.08);
-        color: var(--gold);
-        border: 1px solid rgba(212, 175, 55, 0.04);
-    }
-    .plan-card .plan-badge.popular {
-        background: rgba(212, 175, 55, 0.15);
-        color: var(--gold-light);
-        border-color: rgba(212, 175, 55, 0.15);
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
-    }
-    .plan-card .plan-icon { font-size: 2.4rem; margin-bottom: 8px; display: block; }
-    .plan-card .plan-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 2px; }
-    .plan-card .plan-sub { font-size: 0.8rem; color: var(--gray-500); margin-bottom: 12px; }
-    .plan-card .plan-price {
-        font-size: 2.6rem;
-        font-weight: 800;
-        color: var(--gold);
-        letter-spacing: -0.02em;
-        margin-bottom: 2px;
-    }
-    .plan-card .plan-price .currency { font-size: 1.2rem; font-weight: 600; color: var(--gray-400); }
-    .plan-card .plan-min { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 16px; }
-    .plan-card .plan-divider { height: 1px; background: rgba(255, 255, 255, 0.04); margin: 12px 0 16px; }
-    .plan-card .plan-features { list-style: none; text-align: left; margin-bottom: 20px; }
-    .plan-card .plan-features li {
-        font-size: 0.8rem;
-        color: var(--gray-400);
-        padding: 4px 0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .plan-card .plan-features li .check { color: var(--gold); font-weight: 700; }
-    .plan-card .plan-features li .muted { color: var(--gray-500); }
-    .plan-card .btn { width: 100%; justify-content: center; padding: 12px 20px; font-size: 0.85rem; }
-
-    /* ===== CEO SECTION ===== */
-    .ceo-section {
-        background: var(--navy);
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
-    .ceo-grid {
-        display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 60px;
-        align-items: center;
-    }
-    .ceo-image-placeholder {
-        width: 100%;
-        aspect-ratio: 1/1.1;
-        border-radius: var(--radius-lg);
-        background: linear-gradient(145deg, rgba(212, 175, 55, 0.08), rgba(17, 27, 47, 0.6));
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 6rem;
-        color: var(--gold);
-        position: relative;
-        overflow: hidden;
-        transition: var(--transition);
-    }
-    .ceo-image-placeholder:hover { border-color: rgba(212, 175, 55, 0.2); }
-    .ceo-image-placeholder .initials {
-        font-weight: 700;
-        font-size: 5rem;
-        color: var(--gold);
-        opacity: 0.5;
-        letter-spacing: 0.1em;
-        z-index: 1;
-    }
-    .ceo-badge {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        background: rgba(10, 15, 31, 0.8);
-        backdrop-filter: blur(8px);
-        padding: 8px 18px;
-        border-radius: 50px;
-        border: 1px solid rgba(212, 175, 55, 0.2);
-        font-size: 0.75rem;
-        color: var(--gold);
-        letter-spacing: 0.05em;
-        z-index: 2;
-    }
-    .ceo-content .ceo-name { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
-    .ceo-content .ceo-title { font-size: 1rem; color: var(--gold); font-weight: 500; margin-bottom: 20px; letter-spacing: 0.02em; }
-    .ceo-content .ceo-quote {
-        font-size: 1.2rem;
-        line-height: 1.7;
-        color: var(--gray-300);
-        font-style: italic;
-        padding-left: 20px;
-        border-left: 3px solid var(--gold);
-        margin-bottom: 20px;
-    }
-    .ceo-content .ceo-bio { color: var(--gray-400); font-size: 0.95rem; line-height: 1.8; max-width: 520px; }
-    .ceo-content .ceo-meta {
-        display: flex;
-        gap: 32px;
-        margin-top: 24px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-    }
-    .ceo-content .ceo-meta .meta-item span {
-        display: block;
-        font-size: 0.75rem;
-        color: var(--gray-500);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    .ceo-content .ceo-meta .meta-item strong { font-size: 1rem; color: var(--white); font-weight: 600; }
-
-    /* ===== AWARDS ===== */
-    .awards-section { background: var(--navy); }
-    .awards-grid {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 40px 64px;
-        padding: 20px 0;
-    }
-    .awards-grid .award {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 0.9rem;
-        color: var(--gray-300);
-        transition: var(--transition);
-    }
-    .awards-grid .award:hover { color: var(--white); transform: translateY(-2px); }
-    .awards-grid .award .badge { font-size: 1.8rem; }
-
-    /* ===== CERTIFICATES ===== */
-    .certificates-section { background: var(--navy); border-top: 1px solid rgba(255, 255, 255, 0.04); }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-    .cert-grid .cert-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        border-radius: var(--radius);
-        padding: 28px 20px 24px;
-        transition: var(--transition);
-        text-align: center;
-        backdrop-filter: blur(4px);
-    }
-    .cert-grid .cert-card:hover {
-        border-color: rgba(212, 175, 55, 0.15);
-        transform: translateY(-4px);
-        background: rgba(255, 255, 255, 0.04);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    }
-    .cert-grid .cert-card .cert-icon { font-size: 2.8rem; margin-bottom: 12px; display: block; transition: var(--transition); }
-    .cert-grid .cert-card:hover .cert-icon { transform: scale(1.1); }
-    .cert-grid .cert-card .cert-name { font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
-    .cert-grid .cert-card .cert-issuer { font-size: 0.8rem; color: var(--gray-500); margin-bottom: 8px; }
-    .cert-grid .cert-card .cert-desc { font-size: 0.85rem; color: var(--gray-400); line-height: 1.6; }
-    .cert-grid .cert-card .cert-badge {
-        display: inline-block;
-        margin-top: 12px;
-        padding: 4px 16px;
-        border-radius: 50px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        background: rgba(212, 175, 55, 0.06);
-        color: var(--gold);
-        border: 1px solid rgba(212, 175, 55, 0.04);
-    }
-
-    /* ===== FAQ ===== */
-    .faq-section { background: var(--navy-light); }
-    .faq-list {
-        max-width: 800px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    .faq-item {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        border-radius: var(--radius);
-        overflow: hidden;
-        transition: var(--transition);
-        backdrop-filter: blur(4px);
-    }
-    .faq-item:hover { border-color: rgba(212, 175, 55, 0.1); }
-    .faq-item .faq-question {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 18px 24px;
-        font-weight: 600;
-        font-size: 1rem;
-        cursor: pointer;
-        width: 100%;
-        background: none;
-        border: none;
-        color: var(--white);
-        text-align: left;
-        transition: var(--transition);
-    }
-    .faq-item .faq-question:hover { color: var(--gold); }
-    .faq-item .faq-question .icon {
-        font-size: 1.2rem;
-        transition: var(--transition);
-        flex-shrink: 0;
-        margin-left: 16px;
-        color: var(--gold);
-    }
-    .faq-item.active .faq-question .icon { transform: rotate(45deg); }
-    .faq-item .faq-answer {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.4s ease, padding 0.4s ease;
-        padding: 0 24px;
-        color: var(--gray-400);
-        font-size: 0.95rem;
-        line-height: 1.7;
-    }
-    .faq-item.active .faq-answer {
-        max-height: 300px;
-        padding: 0 24px 20px;
-    }
-
-    @media (max-width: 1024px) {
-        .hero .container { grid-template-columns: 1fr; text-align: center; }
-        .hero-content p { margin-left: auto; margin-right: auto; }
-        .hero-buttons { justify-content: center; }
-        .hero-stats { justify-content: center; }
-        .hero-chart-card { max-width: 100%; }
-        .why-grid { grid-template-columns: repeat(2, 1fr); }
-        .plans-grid { grid-template-columns: repeat(2, 1fr); }
-        .grid-4 { grid-template-columns: repeat(2, 1fr); }
-        .ceo-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-        .ceo-content .ceo-quote {
-            padding-left: 0;
-            border-left: none;
-            border-top: 3px solid var(--gold);
-            padding-top: 16px;
-        }
-        .ceo-content .ceo-bio { max-width: 100%; margin-left: auto; margin-right: auto; }
-        .ceo-content .ceo-meta { justify-content: center; }
-        .ceo-image-placeholder { max-width: 400px; margin: 0 auto; }
-    }
-    @media (max-width: 768px) {
-        .hero-content h1 { font-size: 2.4rem; }
-        .hero-content p { font-size: 1rem; }
-        .hero-stats { gap: 24px; flex-wrap: wrap; }
-        .hero-stats .stat h3 { font-size: 1.4rem; }
-        .section-title { font-size: 2rem; }
-        .why-grid { grid-template-columns: 1fr; }
-        .plans-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .grid-4 { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .stats-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
-        .stats-grid .stat-item h2 { font-size: 2.2rem; }
-        .ceo-content .ceo-name { font-size: 1.8rem; }
-        .ceo-content .ceo-meta { flex-direction: column; gap: 12px; align-items: center; }
-        .ceo-image-placeholder { max-width: 280px; }
-        .hero-chart-card { padding: 18px 16px; }
-        .hero-chart-card .chart-price-section .price { font-size: 1.4rem; }
-        .chart-area { height: 120px; }
-        .section { padding: 56px 0; }
-    }
-    @media (max-width: 480px) {
-        .hero-content h1 { font-size: 1.9rem; }
-        .hero-buttons .btn { width: 100%; justify-content: center; }
-        .hero-buttons { flex-direction: column; width: 100%; }
-        .hero-stats { flex-direction: column; gap: 12px; align-items: center; }
-        .stats-grid { grid-template-columns: 1fr 1fr; }
-        .plans-grid { max-width: 100%; }
-        .ceo-image-placeholder { max-width: 200px; }
-        .ceo-image-placeholder .initials { font-size: 3rem; }
-        .ceo-badge { font-size: 0.6rem; padding: 4px 12px; bottom: 10px; right: 10px; }
-        .hero-chart-card .chart-price-section .price { font-size: 1.2rem; }
-        .chart-area { height: 100px; }
-        .chart-timeframes button { font-size: 0.6rem; padding: 2px 8px; }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<!-- ===== HERO ===== -->
-<section class="hero" id="home">
-    <div class="hero-orb orb1"></div>
-    <div class="hero-orb orb2"></div>
-    <div class="hero-bg-grid"></div>
-    <div class="container">
-        <div class="hero-content">
-            <h1>Trade Global Markets with <span class="gold">Confidence</span></h1>
-            <p>Institutional-grade trading infrastructure, SEC-compliant execution, and premium support for traders who demand excellence.</p>
-            <div class="hero-buttons">
-                <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">Open Account</a>
-                <a href="#about" class="btn btn-secondary btn-lg">Learn More</a>
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+        <div class="hero-orb orb1"></div>
+        <div class="hero-orb orb2"></div>
+        <div class="hero-bg-grid"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Trade Global Markets with <span class="gold">Confidence</span></h1>
+                <p>Institutional-grade trading infrastructure, SEC-compliant execution, and premium support for traders who demand excellence.</p>
+                <div class="hero-buttons">
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">Open Account</a>
+                    <a href="#plans" class="btn btn-secondary btn-lg">View Plans</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat"><h3>$12.4B+</h3><p>Monthly Volume</p></div>
+                    <div class="stat"><h3>150+</h3><p>Global Markets</p></div>
+                    <div class="stat"><h3>98.7%</h3><p>Execution Rate</p></div>
+                </div>
             </div>
-            <div class="hero-stats">
-                <div class="stat"><h3>$12.4B+</h3><p>Monthly Volume</p></div>
-                <div class="stat"><h3>150+</h3><p>Global Markets</p></div>
-                <div class="stat"><h3>98.7%</h3><p>Execution Rate</p></div>
-            </div>
-        </div>
-        <div class="hero-visual">
-            <div class="hero-chart-card" id="heroChartCard">
-                <div class="chart-header">
-                    <div class="chart-header-left">
-                        <div class="pair"><span class="flag">🇺🇸</span> EUR/USD</div>
-                        <div class="chart-price-section">
-                            <span class="price" id="livePrice">1.08742</span>
-                            <span class="change up" id="liveChange">+0.23%</span>
+            <div class="hero-visual">
+                <div class="hero-chart-card" id="heroChartCard">
+                    <div class="chart-header">
+                        <div class="chart-header-left">
+                            <div class="pair"><span class="flag">🇺🇸</span> EUR/USD</div>
+                            <div class="chart-price-section">
+                                <span class="price" id="livePrice">1.08742</span>
+                                <span class="change up" id="liveChange">+0.23%</span>
+                            </div>
+                        </div>
+                        <div class="chart-header-right">
+                            <div class="label">24h Volume</div>
+                            <div class="value">$24.6B</div>
                         </div>
                     </div>
-                    <div class="chart-header-right">
-                        <div class="label">24h Volume</div>
-                        <div class="value">$24.6B</div>
+                    <div class="chart-area">
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="chartCanvas"></canvas>
+                        </div>
+                        <div class="chart-glow-line"></div>
+                    </div>
+                    <div class="chart-timeframes">
+                        <button class="active">1H</button><button>4H</button><button>1D</button>
+                        <button>1W</button><button>1M</button><button>ALL</button>
+                    </div>
+                    <div class="chart-indicators">
+                        <div class="indicator"><span class="dot green"></span> RSI <span class="ind-value">62.4</span></div>
+                        <div class="indicator"><span class="dot gold"></span> MACD <span class="ind-value">0.0012</span></div>
+                        <div class="indicator"><span class="dot red"></span> Volatility <span class="ind-value">12.8%</span></div>
+                        <div class="indicator"><span class="dot green"></span> Momentum <span class="ind-value">Bullish</span></div>
+                    </div>
+                    <div class="trade-feed" id="tradeFeed">
+                        <div class="trade-item"><span>🟢</span> Buy <span class="trade-amount">$12.4K</span> @ 1.0874</div>
+                        <div class="trade-item"><span>🔴</span> Sell <span class="trade-amount sell">$8.2K</span> @ 1.0872</div>
+                        <div class="trade-item"><span>🟢</span> Buy <span class="trade-amount">$5.6K</span> @ 1.0875</div>
                     </div>
                 </div>
-                <div class="chart-area">
-                    <div class="chart-canvas-wrapper">
-                        <canvas id="chartCanvas"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TICKER ===== -->
+    <div class="ticker" aria-label="Live market ticker">
+        <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+
+    <!-- ===== WHY CHOOSE US ===== -->
+    <section class="section why-section" id="about">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:48px;">
+                <h2 class="section-title">Why <span class="highlight">Titan Global FX</span></h2>
+                <p class="section-subtitle mx-auto">Built for serious traders. Powered by institutional technology. Regulated and transparent.</p>
+            </div>
+            <div class="grid-3 why-grid">
+                <div class="why-card"><div class="icon">🏦</div><h3>SEC-Regulated</h3><p>Fully compliant with SEC and FINRA regulations. Your assets are protected with institutional-grade custody.</p></div>
+                <div class="why-card"><div class="icon">⚡</div><h3>Lightning Execution</h3><p>Sub-10ms execution with direct market access. No dealing desk intervention, ever.</p></div>
+                <div class="why-card"><div class="icon">🔒</div><h3>Bank-Grade Security</h3><p>256-bit encryption, multi-factor authentication, and segregated client accounts with tier-1 banks.</p></div>
+                <div class="why-card"><div class="icon">📊</div><h3>Advanced Tools</h3><p>Professional charting, 100+ indicators, algorithmic trading, and real-time market data.</p></div>
+                <div class="why-card"><div class="icon">🌐</div><h3>Global Access</h3><p>Trade 150+ markets across forex, stocks, commodities, indices, and crypto from a single account.</p></div>
+                <div class="why-card"><div class="icon">🎓</div><h3>Trader Education</h3><p>Comprehensive learning center with courses, webinars, and daily market analysis from industry experts.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CEO SECTION ===== -->
+    <section class="section ceo-section" id="leadership">
+        <div class="container">
+            <div class="ceo-grid">
+                <div class="ceo-image-wrapper">
+                    <div class="ceo-image-placeholder">
+                        <img src="{% static 'img/ceo.jpeg' %}" alt="CEO" style="height:600px;width:100%;object-fit:cover;border-radius:var(--radius-lg);">
                     </div>
-                    <div class="chart-glow-line"></div>
+                    <div class="ceo-badge">✦ FOUNDER &amp; CEO</div>
                 </div>
-                <div class="chart-timeframes">
-                    <button class="active">1H</button>
-                    <button>4H</button>
-                    <button>1D</button>
-                    <button>1W</button>
-                    <button>1M</button>
-                    <button>ALL</button>
-                </div>
-                <div class="chart-indicators">
-                    <div class="indicator"><span class="dot green"></span> RSI <span class="ind-value">62.4</span></div>
-                    <div class="indicator"><span class="dot gold"></span> MACD <span class="ind-value">0.0012</span></div>
-                    <div class="indicator"><span class="dot red"></span> Volatility <span class="ind-value">12.8%</span></div>
-                    <div class="indicator"><span class="dot green"></span> Momentum <span class="ind-value">Bullish</span></div>
-                </div>
-                <div class="trade-feed" id="tradeFeed">
-                    <div class="trade-item"><span>🟢</span> Buy <span class="trade-amount">$12.4K</span> @ 1.0874</div>
-                    <div class="trade-item"><span>🔴</span> Sell <span class="trade-amount sell">$8.2K</span> @ 1.0872</div>
-                    <div class="trade-item"><span>🟢</span> Buy <span class="trade-amount">$5.6K</span> @ 1.0875</div>
+                <div class="ceo-content">
+                    <h2 class="ceo-name">Alexandra Cedeño</h2>
+                    <div class="ceo-title">Chief Executive Officer, Titan Global FX</div>
+                    <div class="ceo-quote">"Our mission is to democratize institutional-grade trading by combining cutting-edge technology with uncompromising regulatory standards."</div>
+                    <p class="ceo-bio">With over 25 years of experience in global financial markets, Jonathan founded Titan Global FX to bridge the gap between retail traders and institutional execution. Previously a managing director at Goldman Sachs and a partner at a leading hedge fund, he brings deep expertise in electronic trading, risk management, and fintech innovation.</p>
+                    <div class="ceo-meta">
+                        <div class="meta-item"><span>Experience</span><strong>25+ Years</strong></div>
+                        <div class="meta-item"><span>Education</span><strong>Harvard MBA, MIT Sloan</strong></div>
+                        <div class="meta-item"><span>Previous</span><strong>Goldman Sachs, Tudor</strong></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- ===== TICKER ===== -->
-<div class="ticker" aria-label="Live market ticker">
-    <div class="ticker-track" id="tickerTrack">
-        <!-- injected by JS -->
-    </div>
-</div>
+    <!-- ===== STATISTICS ===== -->
+    <section class="section stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item"><h2 id="stat1">0</h2><p>Active Traders</p></div>
+                <div class="stat-item"><h2 id="stat2">0</h2><p>Daily Trades</p></div>
+                <div class="stat-item"><h2 id="stat3">0</h2><p>Markets Access</p></div>
+                <div class="stat-item"><h2 id="stat4">0</h2><p>Avg. Execution (ms)</p></div>
+            </div>
+        </div>
+    </section>
 
-<!-- ===== WHY CHOOSE US ===== -->
-<section class="section why-section" id="about">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:48px;">
-            <h2 class="section-title">Why <span class="highlight">Titan Global FX</span></h2>
-            <p class="section-subtitle mx-auto">Built for serious traders. Powered by institutional technology. Regulated and transparent.</p>
-        </div>
-        <div class="why-grid">
-            <div class="why-card">
-                <div class="icon">🏦</div>
-                <h3>SEC-Regulated</h3>
-                <p>Fully compliant with SEC and FINRA regulations. Your assets are protected with institutional-grade custody.</p>
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="section testimonial-section" id="platforms">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:48px;">
+                <h2 class="section-title">What Our <span class="highlight">Traders Say</span></h2>
+                <p class="section-subtitle mx-auto">Real feedback from professionals who trade with Titan Global FX.</p>
             </div>
-            <div class="why-card">
-                <div class="icon">⚡</div>
-                <h3>Lightning Execution</h3>
-                <p>Sub-10ms execution with direct market access. No dealing desk intervention, ever.</p>
-            </div>
-            <div class="why-card">
-                <div class="icon">🔒</div>
-                <h3>Bank-Grade Security</h3>
-                <p>256-bit encryption, multi-factor authentication, and segregated client accounts with tier-1 banks.</p>
-            </div>
-            <div class="why-card">
-                <div class="icon">📊</div>
-                <h3>Advanced Tools</h3>
-                <p>Professional charting, 100+ indicators, algorithmic trading, and real-time market data.</p>
-            </div>
-            <div class="why-card">
-                <div class="icon">🌐</div>
-                <h3>Global Access</h3>
-                <p>Trade 150+ markets across forex, stocks, commodities, indices, and crypto from a single account.</p>
-            </div>
-            <div class="why-card">
-                <div class="icon">🎓</div>
-                <h3>Trader Education</h3>
-                <p>Comprehensive learning center with courses, webinars, and daily market analysis from industry experts.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== CEO SECTION ===== -->
-<section class="section ceo-section" id="leadership">
-    <div class="container">
-        <div class="ceo-grid">
-            <div class="ceo-image-wrapper">
-                <div class="ceo-image-placeholder">
-                    <span class="initials">JR</span>
-                </div>
-                <div class="ceo-badge">✦ FOUNDER &amp; CEO</div>
-            </div>
-            <div class="ceo-content">
-                <h2 class="ceo-name">Jonathan R. Ashford</h2>
-                <div class="ceo-title">Chief Executive Officer, Titan Global FX</div>
-                <div class="ceo-quote">
-                    "Our mission is to democratize institutional-grade trading by combining cutting-edge technology with uncompromising regulatory standards."
-                </div>
-                <p class="ceo-bio">
-                    With over 25 years of experience in global financial markets, Jonathan founded Titan Global FX to bridge the gap between retail traders and institutional execution. Previously a managing director at Goldman Sachs and a partner at a leading hedge fund, he brings deep expertise in electronic trading, risk management, and fintech innovation.
-                </p>
-                <div class="ceo-meta">
-                    <div class="meta-item"><span>Experience</span><strong>25+ Years</strong></div>
-                    <div class="meta-item"><span>Education</span><strong>Harvard MBA, MIT Sloan</strong></div>
-                    <div class="meta-item"><span>Previous</span><strong>Goldman Sachs, Tudor</strong></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== STATISTICS ===== -->
-<section class="section stats-section">
-    <div class="container">
-        <div class="stats-grid">
-            <div class="stat-item"><h2 id="stat1">0</h2><p>Active Traders</p></div>
-            <div class="stat-item"><h2 id="stat2">0</h2><p>Daily Trades</p></div>
-            <div class="stat-item"><h2 id="stat3">0</h2><p>Markets Access</p></div>
-            <div class="stat-item"><h2 id="stat4">0</h2><p>Avg. Execution (ms)</p></div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== TESTIMONIALS CAROUSEL ===== -->
-<section class="section testimonial-section" id="platforms">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:48px;">
-            <h2 class="section-title">What Our <span class="highlight">Traders Say</span></h2>
-            <p class="section-subtitle mx-auto">Real feedback from professionals who trade with Titan Global FX.</p>
-        </div>
-        <div class="testimonial-carousel" id="testimonialCarousel">
-            <div class="testimonial-track" id="testimonialTrack">
-                <div class="testimonial-card">
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"The execution speed and transparency at Titan Global FX is unmatched. I've traded with major brokers for 15 years and this is the best infrastructure I've seen."</blockquote>
-                    <div class="author">
-                        <div class="avatar">JD</div>
-                        <div>
-                            <div class="name">Jonathan Drake</div>
-                            <div class="title">Hedge Fund Manager</div>
+            <div class="testimonial-carousel" id="testimonialCarousel">
+                <div class="testimonial-track" id="testimonialTrack">
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <blockquote>"The execution speed and transparency at Titan Global FX is unmatched. I've traded with major brokers for 15 years and this is the best infrastructure I've seen."</blockquote>
+                        <div class="author">
+                            <div class="avatar"><img src="{% static 'img/ceo.jpg' %}" alt="Jonathan Drake" style="border-radius:70px;width:44px;height:44px;object-fit:cover;"></div>
+                            <div><div class="name">Jonathan Drake</div><div class="title">Hedge Fund Manager</div></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <blockquote>"Their educational resources and daily market analysis have completely transformed my trading strategy. The webinars are outstanding."</blockquote>
+                        <div class="author">
+                            <div class="avatar"><img src="{% static 'img/ashwina.jpeg' %}" alt="Sarah Mitchell" style="border-radius:70px;width:44px;height:44px;object-fit:cover;"></div>
+                            <div><div class="name">Sarah Mitchell</div><div class="title">Retail Trader</div></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <blockquote>"As an institutional trader, I need reliability and depth. Titan Global FX delivers on both counts. The MT5 integration is flawless."</blockquote>
+                        <div class="author">
+                            <div class="avatar"><img src="{% static 'img/ashley.jpeg' %}" alt="Michael Rourke" style="border-radius:70px;width:44px;height:44px;object-fit:cover;"></div>
+                            <div><div class="name">Michael Rourke</div><div class="title">Proprietary Trader</div></div>
                         </div>
                     </div>
                 </div>
-                <div class="testimonial-card">
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"Their educational resources and daily market analysis have completely transformed my trading strategy. The webinars are outstanding."</blockquote>
-                    <div class="author">
-                        <div class="avatar">SM</div>
-                        <div>
-                            <div class="name">Sarah Mitchell</div>
-                            <div class="title">Retail Trader</div>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" id="testimonialPrevBtn">‹</button>
+                    <div class="carousel-dots" id="testimonialDots"></div>
+                    <button class="carousel-btn" id="testimonialNextBtn">›</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== EXPERT TRADERS ===== -->
+    <section class="section traders-section" id="traders">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:48px;">
+                <h2 class="section-title">Meet Our <span class="highlight">Expert Traders</span></h2>
+                <p class="section-subtitle mx-auto">The team behind our institutional-grade execution and market intelligence.</p>
+            </div>
+            <div class="traders-carousel" id="tradersCarousel">
+                <div class="traders-track" id="tradersTrack">
+                    <div class="trader-card">
+                        <div class="trader-avatar"><img src="{% static 'img/jenifergomez.jpeg' %}" alt="Jenifer Gomez" style="border-radius:70px;width:72px;height:72px;object-fit:cover;"></div>
+                        <div class="trader-name">Jenifer Gomez</div>
+                        <div class="trader-specialty">Chief Market Strategist</div>
+                        <div class="trader-stats">
+                            <div class="ts-item"><span class="ts-value">14yr</span><span class="ts-label">Experience</span></div>
+                            <div class="ts-item"><span class="ts-value">$10.5M</span><span class="ts-label">Managed</span></div>
+                            <div class="ts-item"><span class="ts-value">92%</span><span class="ts-label">Accuracy</span></div>
                         </div>
+                        <span class="trader-badge verified">✓ Verified Professional</span>
                     </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars">★★★★★</div>
-                    <blockquote>"As an institutional trader, I need reliability and depth. Titan Global FX delivers on both counts. The MT5 integration is flawless."</blockquote>
-                    <div class="author">
-                        <div class="avatar">MR</div>
-                        <div>
-                            <div class="name">Michael Rourke</div>
-                            <div class="title">Proprietary Trader</div>
+                    <div class="trader-card">
+                        <div class="trader-avatar"><img src="{% static 'img/Dayanyceullar.jpeg' %}" alt="Dayany Ceullar" style="border-radius:70px;width:72px;height:72px;object-fit:cover;"></div>
+                        <div class="trader-name">Dayany Ceullar</div>
+                        <div class="trader-specialty">Head of Quantitative Trading</div>
+                        <div class="trader-stats">
+                            <div class="ts-item"><span class="ts-value">11yr</span><span class="ts-label">Experience</span></div>
+                            <div class="ts-item"><span class="ts-value">$15M</span><span class="ts-label">Managed</span></div>
+                            <div class="ts-item"><span class="ts-value">96%</span><span class="ts-label">Accuracy</span></div>
                         </div>
+                        <span class="trader-badge verified">✓ Verified Professional</span>
+                    </div>
+                    <div class="trader-card">
+                        <div class="trader-avatar"><img src="{% static 'img/LeidyguAnes.jpeg' %}" alt="Leidy Guanes" style="border-radius:70px;width:72px;height:72px;object-fit:cover;"></div>
+                        <div class="trader-name">Leidy Guanes</div>
+                        <div class="trader-specialty">Senior FX Trader</div>
+                        <div class="trader-stats">
+                            <div class="ts-item"><span class="ts-value">9yr</span><span class="ts-label">Experience</span></div>
+                            <div class="ts-item"><span class="ts-value">$2.6M</span><span class="ts-label">Managed</span></div>
+                            <div class="ts-item"><span class="ts-value">89%</span><span class="ts-label">Accuracy</span></div>
+                        </div>
+                        <span class="trader-badge">★ Top 1% Performer</span>
+                    </div>
+                    <div class="trader-card">
+                        <div class="trader-avatar"><img src="{% static 'img/jessica.jpeg' %}" alt="Jessica Liam" style="border-radius:70px;width:72px;height:72px;object-fit:cover;"></div>
+                        <div class="trader-name">Jessica Liam</div>
+                        <div class="trader-specialty">Head of Algorithmic Trading</div>
+                        <div class="trader-stats">
+                            <div class="ts-item"><span class="ts-value">10yr</span><span class="ts-label">Experience</span></div>
+                            <div class="ts-item"><span class="ts-value">$45.9M</span><span class="ts-label">Managed</span></div>
+                            <div class="ts-item"><span class="ts-value">98%</span><span class="ts-label">Accuracy</span></div>
+                        </div>
+                        <span class="trader-badge verified">✓ Verified Professional</span>
+                    </div>
+                    <div class="trader-card">
+                        <div class="trader-avatar"><img src="{% static 'img/emma.jpeg' %}" alt="Amara Okafor" style="border-radius:70px;width:72px;height:72px;object-fit:cover;"></div>
+                        <div class="trader-name">Amara Okafor</div>
+                        <div class="trader-specialty">Senior Commodities Trader</div>
+                        <div class="trader-stats">
+                            <div class="ts-item"><span class="ts-value">8yr</span><span class="ts-label">Experience</span></div>
+                            <div class="ts-item"><span class="ts-value">$11M</span><span class="ts-label">Managed</span></div>
+                            <div class="ts-item"><span class="ts-value">91%</span><span class="ts-label">Accuracy</span></div>
+                        </div>
+                        <span class="trader-badge">★ Top 5% Performer</span>
                     </div>
                 </div>
-            </div>
-            <div class="carousel-controls">
-                <button class="carousel-btn" id="testimonialPrevBtn" aria-label="Previous testimonial">‹</button>
-                <div class="carousel-dots" id="testimonialDots"></div>
-                <button class="carousel-btn" id="testimonialNextBtn" aria-label="Next testimonial">›</button>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== TRADERS CAROUSEL ===== -->
-<section class="section traders-section" id="traders">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:48px;">
-            <h2 class="section-title">Meet Our <span class="highlight">Expert Traders</span></h2>
-            <p class="section-subtitle mx-auto">The team behind our institutional-grade execution and market intelligence.</p>
-        </div>
-        <div class="traders-carousel" id="tradersCarousel">
-            <div class="traders-track" id="tradersTrack">
-                <!-- Trader cards -->
-                <div class="trader-card">
-                    <div class="trader-avatar">EK</div>
-                    <div class="trader-name">Elena Kravitz</div>
-                    <div class="trader-specialty">Chief Market Strategist</div>
-                    <div class="trader-stats">
-                        <div class="ts-item"><span class="ts-value">14yr</span><span class="ts-label">Experience</span></div>
-                        <div class="ts-item"><span class="ts-value">$2.8B</span><span class="ts-label">Managed</span></div>
-                        <div class="ts-item"><span class="ts-value">92%</span><span class="ts-label">Accuracy</span></div>
-                    </div>
-                    <span class="trader-badge verified">✓ Verified Professional</span>
-                </div>
-                <div class="trader-card">
-                    <div class="trader-avatar">MT</div>
-                    <div class="trader-name">Marcus Thorne</div>
-                    <div class="trader-specialty">Head of Quantitative Trading</div>
-                    <div class="trader-stats">
-                        <div class="ts-item"><span class="ts-value">11yr</span><span class="ts-label">Experience</span></div>
-                        <div class="ts-item"><span class="ts-value">$4.1B</span><span class="ts-label">Managed</span></div>
-                        <div class="ts-item"><span class="ts-value">96%</span><span class="ts-label">Accuracy</span></div>
-                    </div>
-                    <span class="trader-badge verified">✓ Verified Professional</span>
-                </div>
-                <div class="trader-card">
-                    <div class="trader-avatar">LN</div>
-                    <div class="trader-name">Lena Novak</div>
-                    <div class="trader-specialty">Senior FX Trader</div>
-                    <div class="trader-stats">
-                        <div class="ts-item"><span class="ts-value">9yr</span><span class="ts-label">Experience</span></div>
-                        <div class="ts-item"><span class="ts-value">$1.9B</span><span class="ts-label">Managed</span></div>
-                        <div class="ts-item"><span class="ts-value">89%</span><span class="ts-label">Accuracy</span></div>
-                    </div>
-                    <span class="trader-badge">★ Top 1% Performer</span>
-                </div>
-                <div class="trader-card">
-                    <div class="trader-avatar">DC</div>
-                    <div class="trader-name">David Chen</div>
-                    <div class="trader-specialty">Head of Algorithmic Trading</div>
-                    <div class="trader-stats">
-                        <div class="ts-item"><span class="ts-value">10yr</span><span class="ts-label">Experience</span></div>
-                        <div class="ts-item"><span class="ts-value">$5.2B</span><span class="ts-label">Managed</span></div>
-                        <div class="ts-item"><span class="ts-value">98%</span><span class="ts-label">Accuracy</span></div>
-                    </div>
-                    <span class="trader-badge verified">✓ Verified Professional</span>
-                </div>
-                <div class="trader-card">
-                    <div class="trader-avatar">AO</div>
-                    <div class="trader-name">Amara Okafor</div>
-                    <div class="trader-specialty">Senior Commodities Trader</div>
-                    <div class="trader-stats">
-                        <div class="ts-item"><span class="ts-value">8yr</span><span class="ts-label">Experience</span></div>
-                        <div class="ts-item"><span class="ts-value">$1.6B</span><span class="ts-label">Managed</span></div>
-                        <div class="ts-item"><span class="ts-value">91%</span><span class="ts-label">Accuracy</span></div>
-                    </div>
-                    <span class="trader-badge">★ Top 5% Performer</span>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" id="tradersPrevBtn">‹</button>
+                    <div class="carousel-dots" id="tradersDots"></div>
+                    <button class="carousel-btn" id="tradersNextBtn">›</button>
                 </div>
             </div>
-            <div class="carousel-controls">
-                <button class="carousel-btn" id="tradersPrevBtn" aria-label="Previous trader">‹</button>
-                <div class="carousel-dots" id="tradersDots"></div>
-                <button class="carousel-btn" id="tradersNextBtn" aria-label="Next trader">›</button>
+        </div>
+    </section>
+
+    <!-- ===== PLATFORMS ===== -->
+    <section class="section platforms-section" id="platforms">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:40px;">
+                <h2 class="section-title">Our <span class="highlight">Platforms</span></h2>
+                <p class="section-subtitle mx-auto">Trade with the tools that professionals trust. Each platform is optimized for speed, reliability, and advanced functionality.</p>
+            </div>
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <span class="platform-badge popular">★ Most Popular</span>
+                    <span class="platform-icon">📊</span>
+                    <div class="platform-name">MetaTrader 4</div>
+                    <div class="platform-sub">The industry standard</div>
+                    <div class="platform-desc">The world's most trusted trading platform. Ideal for forex and CFD traders with advanced charting and automated trading.</div>
+                    <ul class="platform-features">
+                        <li><span class="check">✓</span> 30+ Built-in Indicators</li>
+                        <li><span class="check">✓</span> Expert Advisors (EAs)</li>
+                        <li><span class="check">✓</span> One-Click Trading</li>
+                        <li><span class="check">✓</span> Mobile &amp; Web Access</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary btn-sm">Learn More</a>
+                </div>
+                <div class="platform-card">
+                    <span class="platform-badge">Advanced</span>
+                    <span class="platform-icon">📈</span>
+                    <div class="platform-name">MetaTrader 5</div>
+                    <div class="platform-sub">Multi-asset power</div>
+                    <div class="platform-desc">Next-generation platform with support for stocks, commodities, and crypto. Enhanced depth of market and advanced order types.</div>
+                    <ul class="platform-features">
+                        <li><span class="check">✓</span> 38+ Technical Indicators</li>
+                        <li><span class="check">✓</span> Depth of Market (DOM)</li>
+                        <li><span class="check">✓</span> Algorithmic Trading</li>
+                        <li><span class="check">✓</span> Economic Calendar</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary btn-sm">Learn More</a>
+                </div>
+                <div class="platform-card">
+                    <span class="platform-badge">No Download</span>
+                    <span class="platform-icon">🌐</span>
+                    <div class="platform-name">Web Trader</div>
+                    <div class="platform-sub">Trade from any browser</div>
+                    <div class="platform-desc">Access your account from any device with a modern web browser. No installation required, full functionality included.</div>
+                    <ul class="platform-features">
+                        <li><span class="check">✓</span> Instant Access</li>
+                        <li><span class="check">✓</span> Responsive Design</li>
+                        <li><span class="check">✓</span> Advanced Charting</li>
+                        <li><span class="check">✓</span> One-Click Trading</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary btn-sm">Launch Web Trader</a>
+                </div>
+                <div class="platform-card">
+                    <span class="platform-badge">On-the-Go</span>
+                    <span class="platform-icon">📱</span>
+                    <div class="platform-name">Mobile Trading App</div>
+                    <div class="platform-sub">Trade anywhere, anytime</div>
+                    <div class="platform-desc">Full-featured mobile trading app for iOS and Android. Monitor markets, manage positions, and execute trades from anywhere.</div>
+                    <ul class="platform-features">
+                        <li><span class="check">✓</span> Real-Time Quotes</li>
+                        <li><span class="check">✓</span> Interactive Charts</li>
+                        <li><span class="check">✓</span> Push Notifications</li>
+                        <li><span class="check">✓</span> Biometric Security</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary btn-sm">Download App</a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- ===== PLANS ===== -->
-<section class="section plans-section" id="plans">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:40px;">
-            <h2 class="section-title">Investment <span class="highlight">Plans</span></h2>
-            <p class="section-subtitle mx-auto">Choose the plan that fits your trading goals. Minimum investment starts at <strong class="highlight">$100</strong>.</p>
-        </div>
-        <div class="plans-grid">
-            <div class="plan-card">
-                <span class="plan-badge">Starter</span>
-                <span class="plan-icon">🌱</span>
-                <div class="plan-name">Starter</div>
-                <div class="plan-sub">Beginner friendly</div>
-                <div class="plan-price"><span class="currency">$</span>100</div>
-                <div class="plan-min">Minimum Investment</div>
-                <div class="plan-divider"></div>
-                <ul class="plan-features">
-                    <li><span class="check">✓</span> Access to 50+ Markets</li>
-                    <li><span class="check">✓</span> Basic Charting Tools</li>
-                    <li><span class="check">✓</span> Email Support</li>
-                    <li><span class="muted">—</span> Advanced Indicators</li>
-                    <li><span class="muted">—</span> Priority Support</li>
-                </ul>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
+    <!-- ===== MARKETS ===== -->
+    <section class="section markets-section" id="markets">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:40px;">
+                <h2 class="section-title">Asset <span class="highlight">Classes</span></h2>
+                <p class="section-subtitle mx-auto">Diversify your portfolio with a wide range of asset classes, all available from a single account.</p>
             </div>
-            <div class="plan-card">
-                <span class="plan-badge popular">★ Popular</span>
-                <span class="plan-icon">📈</span>
-                <div class="plan-name">Professional</div>
-                <div class="plan-sub">For serious traders</div>
-                <div class="plan-price"><span class="currency">$</span>500</div>
-                <div class="plan-min">Minimum Investment</div>
-                <div class="plan-divider"></div>
-                <ul class="plan-features">
-                    <li><span class="check">✓</span> Access to 100+ Markets</li>
-                    <li><span class="check">✓</span> Advanced Charting &amp; Indicators</li>
-                    <li><span class="check">✓</span> Priority Email &amp; Chat Support</li>
-                    <li><span class="check">✓</span> Daily Market Analysis</li>
-                    <li><span class="muted">—</span> Dedicated Account Manager</li>
-                </ul>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-sm">Get Started</a>
-            </div>
-            <div class="plan-card">
-                <span class="plan-badge">VIP</span>
-                <span class="plan-icon">👑</span>
-                <div class="plan-name">VIP</div>
-                <div class="plan-sub">Premium experience</div>
-                <div class="plan-price"><span class="currency">$</span>2,500</div>
-                <div class="plan-min">Minimum Investment</div>
-                <div class="plan-divider"></div>
-                <ul class="plan-features">
-                    <li><span class="check">✓</span> Access to 150+ Markets</li>
-                    <li><span class="check">✓</span> Professional Charting Suite</li>
-                    <li><span class="check">✓</span> 24/7 Priority Support</li>
-                    <li><span class="check">✓</span> Daily Expert Analysis &amp; Signals</li>
-                    <li><span class="check">✓</span> Dedicated Account Manager</li>
-                </ul>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
-            </div>
-            <div class="plan-card">
-                <span class="plan-badge">Institutional</span>
-                <span class="plan-icon">🏛️</span>
-                <div class="plan-name">Institutional</div>
-                <div class="plan-sub">For funds &amp; firms</div>
-                <div class="plan-price"><span class="currency">$</span>10,000</div>
-                <div class="plan-min">Minimum Investment</div>
-                <div class="plan-divider"></div>
-                <ul class="plan-features">
-                    <li><span class="check">✓</span> Full Market Access</li>
-                    <li><span class="check">✓</span> Institutional-Grade Tools</li>
-                    <li><span class="check">✓</span> 24/7 Dedicated Support Team</li>
-                    <li><span class="check">✓</span> Custom Analytics &amp; Reporting</li>
-                    <li><span class="check">✓</span> Dedicated Relationship Manager</li>
-                </ul>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== AWARDS ===== -->
-<section class="section awards-section">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:8px;">
-            <h2 class="section-title" style="font-size:1.6rem;">Awards &amp; <span class="highlight">Certifications</span></h2>
-        </div>
-        <div class="awards-grid">
-            <div class="award"><span class="badge">🏆</span> Best Forex Broker 2025</div>
-            <div class="award"><span class="badge">⭐</span> SEC Registered Investment Adviser</div>
-            <div class="award"><span class="badge">🔒</span> FINRA Member Firm</div>
-            <div class="award"><span class="badge">📈</span> Institutional Trader Award 2024</div>
-            <div class="award"><span class="badge">🌍</span> Licensed in 50+ Jurisdictions</div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== CERTIFICATES ===== -->
-<section class="section certificates-section" id="certificates">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:48px;">
-            <h2 class="section-title">Trading <span class="highlight">Certifications</span></h2>
-            <p class="section-subtitle mx-auto">Industry-recognized credentials that validate our expertise and commitment to excellence.</p>
-        </div>
-        <div class="grid-4 cert-grid">
-            <div class="cert-card">
-                <span class="cert-icon">📜</span>
-                <div class="cert-name">CFA Charterholder</div>
-                <div class="cert-issuer">CFA Institute</div>
-                <div class="cert-desc">Rigorous curriculum covering investment management, financial analysis, and ethical standards.</div>
-                <span class="cert-badge">● Active</span>
-            </div>
-            <div class="cert-card">
-                <span class="cert-icon">⚖️</span>
-                <div class="cert-name">Series 7 &amp; 63</div>
-                <div class="cert-issuer">FINRA</div>
-                <div class="cert-desc">General Securities Representative and Uniform Securities Agent licenses for US markets.</div>
-                <span class="cert-badge">● Active</span>
-            </div>
-            <div class="cert-card">
-                <span class="cert-icon">📊</span>
-                <div class="cert-name">CMT Charter</div>
-                <div class="cert-issuer">CMT Association</div>
-                <div class="cert-desc">Chartered Market Technician — advanced mastery of technical analysis and market behavior.</div>
-                <span class="cert-badge">● Active</span>
-            </div>
-            <div class="cert-card">
-                <span class="cert-icon">🛡️</span>
-                <div class="cert-name">CIPM</div>
-                <div class="cert-issuer">CFA Institute</div>
-                <div class="cert-desc">Certificate in Investment Performance Measurement — global standard for performance evaluation.</div>
-                <span class="cert-badge">● Active</span>
-            </div>
-            <div class="cert-card">
-                <span class="cert-icon">🌐</span>
-                <div class="cert-name">FRM</div>
-                <div class="cert-issuer">GARP</div>
-                <div class="cert-desc">Financial Risk Manager — expertise in risk management, derivatives, and portfolio construction.</div>
-                <span class="cert-badge">● Active</span>
-            </div>
-            <div class="cert-card">
-                <span class="cert-icon">💹</span>
-                <div class="cert-name">CAIA</div>
-                <div class="cert-issuer">CAIA Association</div>
-                <div class="cert-desc">Chartered Alternative Investment Analyst — specialization in alternative investments and hedge funds.</div>
-                <span class="cert-badge">● Active</span>
-            </div>
-            <div class="cert-card">
-                <span class="cert-icon">🔐</span>
-                <div class="cert-name">CISSP</div>
-                <div class="cert-issuer">ISC²</div>
-                <div class="cert-desc">Certified Information Systems Security Professional — enterprise-grade cybersecurity certification.</div>
-                <span class="cert-badge">● Active</span>
-            </div>
-            <div class="cert-card">
-                <span class="cert-icon">📘</span>
-                <div class="cert-name">CCO</div>
-                <div class="cert-issuer">NFA</div>
-                <div class="cert-desc">Chief Compliance Officer certification — ensuring regulatory adherence and best execution practices.</div>
-                <span class="cert-badge">● Active</span>
+            <div class="market-grid">
+                <div class="market-card">
+                    <span class="market-badge">Liquid</span>
+                    <span class="market-icon">💱</span>
+                    <div class="market-name">Forex</div>
+                    <div class="market-sub">The world's largest market</div>
+                    <div class="market-desc">Trade major, minor, and exotic currency pairs with ultra-tight spreads and 24/5 liquidity.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Pairs</div><div class="ms-value">60+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.0 pips</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:50</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Forex</a>
+                </div>
+                <div class="market-card">
+                    <span class="market-badge high">High Liquidity</span>
+                    <span class="market-icon">📈</span>
+                    <div class="market-name">Stocks</div>
+                    <div class="market-sub">Global equity markets</div>
+                    <div class="market-desc">Trade shares of the world's leading companies across US, European, and Asian exchanges.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Stocks</div><div class="ms-value">300+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.02%</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:20</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Stocks</a>
+                </div>
+                <div class="market-card">
+                    <span class="market-badge volatile">Volatile</span>
+                    <span class="market-icon">🛢️</span>
+                    <div class="market-name">Commodities</div>
+                    <div class="market-sub">Hard &amp; soft commodities</div>
+                    <div class="market-desc">Trade precious metals, energy products, and agricultural commodities with competitive spreads.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Instruments</div><div class="ms-value">20+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.3 pips</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:30</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Commodities</a>
+                </div>
+                <div class="market-card">
+                    <span class="market-badge">Broad Exposure</span>
+                    <span class="market-icon">📊</span>
+                    <div class="market-name">Indices</div>
+                    <div class="market-sub">Market benchmarks</div>
+                    <div class="market-desc">Trade the world's major stock indices including the S&P 500, Nasdaq, FTSE 100, and more.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Indices</div><div class="ms-value">15+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.5 pips</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:40</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Indices</a>
+                </div>
+                <div class="market-card">
+                    <span class="market-badge volatile">High Volatility</span>
+                    <span class="market-icon">₿</span>
+                    <div class="market-name">Cryptocurrency</div>
+                    <div class="market-sub">Digital assets</div>
+                    <div class="market-desc">Trade Bitcoin, Ethereum, and other major cryptocurrencies with leverage and tight spreads.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Crypto Pairs</div><div class="ms-value">12+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.05%</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:5</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Crypto</a>
+                </div>
+                <div class="market-card">
+                    <span class="market-badge high">Diversified</span>
+                    <span class="market-icon">📦</span>
+                    <div class="market-name">ETFs</div>
+                    <div class="market-sub">Exchange-traded funds</div>
+                    <div class="market-desc">Gain diversified exposure to sectors, themes, and asset classes through liquid ETFs.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">ETFs</div><div class="ms-value">50+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.03%</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:20</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore ETFs</a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- ===== FAQ ===== -->
-<section class="section faq-section" id="accounts">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:48px;">
-            <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
-            <p class="section-subtitle mx-auto">Everything you need to know about trading with Titan Global FX.</p>
+    <!-- ===== INVESTMENT PLANS ===== -->
+    <section class="section plans-section" id="plans">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:40px;">
+                <h2 class="section-title">Investment <span class="highlight">Plans</span></h2>
+                <p class="section-subtitle mx-auto">Choose the plan that fits your trading goals. Minimum investment starts at <strong class="highlight">$100</strong>.</p>
+            </div>
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <span class="plan-badge">Starter</span>
+                    <span class="plan-icon">🌱</span>
+                    <div class="plan-name">Starter</div>
+                    <div class="plan-sub">Beginner friendly</div>
+                    <div class="plan-price"><span class="currency">$</span>100</div>
+                    <div class="plan-min">Minimum Investment</div>
+                    <div class="plan-divider"></div>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> Access to 50+ Markets</li>
+                        <li><span class="check">✓</span> Basic Charting Tools</li>
+                        <li><span class="check">✓</span> Email Support</li>
+                        <li><span class="muted">—</span> Advanced Indicators</li>
+                        <li><span class="muted">—</span> Priority Support</li>
+                    </ul>
+                    <a href="{% url 'signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
+                </div>
+                <div class="plan-card">
+                    <span class="plan-badge popular">★ Popular</span>
+                    <span class="plan-icon">📈</span>
+                    <div class="plan-name">Professional</div>
+                    <div class="plan-sub">For serious traders</div>
+                    <div class="plan-price"><span class="currency">$</span>500</div>
+                    <div class="plan-min">Minimum Investment</div>
+                    <div class="plan-divider"></div>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> Access to 100+ Markets</li>
+                        <li><span class="check">✓</span> Advanced Charting &amp; Indicators</li>
+                        <li><span class="check">✓</span> Priority Email &amp; Chat Support</li>
+                        <li><span class="check">✓</span> Daily Market Analysis</li>
+                        <li><span class="muted">—</span> Dedicated Account Manager</li>
+                    </ul>
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-sm">Get Started</a>
+                </div>
+                <div class="plan-card">
+                    <span class="plan-badge">VIP</span>
+                    <span class="plan-icon">👑</span>
+                    <div class="plan-name">VIP</div>
+                    <div class="plan-sub">Premium experience</div>
+                    <div class="plan-price"><span class="currency">$</span>2,500</div>
+                    <div class="plan-min">Minimum Investment</div>
+                    <div class="plan-divider"></div>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> Access to 150+ Markets</li>
+                        <li><span class="check">✓</span> Professional Charting Suite</li>
+                        <li><span class="check">✓</span> 24/7 Priority Support</li>
+                        <li><span class="check">✓</span> Daily Expert Analysis &amp; Signals</li>
+                        <li><span class="check">✓</span> Dedicated Account Manager</li>
+                    </ul>
+                    <a href="{% url 'signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
+                </div>
+                <div class="plan-card">
+                    <span class="plan-badge">Institutional</span>
+                    <span class="plan-icon">🏛️</span>
+                    <div class="plan-name">Institutional</div>
+                    <div class="plan-sub">For funds &amp; firms</div>
+                    <div class="plan-price"><span class="currency">$</span>10,000</div>
+                    <div class="plan-min">Minimum Investment</div>
+                    <div class="plan-divider"></div>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> Full Market Access</li>
+                        <li><span class="check">✓</span> Institutional-Grade Tools</li>
+                        <li><span class="check">✓</span> 24/7 Dedicated Support Team</li>
+                        <li><span class="check">✓</span> Custom Analytics &amp; Reporting</li>
+                        <li><span class="check">✓</span> Dedicated Relationship Manager</li>
+                    </ul>
+                    <a href="{% url 'signup' %}" class="btn btn-secondary btn-sm">Get Started</a>
+                </div>
+            </div>
         </div>
-        <div class="faq-list" id="faqList">
-            <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    What is the minimum deposit to open an account?
-                    <span class="icon">+</span>
-                </button>
-                <div class="faq-answer">We offer flexible account options starting from $250 for our Starter Account. Professional and VIP accounts have higher minimums with additional benefits and lower spreads.</div>
+    </section>
+
+    <!-- ===== ACCOUNTS ===== -->
+    <section class="section accounts-section" id="accounts">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:40px;">
+                <h2 class="section-title">Account <span class="highlight">Types</span></h2>
+                <p class="section-subtitle mx-auto">Choose the account type that matches your trading style and experience level.</p>
             </div>
-            <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    Is Titan Global FX regulated in the US?
-                    <span class="icon">+</span>
-                </button>
-                <div class="faq-answer">Yes. Titan Global FX is a registered SEC Investment Adviser and FINRA member firm. We operate under strict regulatory oversight with full transparency and client fund segregation.</div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    What trading platforms do you support?
-                    <span class="icon">+</span>
-                </button>
-                <div class="faq-answer">We support MetaTrader 4 (MT4), MetaTrader 5 (MT5), our proprietary Web Trader, and a fully-featured Mobile Trading App for iOS and Android.</div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    How long do withdrawals take?
-                    <span class="icon">+</span>
-                </button>
-                <div class="faq-answer">Withdrawals are processed within 24 hours on business days. Bank transfers typically take 1-3 business days, while card and e-wallet withdrawals are usually instant or within 24 hours.</div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    Do you offer leverage trading?
-                    <span class="icon">+</span>
-                </button>
-                <div class="faq-answer">Yes. We offer flexible leverage up to 1:50 for forex trading, subject to regulatory limits and account type. Leverage options are customizable based on your trading experience and risk appetite.</div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    What are the investment plan minimums?
-                    <span class="icon">+</span>
-                </button>
-                <div class="faq-answer">Our investment plans start at just $100 for the Starter plan. Professional ($500), VIP ($2,500), and Institutional ($10,000) plans offer progressively more features, markets, and dedicated support.</div>
+            <div class="accounts-grid">
+                <div class="account-card">
+                    <span class="account-icon">🌱</span>
+                    <h3 class="account-name">Starter Account</h3>
+                    <div class="account-sub">Perfect for beginners</div>
+                    <div class="account-price"><span class="currency">$</span>100</div>
+                    <div class="account-min">Minimum Deposit</div>
+                    <ul class="account-features">
+                        <li><span class="check">✓</span> 50+ Markets</li>
+                        <li><span class="check">✓</span> Basic Charts</li>
+                        <li><span class="check">✓</span> Email Support</li>
+                        <li><span class="muted">—</span> Priority Support</li>
+                    </ul>
+                    <a href="{% url 'signup' %}" class="btn btn-secondary btn-sm">Open Account</a>
+                </div>
+                <div class="account-card">
+                    <span class="account-badge popular">★ Popular</span>
+                    <span class="account-icon">📈</span>
+                    <h3 class="account-name">Professional Account</h3>
+                    <div class="account-sub">For serious traders</div>
+                    <div class="account-price"><span class="currency">$</span>500</div>
+                    <div class="account-min">Minimum Deposit</div>
+                    <ul class="account-features">
+                        <li><span class="check">✓</span> 100+ Markets</li>
+                        <li><span class="check">✓</span> Advanced Charts</li>
+                        <li><span class="check">✓</span> Priority Support</li>
+                        <li><span class="check">✓</span> Daily Analysis</li>
+                    </ul>
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-sm">Open Account</a>
+                </div>
+                <div class="account-card">
+                    <span class="account-icon">👑</span>
+                    <h3 class="account-name">VIP Account</h3>
+                    <div class="account-sub">Premium experience</div>
+                    <div class="account-price"><span class="currency">$</span>2,500</div>
+                    <div class="account-min">Minimum Deposit</div>
+                    <ul class="account-features">
+                        <li><span class="check">✓</span> 150+ Markets</li>
+                        <li><span class="check">✓</span> Professional Suite</li>
+                        <li><span class="check">✓</span> 24/7 Support</li>
+                        <li><span class="check">✓</span> Account Manager</li>
+                    </ul>
+                    <a href="{% url 'signup' %}" class="btn btn-secondary btn-sm">Open Account</a>
+                </div>
+                <div class="account-card">
+                    <span class="account-icon">🏛️</span>
+                    <h3 class="account-name">Institutional Account</h3>
+                    <div class="account-sub">For funds &amp; firms</div>
+                    <div class="account-price"><span class="currency">$</span>10,000</div>
+                    <div class="account-min">Minimum Deposit</div>
+                    <ul class="account-features">
+                        <li><span class="check">✓</span> Full Market Access</li>
+                        <li><span class="check">✓</span> Institutional Tools</li>
+                        <li><span class="check">✓</span> Dedicated Team</li>
+                        <li><span class="check">✓</span> Custom Reporting</li>
+                    </ul>
+                    <a href="{% url 'signup' %}" class="btn btn-secondary btn-sm">Open Account</a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- ===== CTA ===== -->
-<section class="section" style="background:var(--navy-light); border-top:1px solid rgba(255,255,255,0.04); text-align:center; padding:60px 0;">
-    <div class="container">
-        <h2 style="font-size:2.2rem; font-weight:700; margin-bottom:12px;">Ready to Trade with <span class="highlight">Confidence</span>?</h2>
-        <p style="color:var(--gray-400); font-size:1.05rem; max-width:500px; margin:0 auto 28px;">Join over 120,000 traders who trust Titan Global FX for institutional-grade execution.</p>
-        <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-            <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">Open Account</a>
-            <a href="{% url 'core:contact' %}" class="btn btn-secondary btn-lg">Contact Us</a>
+    <!-- ===== ANALYSIS ===== -->
+    <section class="section analysis-section" id="analysis">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:40px;">
+                <h2 class="section-title">Market <span class="highlight">Analysis</span></h2>
+                <p class="section-subtitle mx-auto">Stay ahead of the markets with daily news, trading signals, and expert insights.</p>
+            </div>
+            <div class="analysis-stats">
+                <div class="stat-card"><span class="stat-value">12</span><span class="stat-label">Today's News</span></div>
+                <div class="stat-card"><span class="stat-value">8</span><span class="stat-label">Active Signals</span></div>
+                <div class="stat-card"><span class="stat-value">15</span><span class="stat-label">Upcoming Events</span></div>
+            </div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-meta"><span class="tag news">News</span><span class="news-date">2 hours ago</span></div>
+                    <div class="news-title">Fed Signals Potential Rate Cut as Inflation Cools</div>
+                    <div class="news-excerpt">Federal Reserve officials indicated growing confidence that inflation is moderating, paving the way for potential rate cuts.</div>
+                    <a href="#" class="news-link">Read More →</a>
+                </div>
+                <div class="news-card">
+                    <div class="news-meta"><span class="tag news">News</span><span class="news-date">4 hours ago</span></div>
+                    <div class="news-title">Gold Surges to 3-Month High on Safe-Haven Demand</div>
+                    <div class="news-excerpt">Gold prices climbed to their highest level in three months as geopolitical tensions boosted demand for the safe-haven metal.</div>
+                    <a href="#" class="news-link">Read More →</a>
+                </div>
+                <div class="news-card">
+                    <div class="news-meta"><span class="tag news">News</span><span class="news-date">6 hours ago</span></div>
+                    <div class="news-title">Oil Prices Rally on Strong Demand Outlook</div>
+                    <div class="news-excerpt">Crude oil prices extended gains as data showed robust demand from emerging markets and supply constraints.</div>
+                    <a href="#" class="news-link">Read More →</a>
+                </div>
+            </div>
+            <div class="signals-grid">
+                <div class="signal-card">
+                    <div class="signal-header"><span class="signal-pair">EUR/USD</span><span class="signal-action buy">Buy</span></div>
+                    <div class="signal-price">1.08742</div>
+                    <div class="signal-details">
+                        <div class="sd-item"><div class="sd-label">Entry</div><div class="sd-value">1.0850</div></div>
+                        <div class="sd-item"><div class="sd-label">Take Profit</div><div class="sd-value">1.0950</div></div>
+                        <div class="sd-item"><div class="sd-label">Stop Loss</div><div class="sd-value">1.0800</div></div>
+                    </div>
+                    <div class="signal-confidence">Confidence <div class="conf-bar"><div class="conf-fill" style="width:78%;"></div></div>78%</div>
+                </div>
+                <div class="signal-card">
+                    <div class="signal-header"><span class="signal-pair">GBP/USD</span><span class="signal-action sell">Sell</span></div>
+                    <div class="signal-price">1.26485</div>
+                    <div class="signal-details">
+                        <div class="sd-item"><div class="sd-label">Entry</div><div class="sd-value">1.2680</div></div>
+                        <div class="sd-item"><div class="sd-label">Take Profit</div><div class="sd-value">1.2550</div></div>
+                        <div class="sd-item"><div class="sd-label">Stop Loss</div><div class="sd-value">1.2750</div></div>
+                    </div>
+                    <div class="signal-confidence">Confidence <div class="conf-bar"><div class="conf-fill" style="width:65%;"></div></div>65%</div>
+                </div>
+                <div class="signal-card">
+                    <div class="signal-header"><span class="signal-pair">XAU/USD</span><span class="signal-action buy">Buy</span></div>
+                    <div class="signal-price">2,345.60</div>
+                    <div class="signal-details">
+                        <div class="sd-item"><div class="sd-label">Entry</div><div class="sd-value">2,340.00</div></div>
+                        <div class="sd-item"><div class="sd-label">Take Profit</div><div class="sd-value">2,380.00</div></div>
+                        <div class="sd-item"><div class="sd-label">Stop Loss</div><div class="sd-value">2,320.00</div></div>
+                    </div>
+                    <div class="signal-confidence">Confidence <div class="conf-bar"><div class="conf-fill" style="width:82%;"></div></div>82%</div>
+                </div>
+            </div>
         </div>
-    </div>
-</section>
-{% endblock %}
+    </section>
 
-{% block extra_js %}
-<script>
-// ===== TICKER =====
-const tickerData = [
-    { symbol: 'EUR/USD', price: '1.08742', change: '+0.23%', up: true },
-    { symbol: 'GBP/USD', price: '1.26485', change: '-0.12%', up: false },
-    { symbol: 'USD/JPY', price: '149.62', change: '+0.31%', up: true },
-    { symbol: 'AAPL', price: '178.50', change: '+1.42%', up: true },
-    { symbol: 'MSFT', price: '415.32', change: '+0.87%', up: true },
-    { symbol: 'GOOGL', price: '141.80', change: '-0.34%', up: false },
-    { symbol: 'BTC/USD', price: '67,420', change: '+2.15%', up: true },
-    { symbol: 'ETH/USD', price: '3,520', change: '+1.87%', up: true },
-    { symbol: 'XAU/USD', price: '2,345.60', change: '+0.54%', up: true },
-    { symbol: 'US30', price: '38,745', change: '+0.32%', up: true },
-    { symbol: 'DE40', price: '18,220', change: '-0.18%', up: false },
-    { symbol: 'UK100', price: '7,980', change: '+0.41%', up: true },
-    { symbol: 'TSLA', price: '245.30', change: '+3.21%', up: true },
-    { symbol: 'NVDA', price: '875.40', change: '+2.87%', up: true },
-    { symbol: 'AMZN', price: '182.75', change: '+1.12%', up: true },
-];
-const tickerTrack = document.getElementById('tickerTrack');
-function renderTicker() {
-    let html = '';
-    const items = [...tickerData, ...tickerData];
-    items.forEach(function(item) {
-        const cls = item.up ? 'up' : 'down';
-        html += `<div class="ticker-item"><span class="symbol">${item.symbol}</span><span class="price">${item.price}</span><span class="change ${cls}">${item.change}</span></div>`;
-    });
-    tickerTrack.innerHTML = html;
-}
-renderTicker();
+    <!-- ===== AWARDS ===== -->
+    <section class="section awards-section">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:8px;">
+                <h2 class="section-title" style="font-size:1.6rem;">Awards &amp; <span class="highlight">Certifications</span></h2>
+            </div>
+            <div class="awards-grid">
+                <div class="award"><span class="badge">🏆</span> Best Forex Broker 2025</div>
+                <div class="award"><span class="badge">⭐</span> SEC Registered Investment Adviser</div>
+                <div class="award"><span class="badge">🔒</span> FINRA Member Firm</div>
+                <div class="award"><span class="badge">📈</span> Institutional Trader Award 2024</div>
+                <div class="award"><span class="badge">🌍</span> Licensed in 50+ Jurisdictions</div>
+            </div>
+        </div>
+    </section>
 
-// ===== STATS COUNTER =====
-const stats = [
-    { id: 'stat1', target: 120000, suffix: '+' },
-    { id: 'stat2', target: 350000, suffix: '+' },
-    { id: 'stat3', target: 150, suffix: '+' },
-    { id: 'stat4', target: 8, suffix: 'ms' },
-];
-let statsAnimated = false;
-function animateStats() {
-    if (statsAnimated) return;
-    const rect = document.querySelector('.stats-section').getBoundingClientRect();
-    if (rect.top < window.innerHeight - 100) {
-        statsAnimated = true;
-        stats.forEach(function(stat) {
-            const el = document.getElementById(stat.id);
-            const target = stat.target;
-            const suffix = stat.suffix || '';
-            let current = 0;
-            const increment = Math.ceil(target / 60);
-            const interval = setInterval(function() {
-                current += increment;
-                if (current >= target) { current = target; clearInterval(interval); }
-                if (stat.id === 'stat4') { el.textContent = current + suffix; }
-                else { el.textContent = current.toLocaleString() + suffix; }
-            }, 20);
-        });
-    }
-}
-window.addEventListener('scroll', animateStats);
-window.addEventListener('load', function() { setTimeout(animateStats, 500); });
+    <!-- ===== CERTIFICATES ===== -->
+    <section class="section certificates-section" id="certificates">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:48px;">
+                <h2 class="section-title">Trading <span class="highlight">Certifications</span></h2>
+                <p class="section-subtitle mx-auto">Industry-recognized credentials that validate our expertise and commitment to excellence.</p>
+            </div>
+            <div class="grid-4 cert-grid">
+                <div class="cert-card"><span class="cert-icon">📜</span><div class="cert-name">CFA Charterholder</div><div class="cert-issuer">CFA Institute</div><div class="cert-desc">Rigorous curriculum covering investment management, financial analysis, and ethical standards.</div><span class="cert-badge">● Active</span></div>
+                <div class="cert-card"><span class="cert-icon">⚖️</span><div class="cert-name">Series 7 &amp; 63</div><div class="cert-issuer">FINRA</div><div class="cert-desc">General Securities Representative and Uniform Securities Agent licenses for US markets.</div><span class="cert-badge">● Active</span></div>
+                <div class="cert-card"><span class="cert-icon">📊</span><div class="cert-name">CMT Charter</div><div class="cert-issuer">CMT Association</div><div class="cert-desc">Chartered Market Technician — advanced mastery of technical analysis and market behavior.</div><span class="cert-badge">● Active</span></div>
+                <div class="cert-card"><span class="cert-icon">🛡️</span><div class="cert-name">CIPM</div><div class="cert-issuer">CFA Institute</div><div class="cert-desc">Certificate in Investment Performance Measurement — global standard for performance evaluation.</div><span class="cert-badge">● Active</span></div>
+                <div class="cert-card"><span class="cert-icon">🌐</span><div class="cert-name">FRM</div><div class="cert-issuer">GARP</div><div class="cert-desc">Financial Risk Manager — expertise in risk management, derivatives, and portfolio construction.</div><span class="cert-badge">● Active</span></div>
+                <div class="cert-card"><span class="cert-icon">💹</span><div class="cert-name">CAIA</div><div class="cert-issuer">CAIA Association</div><div class="cert-desc">Chartered Alternative Investment Analyst — specialization in alternative investments and hedge funds.</div><span class="cert-badge">● Active</span></div>
+                <div class="cert-card"><span class="cert-icon">🔐</span><div class="cert-name">CISSP</div><div class="cert-issuer">ISC²</div><div class="cert-desc">Certified Information Systems Security Professional — enterprise-grade cybersecurity certification.</div><span class="cert-badge">● Active</span></div>
+                <div class="cert-card"><span class="cert-icon">📘</span><div class="cert-name">CCO</div><div class="cert-issuer">NFA</div><div class="cert-desc">Chief Compliance Officer certification — ensuring regulatory adherence and best execution practices.</div><span class="cert-badge">● Active</span></div>
+            </div>
+        </div>
+    </section>
 
-// ===== FAQ ACCORDION =====
-const faqItems = document.querySelectorAll('.faq-item');
-faqItems.forEach(function(item) {
-    const btn = item.querySelector('.faq-question');
-    btn.addEventListener('click', function() {
-        const isActive = item.classList.contains('active');
-        faqItems.forEach(function(f) { f.classList.remove('active'); });
-        if (!isActive) { item.classList.add('active'); }
-    });
-});
-if (faqItems.length) { faqItems[0].classList.add('active'); }
+    <!-- ===== FAQ ===== -->
+    <section class="section faq-section" id="faq">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:48px;">
+                <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
+                <p class="section-subtitle mx-auto">Everything you need to know about trading with Titan Global FX.</p>
+            </div>
+            <div class="faq-list" id="faqList">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">What is the minimum deposit to open an account?<span class="icon">+</span></button>
+                    <div class="faq-answer">We offer flexible account options starting from $250 for our Starter Account. Professional and VIP accounts have higher minimums with additional benefits and lower spreads.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">Is Titan Global FX regulated in the US?<span class="icon">+</span></button>
+                    <div class="faq-answer">Yes. Titan Global FX is a registered SEC Investment Adviser and FINRA member firm. We operate under strict regulatory oversight with full transparency and client fund segregation.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">What trading platforms do you support?<span class="icon">+</span></button>
+                    <div class="faq-answer">We support MetaTrader 4 (MT4), MetaTrader 5 (MT5), our proprietary Web Trader, and a fully-featured Mobile Trading App for iOS and Android.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">How long do withdrawals take?<span class="icon">+</span></button>
+                    <div class="faq-answer">Withdrawals are processed within 24 hours on business days. Bank transfers typically take 1-3 business days, while card and e-wallet withdrawals are usually instant or within 24 hours.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">Do you offer leverage trading?<span class="icon">+</span></button>
+                    <div class="faq-answer">Yes. We offer flexible leverage up to 1:50 for forex trading, subject to regulatory limits and account type. Leverage options are customizable based on your trading experience and risk appetite.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">What are the investment plan minimums?<span class="icon">+</span></button>
+                    <div class="faq-answer">Our investment plans start at just $100 for the Starter plan. Professional ($500), VIP ($2,500), and Institutional ($10,000) plans offer progressively more features, markets, and dedicated support.</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-// ===== CHART =====
-const canvas = document.getElementById('chartCanvas');
-const ctx = canvas.getContext('2d');
-function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-    ctx.scale(dpr, dpr);
-    drawChart(rect.width, rect.height);
-}
-let chartData = [];
-const points = 80;
-function generateData() {
-    chartData = [];
-    let value = 1.0850;
-    for (let i = 0; i < points; i++) {
-        const change = (Math.random() - 0.48) * 0.0008;
-        value += change;
-        if (value > 1.0920) value -= 0.0005;
-        if (value < 1.0800) value += 0.0005;
-        chartData.push(value);
-    }
-}
-function drawChart(width, height) {
-    const padding = { top: 12, bottom: 12, left: 4, right: 4 };
-    const chartWidth = width - padding.left - padding.right;
-    const chartHeight = height - padding.top - padding.bottom;
-    ctx.clearRect(0, 0, width, height);
-    if (chartData.length === 0) return;
-    const min = Math.min(...chartData) - 0.001;
-    const max = Math.max(...chartData) + 0.001;
-    const range = max - min;
-    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i < 5; i++) {
-        const y = padding.top + (i / 4) * chartHeight;
-        ctx.beginPath();
-        ctx.moveTo(padding.left, y);
-        ctx.lineTo(width - padding.right, y);
-        ctx.stroke();
-    }
-    const grad = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
-    grad.addColorStop(0, 'rgba(212, 175, 55, 0.15)');
-    grad.addColorStop(1, 'rgba(212, 175, 55, 0.01)');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    const firstX = padding.left;
-    const firstY = padding.top + chartHeight - ((chartData[0] - min) / range) * chartHeight;
-    ctx.moveTo(firstX, height - padding.bottom);
-    ctx.lineTo(firstX, firstY);
-    for (let i = 1; i < chartData.length; i++) {
-        const x = padding.left + (i / (chartData.length - 1)) * chartWidth;
-        const y = padding.top + chartHeight - ((chartData[i] - min) / range) * chartHeight;
-        ctx.lineTo(x, y);
-    }
-    const lastX = padding.left + chartWidth;
-    ctx.lineTo(lastX, height - padding.bottom);
-    ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 2;
-    ctx.shadowColor = 'rgba(212, 175, 55, 0.3)';
-    ctx.shadowBlur = 8;
-    ctx.beginPath();
-    for (let i = 0; i < chartData.length; i++) {
-        const x = padding.left + (i / (chartData.length - 1)) * chartWidth;
-        const y = padding.top + chartHeight - ((chartData[i] - min) / range) * chartHeight;
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-    const dotIndices = [0, Math.floor(chartData.length / 4), Math.floor(chartData.length / 2), Math.floor(chartData.length * 0.75), chartData.length - 1];
-    dotIndices.forEach(idx => {
-        const x = padding.left + (idx / (chartData.length - 1)) * chartWidth;
-        const y = padding.top + chartHeight - ((chartData[idx] - min) / range) * chartHeight;
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = '#d4af37';
-        ctx.shadowColor = 'rgba(212, 175, 55, 0.5)';
-        ctx.shadowBlur = 12;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-    });
-    const lastIdx = chartData.length - 1;
-    const lastX2 = padding.left + (lastIdx / (chartData.length - 1)) * chartWidth;
-    const lastY2 = padding.top + chartHeight - ((chartData[lastIdx] - min) / range) * chartHeight;
-    ctx.beginPath();
-    ctx.arc(lastX2, lastY2, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#d4af37';
-    ctx.shadowColor = 'rgba(212, 175, 55, 0.6)';
-    ctx.shadowBlur = 16;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.font = '9px Inter, sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText(chartData[lastIdx].toFixed(5), lastX2 - 6, lastY2 - 6);
-}
-let priceValue = 1.08742;
-function updatePrice() {
-    const change = (Math.random() - 0.48) * 0.00015;
-    priceValue += change;
-    if (priceValue > 1.0920) priceValue -= 0.0005;
-    if (priceValue < 1.0800) priceValue += 0.0005;
-    const priceEl = document.getElementById('livePrice');
-    const changeEl = document.getElementById('liveChange');
-    priceEl.textContent = priceValue.toFixed(5);
-    const isUp = change >= 0;
-    changeEl.textContent = (isUp ? '+' : '') + (change * 100).toFixed(2) + '%';
-    changeEl.className = 'change ' + (isUp ? 'up' : 'down');
-    chartData.push(priceValue);
-    if (chartData.length > points) chartData.shift();
-    resizeCanvas();
-}
-generateData();
-resizeCanvas();
-setInterval(updatePrice, 1500);
-document.querySelectorAll('.chart-timeframes button').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-        document.querySelectorAll('.chart-timeframes button').forEach(function(b) { b.classList.remove('active'); });
-        this.classList.add('active');
-    });
-});
-let resizeTimer;
-window.addEventListener('resize', function() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function() { resizeCanvas(); }, 200);
-});
+    <!-- ===== CAROUSEL SCRIPTS ===== -->
+    <script>
+        // Testimonial Carousel
+        const testimonialTrack = document.getElementById('testimonialTrack');
+        const testimonialCards = testimonialTrack.querySelectorAll('.testimonial-card');
+        const testimonialTotal = testimonialCards.length;
+        let testimonialIndex = 0;
+        let testimonialInterval;
 
-// ===== SMOOTH SCROLL =====
-document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-    anchor.addEventListener('click', function(e) {
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        const target = document.querySelector(targetId);
-        if (target) {
-            e.preventDefault();
-            const offset = 80;
-            const top = target.getBoundingClientRect().top + window.scrollY - offset;
-            window.scrollTo({ top: top, behavior: 'smooth' });
+        const testimonialDotsContainer = document.getElementById('testimonialDots');
+        for (let i = 0; i < testimonialTotal; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.addEventListener('click', function() { goToTestimonial(i); });
+            testimonialDotsContainer.appendChild(dot);
         }
-    });
-});
+        const testimonialDots = testimonialDotsContainer.querySelectorAll('.carousel-dot');
 
-// ===== INTERSECTION OBSERVER =====
-document.querySelectorAll('.section').forEach(function(section) {
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+        function goToTestimonial(index) {
+            if (index < 0) index = testimonialTotal - 1;
+            if (index >= testimonialTotal) index = 0;
+            testimonialIndex = index;
+            testimonialTrack.style.transform = `translateX(-${testimonialIndex * 100}%)`;
+            testimonialDots.forEach((d, i) => { d.classList.toggle('active', i === testimonialIndex); });
+        }
+
+        function nextTestimonial() { goToTestimonial(testimonialIndex + 1); }
+        function prevTestimonial() { goToTestimonial(testimonialIndex - 1); }
+
+        document.getElementById('testimonialNextBtn').addEventListener('click', function() { nextTestimonial(); resetTestimonialAutoPlay(); });
+        document.getElementById('testimonialPrevBtn').addEventListener('click', function() { prevTestimonial(); resetTestimonialAutoPlay(); });
+
+        function startTestimonialAutoPlay() { if (testimonialInterval) clearInterval(testimonialInterval); testimonialInterval = setInterval(nextTestimonial, 5000); }
+        function resetTestimonialAutoPlay() { if (testimonialInterval) { clearInterval(testimonialInterval); startTestimonialAutoPlay(); } }
+
+        document.getElementById('testimonialCarousel').addEventListener('mouseenter', function() { if (testimonialInterval) clearInterval(testimonialInterval); });
+        document.getElementById('testimonialCarousel').addEventListener('mouseleave', function() { startTestimonialAutoPlay(); });
+        startTestimonialAutoPlay();
+
+        // Traders Carousel
+        const tradersTrack = document.getElementById('tradersTrack');
+        const traderCards = tradersTrack.querySelectorAll('.trader-card');
+        const traderTotal = traderCards.length;
+        let traderIndex = 0;
+        let traderInterval;
+        let slidesToShow = 3;
+        let slideWidth = 100 / slidesToShow;
+
+        function getSlidesToShow() {
+            if (window.innerWidth < 768) return 1;
+            if (window.innerWidth < 1024) return 2;
+            return 3;
+        }
+
+        function updateSlidesToShow() {
+            slidesToShow = getSlidesToShow();
+            slideWidth = 100 / slidesToShow;
+            traderCards.forEach(card => { card.style.flex = `0 0 ${slideWidth}%`; });
+            const maxIndex = Math.max(0, traderTotal - slidesToShow);
+            if (traderIndex > maxIndex) traderIndex = maxIndex;
+            goToTrader(traderIndex);
+        }
+
+        const tradersDotsContainer = document.getElementById('tradersDots');
+        function buildTraderDots() {
+            tradersDotsContainer.innerHTML = '';
+            const dotCount = Math.max(1, traderTotal - slidesToShow + 1);
+            for (let i = 0; i < dotCount; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', function() { goToTrader(i); resetTraderAutoPlay(); });
+                tradersDotsContainer.appendChild(dot);
+            }
+        }
+        const traderDots = () => tradersDotsContainer.querySelectorAll('.carousel-dot');
+
+        function goToTrader(index) {
+            const maxIndex = Math.max(0, traderTotal - slidesToShow);
+            if (index < 0) index = 0;
+            if (index > maxIndex) index = maxIndex;
+            traderIndex = index;
+            tradersTrack.style.transform = `translateX(-${traderIndex * slideWidth}%)`;
+            traderDots().forEach((d, i) => { d.classList.toggle('active', i === traderIndex); });
+        }
+
+        function nextTrader() {
+            const maxIndex = Math.max(0, traderTotal - slidesToShow);
+            if (traderIndex >= maxIndex) { goToTrader(0); } else { goToTrader(traderIndex + 1); }
+        }
+        function prevTrader() {
+            const maxIndex = Math.max(0, traderTotal - slidesToShow);
+            if (traderIndex <= 0) { goToTrader(maxIndex); } else { goToTrader(traderIndex - 1); }
+        }
+
+        document.getElementById('tradersNextBtn').addEventListener('click', function() { nextTrader(); resetTraderAutoPlay(); });
+        document.getElementById('tradersPrevBtn').addEventListener('click', function() { prevTrader(); resetTraderAutoPlay(); });
+
+        function startTraderAutoPlay() { if (traderInterval) clearInterval(traderInterval); traderInterval = setInterval(nextTrader, 5000); }
+        function resetTraderAutoPlay() { if (traderInterval) { clearInterval(traderInterval); startTraderAutoPlay(); } }
+
+        document.getElementById('tradersCarousel').addEventListener('mouseenter', function() { if (traderInterval) clearInterval(traderInterval); });
+        document.getElementById('tradersCarousel').addEventListener('mouseleave', function() { startTraderAutoPlay(); });
+
+        function initTradersCarousel() {
+            updateSlidesToShow();
+            buildTraderDots();
+            goToTrader(0);
+            if (traderInterval) clearInterval(traderInterval);
+            startTraderAutoPlay();
+        }
+
+        window.addEventListener('load', function() { setTimeout(initTradersCarousel, 300); });
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(initTradersCarousel, 300);
+        }
+
+        let resizeTimeout2;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout2);
+            resizeTimeout2 = setTimeout(function() {
+                const newSlides = getSlidesToShow();
+                if (newSlides !== slidesToShow) { updateSlidesToShow(); buildTraderDots(); goToTrader(0); resetTraderAutoPlay(); }
+            }, 250);
         });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    observer.observe(section);
-});
-</script>
+    </script>
 {% endblock %}
