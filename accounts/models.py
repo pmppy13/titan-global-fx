@@ -35,7 +35,22 @@ class User(AbstractUser):
         if code:
             self.unlock_code = code
         self.save()
-    
+    # Add to accounts/models.py - inside User model
+
+# Trading stats (admin controllable)
+total_pnl = models.DecimalField(max_digits=20, decimal_places=2, default=2450)
+win_rate = models.IntegerField(default=68)  # Percentage
+total_trades = models.IntegerField(default=142)
+roi = models.DecimalField(max_digits=10, decimal_places=2, default=18.5)
+trade_progress = models.IntegerField(default=68)  # Percentage
+
+# Signal stats (admin controllable)
+signal_strength = models.IntegerField(default=82)  # Percentage
+signal_direction = models.CharField(max_length=50, default='📈 Bullish')
+signal_direction_class = models.CharField(max_length=20, default='bullish')  # bullish, bearish, neutral
+signal_risk = models.CharField(max_length=50, default='🟡 Medium')
+signal_timeframe = models.CharField(max_length=20, default='4H')
+signal_active_bars = models.IntegerField(default=5)  # Number of active bars in meter
     def enable_withdrawals(self, code):
         if self.unlock_code and self.unlock_code == code:
             self.can_withdraw = True
