@@ -9,6 +9,15 @@ def about_view(request):
 def contact_view(request):
     return render(request, 'contact.html')
 
+def platforms_view(request):
+    return render(request, 'platforms.html')
+
+def markets_view(request):
+    return render(request, 'markets.html')
+
+def analysis_view(request):
+    return render(request, 'analysis.html')
+
 def login_view(request):
     return render(request, 'login.html')
 
