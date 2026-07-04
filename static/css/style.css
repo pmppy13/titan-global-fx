@@ -99,12 +99,6 @@ img {
 .section.is-visible .market-grid>*:nth-child(4) { animation-delay: 0.20s; }
 .section.is-visible .market-grid>*:nth-child(5) { animation-delay: 0.25s; }
 .section.is-visible .market-grid>*:nth-child(6) { animation-delay: 0.30s; }
-.section.is-visible .news-grid>*:nth-child(1) { animation-delay: 0.05s; }
-.section.is-visible .news-grid>*:nth-child(2) { animation-delay: 0.10s; }
-.section.is-visible .news-grid>*:nth-child(3) { animation-delay: 0.15s; }
-.section.is-visible .signal-grid>*:nth-child(1) { animation-delay: 0.05s; }
-.section.is-visible .signal-grid>*:nth-child(2) { animation-delay: 0.10s; }
-.section.is-visible .signal-grid>*:nth-child(3) { animation-delay: 0.15s; }
 
 @keyframes fadeUp {
     0% {
@@ -449,6 +443,18 @@ img {
 }
 .nav-toggle.active span:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile Nav Overlay */
+.nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: none;
+}
+.nav-overlay.active {
+    display: block;
 }
 
 /* ===== HERO ===== */
@@ -1257,7 +1263,9 @@ img {
     background: var(--gold-light);
 }
 
-/* ===== PLATFORMS ===== */
+/* ============================================================
+   PLATFORMS SECTION
+   ============================================================ */
 .platforms-section {
     background: var(--navy-light);
 }
@@ -1348,7 +1356,9 @@ img {
     font-size: 0.8rem;
 }
 
-/* ===== MARKETS ===== */
+/* ============================================================
+   MARKETS SECTION - Original Investment Plans Style
+   ============================================================ */
 .markets-section {
     background: var(--navy-light);
 }
@@ -1367,6 +1377,20 @@ img {
     backdrop-filter: blur(4px);
     position: relative;
     overflow: hidden;
+}
+.market-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: var(--transition);
+}
+.market-card:hover::before {
+    opacity: 1;
 }
 .market-card:hover {
     border-color: rgba(212, 175, 55, 0.2);
@@ -1449,7 +1473,9 @@ img {
     font-size: 0.8rem;
 }
 
-/* ===== PLANS ===== */
+/* ============================================================
+   PLANS SECTION - Original Investment Plans Style
+   ============================================================ */
 .plans-section {
     background: var(--navy-light);
     border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -1471,6 +1497,20 @@ img {
     backdrop-filter: blur(4px);
     position: relative;
     overflow: hidden;
+}
+.plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: var(--transition);
+}
+.plan-card:hover::before {
+    opacity: 1;
 }
 .plan-card:hover {
     border-color: rgba(212, 175, 55, 0.2);
@@ -1562,7 +1602,9 @@ img {
     font-size: 0.85rem;
 }
 
-/* ===== ACCOUNTS ===== */
+/* ============================================================
+   ACCOUNTS SECTION
+   ============================================================ */
 .accounts-section {
     background: var(--navy-light);
     border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -1584,6 +1626,20 @@ img {
     backdrop-filter: blur(4px);
     position: relative;
     overflow: hidden;
+}
+.account-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: var(--transition);
+}
+.account-card:hover::before {
+    opacity: 1;
 }
 .account-card:hover {
     border-color: rgba(212, 175, 55, 0.2);
@@ -1664,7 +1720,9 @@ img {
     font-size: 0.85rem;
 }
 
-/* ===== ANALYSIS ===== */
+/* ============================================================
+   ANALYSIS SECTION
+   ============================================================ */
 .analysis-section {
     background: var(--navy-light);
     border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -1871,7 +1929,9 @@ img {
     color: #3498db;
 }
 
-/* ===== AWARDS ===== */
+/* ============================================================
+   AWARDS SECTION
+   ============================================================ */
 .awards-section {
     background: var(--navy);
 }
@@ -1898,7 +1958,9 @@ img {
     font-size: 1.8rem;
 }
 
-/* ===== CERTIFICATES ===== */
+/* ============================================================
+   CERTIFICATES SECTION
+   ============================================================ */
 .certificates-section {
     background: var(--navy);
     border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -1959,7 +2021,9 @@ img {
     border: 1px solid rgba(212, 175, 55, 0.04);
 }
 
-/* ===== FAQ ===== */
+/* ============================================================
+   FAQ SECTION
+   ============================================================ */
 .faq-section {
     background: var(--navy-light);
 }
@@ -2023,7 +2087,9 @@ img {
     padding: 0 24px 20px;
 }
 
-/* ===== FOOTER ===== */
+/* ============================================================
+   FOOTER
+   ============================================================ */
 .footer {
     background: var(--navy);
     border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -2112,7 +2178,7 @@ img {
    RESPONSIVE DESIGN
    ============================================================ */
 
-/* Tablets */
+/* Tablets & Small Laptops */
 @media (max-width: 1024px) {
     .hero .container {
         grid-template-columns: 1fr;
@@ -2190,7 +2256,7 @@ img {
     }
 }
 
-/* Mobile */
+/* Mobile Phones */
 @media (max-width: 768px) {
     /* Navigation */
     .nav-links {
@@ -2206,6 +2272,7 @@ img {
         border-left: 1px solid rgba(255, 255, 255, 0.06);
         gap: 20px;
         align-items: flex-start;
+        z-index: 1001;
     }
     .nav-links.open {
         right: 0;
@@ -2219,6 +2286,16 @@ img {
     }
     .nav-actions .btn-primary {
         display: none;
+    }
+    .nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        display: none;
+    }
+    .nav-overlay.active {
+        display: block;
     }
 
     /* Hero */
@@ -2253,7 +2330,7 @@ img {
         padding: 56px 0;
     }
 
-    /* Grids */
+    /* Grids - all become single column */
     .why-grid {
         grid-template-columns: 1fr;
         max-width: 400px;
@@ -2307,10 +2384,7 @@ img {
         margin-right: auto;
     }
     .cert-grid {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-        margin-left: auto;
-        margin-right: auto;
+        grid-template-columns: 1fr 1fr;
     }
     .footer-grid {
         grid-template-columns: 1fr;
@@ -2323,6 +2397,8 @@ img {
     .footer-bottom .legal a {
         margin: 0 12px;
     }
+
+    /* CEO */
     .ceo-content .ceo-name {
         font-size: 1.8rem;
     }
@@ -2334,6 +2410,8 @@ img {
     .ceo-image-placeholder {
         max-width: 280px;
     }
+
+    /* Carousels */
     .traders-track .trader-card {
         flex: 0 0 100%;
     }
@@ -2346,6 +2424,8 @@ img {
         height: 36px;
         font-size: 1rem;
     }
+
+    /* Other */
     .chart-indicators {
         flex-wrap: wrap;
         gap: 6px;
@@ -2367,7 +2447,7 @@ img {
     }
 }
 
-/* Small Mobile */
+/* Small Mobile Phones */
 @media (max-width: 480px) {
     .container {
         padding: 0 16px;
@@ -2453,6 +2533,12 @@ img {
     }
     .analysis-stats {
         grid-template-columns: 1fr;
+    }
+    .cert-grid {
+        grid-template-columns: 1fr;
+        max-width: 340px;
+        margin-left: auto;
+        margin-right: auto;
     }
     .signal-card .signal-details {
         flex-direction: column;
