@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
-from apps.transactions.models import Transaction
+from transactions.models import Transaction
 
 @login_required
 def dashboard_index(request):
