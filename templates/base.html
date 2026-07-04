@@ -64,6 +64,9 @@
         </div>
     </nav>
 
+    <!-- ===== MOBILE NAV OVERLAY ===== -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
     <!-- ===== MAIN CONTENT ===== -->
     <main>
         {% block content %}{% endblock %}
@@ -151,14 +154,24 @@
         // ===== MOBILE NAV TOGGLE =====
         const navToggle = document.getElementById('navToggle');
         const navLinks = document.getElementById('navLinks');
-        navToggle.addEventListener('click', function() {
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleNav() {
             navLinks.classList.toggle('open');
             navToggle.classList.toggle('active');
-        });
+            navOverlay.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+        }
+
+        navToggle.addEventListener('click', toggleNav);
+        navOverlay.addEventListener('click', toggleNav);
+
         navLinks.querySelectorAll('a').forEach(function(link) {
             link.addEventListener('click', function() {
                 navLinks.classList.remove('open');
                 navToggle.classList.remove('active');
+                navOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             });
         });
 
@@ -406,54 +419,53 @@
                 }
             }, 10000);
         }, 10000);
-    </script>
-    <script>
-    // ===== STATS COUNTER =====
-    const stats = [
-        { id: 'stat1', target: 120000, suffix: '+' },
-        { id: 'stat2', target: 350000, suffix: '+' },
-        { id: 'stat3', target: 150, suffix: '+' },
-        { id: 'stat4', target: 8, suffix: 'ms' },
-    ];
 
-    let statsAnimated = false;
+        // ===== STATS COUNTER =====
+        const stats = [
+            { id: 'stat1', target: 120000, suffix: '+' },
+            { id: 'stat2', target: 350000, suffix: '+' },
+            { id: 'stat3', target: 150, suffix: '+' },
+            { id: 'stat4', target: 8, suffix: 'ms' },
+        ];
 
-    function animateStats() {
-        if (statsAnimated) return;
-        const section = document.querySelector('.stats-section');
-        if (!section) return;
-        const rect = section.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) {
-            statsAnimated = true;
-            stats.forEach(function(stat) {
-                const el = document.getElementById(stat.id);
-                if (!el) return;
-                const target = stat.target;
-                const suffix = stat.suffix || '';
-                let current = 0;
-                const increment = Math.ceil(target / 60);
-                const interval = setInterval(function() {
-                    current += increment;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(interval);
-                    }
-                    if (stat.id === 'stat4') {
-                        el.textContent = current + suffix;
-                    } else {
-                        el.textContent = current.toLocaleString() + suffix;
-                    }
-                }, 20);
-            });
+        let statsAnimated = false;
+
+        function animateStats() {
+            if (statsAnimated) return;
+            const section = document.querySelector('.stats-section');
+            if (!section) return;
+            const rect = section.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100) {
+                statsAnimated = true;
+                stats.forEach(function(stat) {
+                    const el = document.getElementById(stat.id);
+                    if (!el) return;
+                    const target = stat.target;
+                    const suffix = stat.suffix || '';
+                    let current = 0;
+                    const increment = Math.ceil(target / 60);
+                    const interval = setInterval(function() {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(interval);
+                        }
+                        if (stat.id === 'stat4') {
+                            el.textContent = current + suffix;
+                        } else {
+                            el.textContent = current.toLocaleString() + suffix;
+                        }
+                    }, 20);
+                });
+            }
         }
-    }
 
-    // Trigger on scroll and load
-    window.addEventListener('scroll', animateStats);
-    window.addEventListener('load', function() {
-        setTimeout(animateStats, 500);
-    });
-</script>
+        // Trigger on scroll and load
+        window.addEventListener('scroll', animateStats);
+        window.addEventListener('load', function() {
+            setTimeout(animateStats, 500);
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
