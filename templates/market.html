@@ -60,9 +60,17 @@
         color: var(--gray-500);
         margin-bottom: 16px;
     }
-    .page-hero .breadcrumb a { color: var(--gray-400); transition: var(--transition); }
-    .page-hero .breadcrumb a:hover { color: var(--gold); }
-    .page-hero .breadcrumb .sep { margin: 0 8px; color: var(--gray-600); }
+    .page-hero .breadcrumb a {
+        color: var(--gray-400);
+        transition: var(--transition);
+    }
+    .page-hero .breadcrumb a:hover {
+        color: var(--gold);
+    }
+    .page-hero .breadcrumb .sep {
+        margin: 0 8px;
+        color: var(--gray-600);
+    }
     .page-hero h1 {
         font-size: 3.2rem;
         font-weight: 800;
@@ -97,47 +105,15 @@
         color: var(--gold);
         text-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
     }
-    .page-hero .hero-stats .stat p { font-size: 0.85rem; color: var(--gray-500); margin: 0; }
+    .page-hero .hero-stats .stat p {
+        font-size: 0.85rem;
+        color: var(--gray-500);
+        margin: 0;
+    }
 
-    .section { padding: 80px 0; opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
-    .section.is-visible { opacity: 1; transform: translateY(0); }
-    .section-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        line-height: 1.15;
-        margin-bottom: 16px;
+    .markets-section {
+        background: var(--navy-light);
     }
-    .section-title .highlight {
-        background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        position: relative;
-    }
-    .section-title .highlight::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.3;
-        transform: scaleX(0);
-        transition: transform 0.6s ease;
-    }
-    .section.is-visible .section-title .highlight::after { transform: scaleX(1); }
-    .section-subtitle {
-        font-size: 1.1rem;
-        color: var(--gray-400);
-        max-width: 600px;
-        line-height: 1.7;
-    }
-    .text-center { text-align: center; }
-    .mx-auto { margin-left: auto; margin-right: auto; }
-
-    .markets-section { background: var(--navy-light); }
     .market-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -160,6 +136,51 @@
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 175, 55, 0.02);
         background: rgba(255, 255, 255, 0.04);
     }
+    .market-card .market-icon {
+        font-size: 2.6rem;
+        margin-bottom: 10px;
+        display: block;
+    }
+    .market-card .market-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+    .market-card .market-sub {
+        font-size: 0.8rem;
+        color: var(--gold);
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+    .market-card .market-desc {
+        font-size: 0.85rem;
+        color: var(--gray-400);
+        line-height: 1.6;
+        margin-bottom: 14px;
+    }
+    .market-card .market-stats {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        margin-bottom: 14px;
+    }
+    .market-card .market-stats .ms-item {
+        flex: 1;
+        min-width: 60px;
+    }
+    .market-card .market-stats .ms-item .ms-label {
+        font-size: 0.6rem;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .market-card .market-stats .ms-item .ms-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--white);
+    }
     .market-card .market-badge {
         display: inline-block;
         padding: 3px 12px;
@@ -173,56 +194,21 @@
         border: 1px solid rgba(212, 175, 55, 0.04);
         margin-bottom: 10px;
     }
-    .market-card .market-badge.high { background: rgba(0, 200, 151, 0.08); color: var(--green); border-color: rgba(0, 200, 151, 0.08); }
-    .market-card .market-badge.volatile { background: rgba(255, 107, 107, 0.08); color: var(--red); border-color: rgba(255, 107, 107, 0.08); }
-    .market-card .market-icon { font-size: 2.6rem; margin-bottom: 10px; display: block; }
-    .market-card .market-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 2px; }
-    .market-card .market-sub { font-size: 0.8rem; color: var(--gold); font-weight: 500; margin-bottom: 10px; }
-    .market-card .market-desc { font-size: 0.85rem; color: var(--gray-400); line-height: 1.6; margin-bottom: 14px; }
-    .market-card .market-stats {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-        padding-top: 12px;
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        margin-bottom: 14px;
+    .market-card .market-badge.high {
+        background: rgba(0, 200, 151, 0.08);
+        color: var(--green);
+        border-color: rgba(0, 200, 151, 0.08);
     }
-    .market-card .market-stats .ms-item { flex: 1; min-width: 60px; }
-    .market-card .market-stats .ms-item .ms-label { font-size: 0.6rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.04em; }
-    .market-card .market-stats .ms-item .ms-value { font-size: 0.9rem; font-weight: 600; color: var(--white); }
-    .market-card .btn { width: 100%; justify-content: center; padding: 10px 20px; font-size: 0.8rem; }
-
-    .ticker-bar {
-        background: rgba(17, 27, 47, 0.5);
-        backdrop-filter: blur(4px);
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        padding: 12px 0;
-        overflow: hidden;
-        position: relative;
-        z-index: 2;
+    .market-card .market-badge.volatile {
+        background: rgba(255, 107, 107, 0.08);
+        color: var(--red);
+        border-color: rgba(255, 107, 107, 0.08);
     }
-    .ticker-track {
-        display: flex;
-        animation: tickerScroll 30s linear infinite;
-        width: max-content;
-    }
-    .ticker-track .ticker-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 0 32px;
-        font-size: 0.85rem;
-        white-space: nowrap;
-    }
-    .ticker-track .ticker-item .symbol { font-weight: 600; color: var(--white); }
-    .ticker-track .ticker-item .price { color: var(--gray-300); }
-    .ticker-track .ticker-item .change { font-weight: 600; }
-    .ticker-track .ticker-item .change.up { color: #4caf50; }
-    .ticker-track .ticker-item .change.down { color: #ef5350; }
-    @keyframes tickerScroll {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+    .market-card .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 20px;
+        font-size: 0.8rem;
     }
 
     .sessions-section {
@@ -250,9 +236,20 @@
         background: rgba(255, 255, 255, 0.03);
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     }
-    .session-card .session-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
-    .session-card .session-name { font-size: 1rem; font-weight: 600; margin-bottom: 2px; }
-    .session-card .session-time { font-size: 0.8rem; color: var(--gray-400); }
+    .session-card .session-icon {
+        font-size: 2rem;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .session-card .session-name {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+    .session-card .session-time {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+    }
     .session-card .session-status {
         display: inline-block;
         margin-top: 8px;
@@ -263,11 +260,22 @@
         text-transform: uppercase;
         letter-spacing: 0.04em;
     }
-    .session-card .session-status.open { background: rgba(0, 200, 151, 0.12); color: var(--green); }
-    .session-card .session-status.closed { background: rgba(255, 107, 107, 0.12); color: var(--red); }
-    .session-card .session-status.closing { background: rgba(212, 175, 55, 0.12); color: var(--gold); }
+    .session-card .session-status.open {
+        background: rgba(0, 200, 151, 0.12);
+        color: var(--green);
+    }
+    .session-card .session-status.closed {
+        background: rgba(255, 107, 107, 0.12);
+        color: var(--red);
+    }
+    .session-card .session-status.closing {
+        background: rgba(212, 175, 55, 0.12);
+        color: var(--gold);
+    }
 
-    .spreads-section { background: var(--navy-light); }
+    .spreads-section {
+        background: var(--navy-light);
+    }
     .spreads-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -287,10 +295,27 @@
         transform: translateY(-3px);
         background: rgba(255, 255, 255, 0.03);
     }
-    .spread-card .spread-icon { font-size: 2.2rem; margin-bottom: 8px; display: block; }
-    .spread-card .spread-name { font-size: 1rem; font-weight: 600; margin-bottom: 2px; }
-    .spread-card .spread-value { font-size: 2rem; font-weight: 800; color: var(--gold); letter-spacing: -0.02em; }
-    .spread-card .spread-desc { font-size: 0.8rem; color: var(--gray-400); margin-top: 4px; }
+    .spread-card .spread-icon {
+        font-size: 2.2rem;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .spread-card .spread-name {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+    .spread-card .spread-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--gold);
+        letter-spacing: -0.02em;
+    }
+    .spread-card .spread-desc {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+        margin-top: 4px;
+    }
     .spread-card .spread-leverage {
         margin-top: 10px;
         padding-top: 10px;
@@ -298,7 +323,9 @@
         font-size: 0.8rem;
         color: var(--gray-400);
     }
-    .spread-card .spread-leverage strong { color: var(--white); }
+    .spread-card .spread-leverage strong {
+        color: var(--white);
+    }
 
     .cta-section {
         background: var(--navy-light);
@@ -306,281 +333,399 @@
         text-align: center;
         padding: 60px 0;
     }
-    .cta-section h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; }
-    .cta-section p { color: var(--gray-400); font-size: 1.05rem; max-width: 500px; margin: 0 auto 28px; }
-    .cta-section .btn-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .cta-section h2 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    .cta-section p {
+        color: var(--gray-400);
+        font-size: 1.05rem;
+        max-width: 500px;
+        margin: 0 auto 28px;
+    }
+    .cta-section .btn-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .ticker-bar {
+        background: rgba(17, 27, 47, 0.5);
+        backdrop-filter: blur(4px);
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 12px 0;
+        overflow: hidden;
+        position: relative;
+        z-index: 2;
+    }
+    .ticker-track {
+        display: flex;
+        animation: tickerScroll 30s linear infinite;
+        width: max-content;
+    }
+    .ticker-track .ticker-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 32px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    .ticker-track .ticker-item .symbol {
+        font-weight: 600;
+        color: var(--white);
+    }
+    .ticker-track .ticker-item .price {
+        color: var(--gray-300);
+    }
+    .ticker-track .ticker-item .change {
+        font-weight: 600;
+    }
+    .ticker-track .ticker-item .change.up {
+        color: #4caf50;
+    }
+    .ticker-track .ticker-item .change.down {
+        color: #ef5350;
+    }
+    @keyframes tickerScroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
 
     @media (max-width: 1024px) {
-        .market-grid { grid-template-columns: repeat(2, 1fr); }
-        .session-grid { grid-template-columns: repeat(2, 1fr); }
-        .spreads-grid { grid-template-columns: repeat(2, 1fr); }
+        .market-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .session-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .spreads-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
     @media (max-width: 768px) {
-        .page-hero h1 { font-size: 2.4rem; }
-        .page-hero p { font-size: 1rem; }
-        .page-hero .hero-stats { gap: 24px; flex-wrap: wrap; }
-        .page-hero .hero-stats .stat h3 { font-size: 1.4rem; }
-        .section-title { font-size: 2rem; }
-        .market-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .session-grid { grid-template-columns: 1fr 1fr; }
-        .spreads-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .section { padding: 56px 0; }
-        .page-hero { padding-top: 120px; padding-bottom: 56px; }
-        .cta-section h2 { font-size: 1.8rem; }
+        .page-hero h1 {
+            font-size: 2.4rem;
+        }
+        .page-hero p {
+            font-size: 1rem;
+        }
+        .page-hero .hero-stats {
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .page-hero .hero-stats .stat h3 {
+            font-size: 1.4rem;
+        }
+        .market-grid {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .session-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+        .spreads-grid {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .cta-section h2 {
+            font-size: 1.8rem;
+        }
+        .section {
+            padding: 56px 0;
+        }
+        .page-hero {
+            padding-top: 120px;
+            padding-bottom: 56px;
+        }
     }
     @media (max-width: 480px) {
-        .page-hero h1 { font-size: 1.9rem; }
-        .page-hero .hero-stats { gap: 12px; flex-direction: column; align-items: center; }
-        .session-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-        .session-card { padding: 16px 12px; }
-        .cta-section .btn-group { flex-direction: column; align-items: center; }
-        .cta-section .btn-group .btn { width: 100%; justify-content: center; }
-        .market-card .market-stats { flex-direction: column; gap: 6px; }
+        .page-hero h1 {
+            font-size: 1.9rem;
+        }
+        .session-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .session-card {
+            padding: 16px 12px;
+        }
+        .cta-section .btn-group {
+            flex-direction: column;
+            align-items: center;
+        }
+        .cta-section .btn-group .btn {
+            width: 100%;
+            justify-content: center;
+        }
+        .page-hero .hero-stats {
+            gap: 12px;
+            flex-direction: column;
+            align-items: center;
+        }
+        .market-card .market-stats {
+            flex-direction: column;
+            gap: 6px;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- ===== TICKER ===== -->
-<div class="ticker-bar" aria-label="Live market ticker">
-    <div class="ticker-track" id="tickerTrack">
-        <!-- injected by JS -->
-    </div>
-</div>
-
-<!-- ===== PAGE HERO ===== -->
-<section class="page-hero">
-    <div class="hero-orb orb1"></div>
-    <div class="hero-orb orb2"></div>
-    <div class="container">
-        <div class="breadcrumb">
-            <a href="{% url 'core:home' %}">Home</a>
-            <span class="sep">/</span>
-            <span>Markets</span>
-        </div>
-        <h1>Global <span class="highlight">Markets</span></h1>
-        <p>Access 150+ tradable instruments across Forex, Stocks, Commodities, Indices, Cryptocurrency, and ETFs — all with institutional-grade execution and transparent pricing.</p>
-        <div class="hero-stats">
-            <div class="stat"><h3>150+</h3><p>Markets Available</p></div>
-            <div class="stat"><h3>24/5</h3><p>Trading Hours</p></div>
-            <div class="stat"><h3>0.0</h3><p>Starting Spread (pips)</p></div>
-            <div class="stat"><h3>1:50</h3><p>Max Leverage</p></div>
+    <!-- ===== TICKER BAR ===== -->
+    <div class="ticker-bar" aria-label="Live market ticker">
+        <div class="ticker-track" id="tickerTrack">
+            <!-- injected by JS -->
         </div>
     </div>
-</section>
 
-<!-- ===== MARKETS ===== -->
-<section class="section markets-section" id="markets">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:40px;">
-            <h2 class="section-title">Asset <span class="highlight">Classes</span></h2>
-            <p class="section-subtitle mx-auto">Diversify your portfolio with a wide range of asset classes, all available from a single account.</p>
-        </div>
-        <div class="market-grid">
-            <div class="market-card">
-                <span class="market-badge">Liquid</span>
-                <span class="market-icon">💱</span>
-                <div class="market-name">Forex</div>
-                <div class="market-sub">The world's largest market</div>
-                <div class="market-desc">Trade major, minor, and exotic currency pairs with ultra-tight spreads and 24/5 liquidity.</div>
-                <div class="market-stats">
-                    <div class="ms-item"><div class="ms-label">Pairs</div><div class="ms-value">60+</div></div>
-                    <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.0 pips</div></div>
-                    <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:50</div></div>
-                </div>
-                <a href="#" class="btn btn-secondary btn-sm">Explore Forex</a>
+    <!-- ===== PAGE HERO ===== -->
+    <section class="page-hero">
+        <div class="hero-orb orb1"></div>
+        <div class="hero-orb orb2"></div>
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="{% url 'index' %}">Home</a>
+                <span class="sep">/</span>
+                <span>Markets</span>
             </div>
-            <div class="market-card">
-                <span class="market-badge high">High Liquidity</span>
-                <span class="market-icon">📈</span>
-                <div class="market-name">Stocks</div>
-                <div class="market-sub">Global equity markets</div>
-                <div class="market-desc">Trade shares of the world's leading companies across US, European, and Asian exchanges.</div>
-                <div class="market-stats">
-                    <div class="ms-item"><div class="ms-label">Stocks</div><div class="ms-value">300+</div></div>
-                    <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.02%</div></div>
-                    <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:20</div></div>
+            <h1>Global <span class="highlight">Markets</span></h1>
+            <p>Access 150+ tradable instruments across Forex, Stocks, Commodities, Indices, Cryptocurrency, and ETFs — all with institutional-grade execution and transparent pricing.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <h3>150+</h3>
+                    <p>Markets Available</p>
                 </div>
-                <a href="#" class="btn btn-secondary btn-sm">Explore Stocks</a>
-            </div>
-            <div class="market-card">
-                <span class="market-badge volatile">Volatile</span>
-                <span class="market-icon">🛢️</span>
-                <div class="market-name">Commodities</div>
-                <div class="market-sub">Hard &amp; soft commodities</div>
-                <div class="market-desc">Trade precious metals, energy products, and agricultural commodities with competitive spreads.</div>
-                <div class="market-stats">
-                    <div class="ms-item"><div class="ms-label">Instruments</div><div class="ms-value">20+</div></div>
-                    <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.3 pips</div></div>
-                    <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:30</div></div>
+                <div class="stat">
+                    <h3>24/5</h3>
+                    <p>Trading Hours</p>
                 </div>
-                <a href="#" class="btn btn-secondary btn-sm">Explore Commodities</a>
-            </div>
-            <div class="market-card">
-                <span class="market-badge">Broad Exposure</span>
-                <span class="market-icon">📊</span>
-                <div class="market-name">Indices</div>
-                <div class="market-sub">Market benchmarks</div>
-                <div class="market-desc">Trade the world's major stock indices including the S&P 500, Nasdaq, FTSE 100, and more.</div>
-                <div class="market-stats">
-                    <div class="ms-item"><div class="ms-label">Indices</div><div class="ms-value">15+</div></div>
-                    <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.5 pips</div></div>
-                    <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:40</div></div>
+                <div class="stat">
+                    <h3>0.0</h3>
+                    <p>Starting Spread (pips)</p>
                 </div>
-                <a href="#" class="btn btn-secondary btn-sm">Explore Indices</a>
-            </div>
-            <div class="market-card">
-                <span class="market-badge volatile">High Volatility</span>
-                <span class="market-icon">₿</span>
-                <div class="market-name">Cryptocurrency</div>
-                <div class="market-sub">Digital assets</div>
-                <div class="market-desc">Trade Bitcoin, Ethereum, and other major cryptocurrencies with leverage and tight spreads.</div>
-                <div class="market-stats">
-                    <div class="ms-item"><div class="ms-label">Crypto Pairs</div><div class="ms-value">12+</div></div>
-                    <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.05%</div></div>
-                    <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:5</div></div>
+                <div class="stat">
+                    <h3>1:50</h3>
+                    <p>Max Leverage</p>
                 </div>
-                <a href="#" class="btn btn-secondary btn-sm">Explore Crypto</a>
-            </div>
-            <div class="market-card">
-                <span class="market-badge high">Diversified</span>
-                <span class="market-icon">📦</span>
-                <div class="market-name">ETFs</div>
-                <div class="market-sub">Exchange-traded funds</div>
-                <div class="market-desc">Gain diversified exposure to sectors, themes, and asset classes through liquid ETFs.</div>
-                <div class="market-stats">
-                    <div class="ms-item"><div class="ms-label">ETFs</div><div class="ms-value">50+</div></div>
-                    <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.03%</div></div>
-                    <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:20</div></div>
-                </div>
-                <a href="#" class="btn btn-secondary btn-sm">Explore ETFs</a>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- ===== SESSIONS ===== -->
-<section class="section sessions-section" id="sessions">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:40px;">
-            <h2 class="section-title">Trading <span class="highlight">Sessions</span></h2>
-            <p class="section-subtitle mx-auto">Stay ahead with round-the-clock access to global markets across four major trading sessions.</p>
-        </div>
-        <div class="session-grid">
-            <div class="session-card">
-                <span class="session-icon">🌏</span>
-                <div class="session-name">Sydney</div>
-                <div class="session-time">10:00 PM — 7:00 AM (EST)</div>
-                <span class="session-status open">● Open Now</span>
+    <!-- ===== MARKETS GRID ===== -->
+    <section class="section markets-section" id="markets">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:40px;">
+                <h2 class="section-title">Asset <span class="highlight">Classes</span></h2>
+                <p class="section-subtitle mx-auto">Diversify your portfolio with a wide range of asset classes, all available from a single account.</p>
             </div>
-            <div class="session-card">
-                <span class="session-icon">🇯🇵</span>
-                <div class="session-name">Tokyo</div>
-                <div class="session-time">7:00 PM — 4:00 AM (EST)</div>
-                <span class="session-status open">● Open Now</span>
-            </div>
-            <div class="session-card">
-                <span class="session-icon">🇬🇧</span>
-                <div class="session-name">London</div>
-                <div class="session-time">3:00 AM — 12:00 PM (EST)</div>
-                <span class="session-status closing">● Closing Soon</span>
-            </div>
-            <div class="session-card">
-                <span class="session-icon">🇺🇸</span>
-                <div class="session-name">New York</div>
-                <div class="session-time">8:00 AM — 5:00 PM (EST)</div>
-                <span class="session-status open">● Open Now</span>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- ===== SPREADS ===== -->
-<section class="section spreads-section" id="spreads">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:40px;">
-            <h2 class="section-title">Spreads &amp; <span class="highlight">Leverage</span></h2>
-            <p class="section-subtitle mx-auto">Transparent pricing and flexible leverage across all asset classes.</p>
-        </div>
-        <div class="spreads-grid">
-            <div class="spread-card">
-                <span class="spread-icon">💱</span>
-                <div class="spread-name">Forex</div>
-                <div class="spread-value">0.0</div>
-                <div class="spread-desc">Average spread (pips)</div>
-                <div class="spread-leverage">Leverage up to <strong>1:50</strong></div>
-            </div>
-            <div class="spread-card">
-                <span class="spread-icon">📈</span>
-                <div class="spread-name">Stocks &amp; ETFs</div>
-                <div class="spread-value">0.02%</div>
-                <div class="spread-desc">Average spread</div>
-                <div class="spread-leverage">Leverage up to <strong>1:20</strong></div>
-            </div>
-            <div class="spread-card">
-                <span class="spread-icon">🛢️</span>
-                <div class="spread-name">Commodities &amp; Indices</div>
-                <div class="spread-value">0.3</div>
-                <div class="spread-desc">Average spread (pips)</div>
-                <div class="spread-leverage">Leverage up to <strong>1:40</strong></div>
-            </div>
-        </div>
-    </div>
-</section>
+            <div class="market-grid">
+                <div class="market-card">
+                    <span class="market-badge">Liquid</span>
+                    <span class="market-icon">💱</span>
+                    <div class="market-name">Forex</div>
+                    <div class="market-sub">The world's largest market</div>
+                    <div class="market-desc">Trade major, minor, and exotic currency pairs with ultra-tight spreads and 24/5 liquidity.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Pairs</div><div class="ms-value">60+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.0 pips</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:50</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Forex</a>
+                </div>
 
-<!-- ===== CTA ===== -->
-<section class="cta-section" id="cta">
-    <div class="container">
-        <h2>Ready to Trade <span class="highlight">Global Markets</span>?</h2>
-        <p>Open your account today and access 150+ instruments with institutional-grade execution.</p>
-        <div class="btn-group">
-            <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">Open Account</a>
-            <a href="#markets" class="btn btn-secondary btn-lg">Explore Markets</a>
+                <div class="market-card">
+                    <span class="market-badge high">High Liquidity</span>
+                    <span class="market-icon">📈</span>
+                    <div class="market-name">Stocks</div>
+                    <div class="market-sub">Global equity markets</div>
+                    <div class="market-desc">Trade shares of the world's leading companies across US, European, and Asian exchanges.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Stocks</div><div class="ms-value">300+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.02%</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:20</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Stocks</a>
+                </div>
+
+                <div class="market-card">
+                    <span class="market-badge volatile">Volatile</span>
+                    <span class="market-icon">🛢️</span>
+                    <div class="market-name">Commodities</div>
+                    <div class="market-sub">Hard &amp; soft commodities</div>
+                    <div class="market-desc">Trade precious metals, energy products, and agricultural commodities with competitive spreads.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Instruments</div><div class="ms-value">20+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.3 pips</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:30</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Commodities</a>
+                </div>
+
+                <div class="market-card">
+                    <span class="market-badge">Broad Exposure</span>
+                    <span class="market-icon">📊</span>
+                    <div class="market-name">Indices</div>
+                    <div class="market-sub">Market benchmarks</div>
+                    <div class="market-desc">Trade the world's major stock indices including the S&P 500, Nasdaq, FTSE 100, and more.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Indices</div><div class="ms-value">15+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.5 pips</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:40</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Indices</a>
+                </div>
+
+                <div class="market-card">
+                    <span class="market-badge volatile">High Volatility</span>
+                    <span class="market-icon">₿</span>
+                    <div class="market-name">Cryptocurrency</div>
+                    <div class="market-sub">Digital assets</div>
+                    <div class="market-desc">Trade Bitcoin, Ethereum, and other major cryptocurrencies with leverage and tight spreads.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">Crypto Pairs</div><div class="ms-value">12+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.05%</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:5</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore Crypto</a>
+                </div>
+
+                <div class="market-card">
+                    <span class="market-badge high">Diversified</span>
+                    <span class="market-icon">📦</span>
+                    <div class="market-name">ETFs</div>
+                    <div class="market-sub">Exchange-traded funds</div>
+                    <div class="market-desc">Gain diversified exposure to sectors, themes, and asset classes through liquid ETFs.</div>
+                    <div class="market-stats">
+                        <div class="ms-item"><div class="ms-label">ETFs</div><div class="ms-value">50+</div></div>
+                        <div class="ms-item"><div class="ms-label">Spread from</div><div class="ms-value">0.03%</div></div>
+                        <div class="ms-item"><div class="ms-label">Leverage</div><div class="ms-value">1:20</div></div>
+                    </div>
+                    <a href="#" class="btn btn-secondary btn-sm">Explore ETFs</a>
+                </div>
+            </div>
         </div>
-    </div>
-</section>
-{% endblock %}
+    </section>
 
-{% block extra_js %}
-<script>
-// ===== TICKER =====
-const tickerData = [
-    { symbol: 'EUR/USD', price: '1.08742', change: '+0.23%', up: true },
-    { symbol: 'GBP/USD', price: '1.26485', change: '-0.12%', up: false },
-    { symbol: 'USD/JPY', price: '149.62', change: '+0.31%', up: true },
-    { symbol: 'AAPL', price: '178.50', change: '+1.42%', up: true },
-    { symbol: 'MSFT', price: '415.32', change: '+0.87%', up: true },
-    { symbol: 'GOOGL', price: '141.80', change: '-0.34%', up: false },
-    { symbol: 'BTC/USD', price: '67,420', change: '+2.15%', up: true },
-    { symbol: 'ETH/USD', price: '3,520', change: '+1.87%', up: true },
-    { symbol: 'XAU/USD', price: '2,345.60', change: '+0.54%', up: true },
-    { symbol: 'US30', price: '38,745', change: '+0.32%', up: true },
-    { symbol: 'DE40', price: '18,220', change: '-0.18%', up: false },
-    { symbol: 'UK100', price: '7,980', change: '+0.41%', up: true },
-    { symbol: 'TSLA', price: '245.30', change: '+3.21%', up: true },
-    { symbol: 'NVDA', price: '875.40', change: '+2.87%', up: true },
-    { symbol: 'AMZN', price: '182.75', change: '+1.12%', up: true },
-];
-const tickerTrack = document.getElementById('tickerTrack');
-function renderTicker() {
-    let html = '';
-    const items = [...tickerData, ...tickerData];
-    items.forEach(function(item) {
-        const cls = item.up ? 'up' : 'down';
-        html += `<div class="ticker-item"><span class="symbol">${item.symbol}</span><span class="price">${item.price}</span><span class="change ${cls}">${item.change}</span></div>`;
-    });
-    tickerTrack.innerHTML = html;
-}
-renderTicker();
+    <!-- ===== TRADING SESSIONS ===== -->
+    <section class="section sessions-section" id="sessions">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:40px;">
+                <h2 class="section-title">Trading <span class="highlight">Sessions</span></h2>
+                <p class="section-subtitle mx-auto">Stay ahead with round-the-clock access to global markets across four major trading sessions.</p>
+            </div>
 
-// ===== INTERSECTION OBSERVER =====
-document.querySelectorAll('.section').forEach(function(section) {
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
-        });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    observer.observe(section);
-});
-</script>
+            <div class="session-grid">
+                <div class="session-card">
+                    <span class="session-icon">🌏</span>
+                    <div class="session-name">Sydney</div>
+                    <div class="session-time">10:00 PM — 7:00 AM (EST)</div>
+                    <span class="session-status open">● Open Now</span>
+                </div>
+                <div class="session-card">
+                    <span class="session-icon">🇯🇵</span>
+                    <div class="session-name">Tokyo</div>
+                    <div class="session-time">7:00 PM — 4:00 AM (EST)</div>
+                    <span class="session-status open">● Open Now</span>
+                </div>
+                <div class="session-card">
+                    <span class="session-icon">🇬🇧</span>
+                    <div class="session-name">London</div>
+                    <div class="session-time">3:00 AM — 12:00 PM (EST)</div>
+                    <span class="session-status closing">● Closing Soon</span>
+                </div>
+                <div class="session-card">
+                    <span class="session-icon">🇺🇸</span>
+                    <div class="session-name">New York</div>
+                    <div class="session-time">8:00 AM — 5:00 PM (EST)</div>
+                    <span class="session-status open">● Open Now</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SPREADS & LEVERAGE ===== -->
+    <section class="section spreads-section" id="spreads">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:40px;">
+                <h2 class="section-title">Spreads &amp; <span class="highlight">Leverage</span></h2>
+                <p class="section-subtitle mx-auto">Transparent pricing and flexible leverage across all asset classes.</p>
+            </div>
+
+            <div class="spreads-grid">
+                <div class="spread-card">
+                    <span class="spread-icon">💱</span>
+                    <div class="spread-name">Forex</div>
+                    <div class="spread-value">0.0</div>
+                    <div class="spread-desc">Average spread (pips)</div>
+                    <div class="spread-leverage">Leverage up to <strong>1:50</strong></div>
+                </div>
+                <div class="spread-card">
+                    <span class="spread-icon">📈</span>
+                    <div class="spread-name">Stocks &amp; ETFs</div>
+                    <div class="spread-value">0.02%</div>
+                    <div class="spread-desc">Average spread</div>
+                    <div class="spread-leverage">Leverage up to <strong>1:20</strong></div>
+                </div>
+                <div class="spread-card">
+                    <span class="spread-icon">🛢️</span>
+                    <div class="spread-name">Commodities &amp; Indices</div>
+                    <div class="spread-value">0.3</div>
+                    <div class="spread-desc">Average spread (pips)</div>
+                    <div class="spread-leverage">Leverage up to <strong>1:40</strong></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section" id="cta">
+        <div class="container">
+            <h2>Ready to Trade <span class="highlight">Global Markets</span>?</h2>
+            <p>Open your account today and access 150+ instruments with institutional-grade execution.</p>
+            <div class="btn-group">
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">Open Account</a>
+                <a href="#markets" class="btn btn-secondary btn-lg">Explore Markets</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ===== TICKER =====
+        const tickerData = [
+            { symbol: 'EUR/USD', price: '1.08742', change: '+0.23%', up: true },
+            { symbol: 'GBP/USD', price: '1.26485', change: '-0.12%', up: false },
+            { symbol: 'USD/JPY', price: '149.62', change: '+0.31%', up: true },
+            { symbol: 'AAPL', price: '178.50', change: '+1.42%', up: true },
+            { symbol: 'MSFT', price: '415.32', change: '+0.87%', up: true },
+            { symbol: 'GOOGL', price: '141.80', change: '-0.34%', up: false },
+            { symbol: 'BTC/USD', price: '67,420', change: '+2.15%', up: true },
+            { symbol: 'ETH/USD', price: '3,520', change: '+1.87%', up: true },
+            { symbol: 'XAU/USD', price: '2,345.60', change: '+0.54%', up: true },
+            { symbol: 'US30', price: '38,745', change: '+0.32%', up: true },
+            { symbol: 'DE40', price: '18,220', change: '-0.18%', up: false },
+            { symbol: 'UK100', price: '7,980', change: '+0.41%', up: true },
+            { symbol: 'TSLA', price: '245.30', change: '+3.21%', up: true },
+            { symbol: 'NVDA', price: '875.40', change: '+2.87%', up: true },
+            { symbol: 'AMZN', price: '182.75', change: '+1.12%', up: true },
+        ];
+
+        const tickerTrack = document.getElementById('tickerTrack');
+        function renderTicker() {
+            let html = '';
+            const items = [...tickerData, ...tickerData];
+            items.forEach(function(item) {
+                const cls = item.up ? 'up' : 'down';
+                html += `<div class="ticker-item"><span class="symbol">${item.symbol}</span><span class="price">${item.price}</span><span class="change ${cls}">${item.change}</span></div>`;
+            });
+            tickerTrack.innerHTML = html;
+        }
+        renderTicker();
+    </script>
 {% endblock %}
