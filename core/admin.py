@@ -1,6 +1,18 @@
 from django.contrib import admin
 from .models import SiteSetting, TermsAndConditions, DepositOption, WithdrawOption
+from django.contrib import admin
+from .models import WalletAddress
 
+@admin.register(WalletAddress)
+class WalletAddressAdmin(admin.ModelAdmin):
+    list_display = ['method', 'address', 'is_active', 'created_at']
+    list_filter = ['method', 'is_active']
+    search_fields = ['address', 'instructions']
+    fieldsets = (
+        (None, {
+            'fields': ('method', 'address', 'instructions', 'is_active')
+        }),
+    )
 @admin.register(SiteSetting)
 class SiteSettingAdmin(admin.ModelAdmin):
     list_display = ['key', 'created_at', 'updated_at']
