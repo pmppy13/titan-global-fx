@@ -1,5 +1,26 @@
 from django.db import models
+from django.db import models
 
+class WalletAddress(models.Model):
+    """Admin-managed wallet addresses for deposit methods"""
+    METHOD_CHOICES = [
+        ('bank', 'Bank Transfer'),
+        ('crypto', 'Cryptocurrency'),
+        ('paypal', 'PayPal'),
+    ]
+    
+    method = models.CharField(max_length=20, choices=METHOD_CHOICES, unique=True)
+    address = models.TextField(help_text="Wallet address, account number, or email")
+    instructions = models.TextField(blank=True, help_text="Instructions shown to user")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.get_method_display()} - {self.address[:20]}..."
+
+    class Meta:
+        verbose_name_plural = "Wallet Addresses"
 class SiteSetting(models.Model):
     key = models.CharField(max_length=100, unique=True)
     value = models.TextField()
