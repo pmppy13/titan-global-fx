@@ -407,6 +407,53 @@
             }, 10000);
         }, 10000);
     </script>
+    <script>
+    // ===== STATS COUNTER =====
+    const stats = [
+        { id: 'stat1', target: 120000, suffix: '+' },
+        { id: 'stat2', target: 350000, suffix: '+' },
+        { id: 'stat3', target: 150, suffix: '+' },
+        { id: 'stat4', target: 8, suffix: 'ms' },
+    ];
+
+    let statsAnimated = false;
+
+    function animateStats() {
+        if (statsAnimated) return;
+        const section = document.querySelector('.stats-section');
+        if (!section) return;
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+            statsAnimated = true;
+            stats.forEach(function(stat) {
+                const el = document.getElementById(stat.id);
+                if (!el) return;
+                const target = stat.target;
+                const suffix = stat.suffix || '';
+                let current = 0;
+                const increment = Math.ceil(target / 60);
+                const interval = setInterval(function() {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(interval);
+                    }
+                    if (stat.id === 'stat4') {
+                        el.textContent = current + suffix;
+                    } else {
+                        el.textContent = current.toLocaleString() + suffix;
+                    }
+                }, 20);
+            });
+        }
+    }
+
+    // Trigger on scroll and load
+    window.addEventListener('scroll', animateStats);
+    window.addEventListener('load', function() {
+        setTimeout(animateStats, 500);
+    });
+</script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
