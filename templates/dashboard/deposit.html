@@ -34,6 +34,7 @@
         color: var(--gray-400);
         margin-bottom: 28px;
     }
+
     .deposit-options {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -65,60 +66,87 @@
         display: block;
         margin-bottom: 4px;
     }
-    .deposit-option-btn .minmax {
-        font-size: 0.7rem;
-        color: var(--gray-500);
-        display: block;
-        margin-top: 4px;
-    }
-    .details-box {
-        background: rgba(255, 255, 255, 0.02);
+
+    /* ===== WALLET ADDRESS SECTION ===== */
+    .wallet-section {
+        background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(212, 175, 55, 0.1);
         border-radius: var(--radius);
-        padding: 16px;
-        margin-top: 16px;
+        padding: 20px 24px;
         margin-bottom: 24px;
         display: none;
     }
-    .details-box h4 {
-        color: var(--gold);
+    .wallet-section.active {
+        display: block;
+        animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    .wallet-section .wallet-label {
+        font-size: 0.8rem;
+        color: var(--gray-400);
         margin-bottom: 8px;
     }
-    .detail-row {
+    .wallet-section .wallet-address {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: 6px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        gap: 12px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
     }
-    .detail-row:last-child {
-        border-bottom: none;
-    }
-    .detail-row .label {
-        color: var(--gray-400);
+    .wallet-section .wallet-address .address-text {
+        flex: 1;
         font-size: 0.85rem;
-    }
-    .detail-row .value {
-        font-family: monospace;
+        color: var(--white);
         word-break: break-all;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 0.5px;
     }
-    .copy-btn {
-        background: none;
-        border: none;
+    .wallet-section .wallet-address .copy-btn {
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid rgba(212, 175, 55, 0.2);
         color: var(--gold);
-        cursor: pointer;
-        font-size: 1.1rem;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
         transition: var(--transition);
-        padding: 0 4px;
+        cursor: pointer;
+        white-space: nowrap;
     }
-    .copy-btn:hover {
-        transform: scale(1.1);
-        color: var(--gold-light);
+    .wallet-section .wallet-address .copy-btn:hover {
+        background: rgba(212, 175, 55, 0.2);
+        border-color: var(--gold);
     }
+    .wallet-section .wallet-address .copy-btn.copied {
+        background: rgba(0, 200, 151, 0.15);
+        border-color: var(--green);
+        color: var(--green);
+    }
+    .wallet-section .wallet-address .copy-btn .checkmark {
+        display: none;
+    }
+    .wallet-section .wallet-address .copy-btn.copied .checkmark {
+        display: inline;
+    }
+    .wallet-section .wallet-address .copy-btn.copied .copy-text {
+        display: none;
+    }
+
+    .wallet-instructions {
+        margin-top: 12px;
+        font-size: 0.8rem;
+        color: var(--gray-400);
+        line-height: 1.6;
+    }
+    .wallet-instructions strong {
+        color: var(--white);
+    }
+
     .form-group {
         margin-bottom: 18px;
     }
@@ -129,7 +157,9 @@
         color: var(--gray-300);
         margin-bottom: 4px;
     }
-    .form-group input, .form-group select, .form-group textarea {
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
         width: 100%;
         padding: 12px 16px;
         background: rgba(255, 255, 255, 0.04);
@@ -141,9 +171,15 @@
         outline: none;
         font-family: inherit;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
         border-color: rgba(212, 175, 55, 0.3);
         background: rgba(255, 255, 255, 0.06);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: var(--gray-500);
     }
     .form-group select option {
         background: var(--navy);
@@ -152,6 +188,7 @@
     .form-group input[type="file"] {
         padding: 8px 12px;
     }
+
     .form-submit {
         width: 100%;
         justify-content: center;
@@ -159,22 +196,46 @@
         font-size: 1rem;
         margin-top: 8px;
     }
+
     .back-link {
         display: inline-block;
         margin-top: 16px;
         color: var(--gray-400);
         transition: var(--transition);
     }
-    .back-link:hover { color: var(--gold); }
+    .back-link:hover {
+        color: var(--gold);
+    }
+
     @media (max-width: 768px) {
-        .deposit-section { padding-top: 100px; }
-        .deposit-wrapper { padding: 24px 20px; }
-        .deposit-options { grid-template-columns: 1fr 1fr; }
-        .deposit-wrapper h1 { font-size: 1.6rem; }
+        .deposit-section {
+            padding-top: 100px;
+        }
+        .deposit-wrapper {
+            padding: 24px 20px;
+        }
+        .deposit-options {
+            grid-template-columns: 1fr 1fr;
+        }
+        .deposit-wrapper h1 {
+            font-size: 1.6rem;
+        }
+        .wallet-section .wallet-address {
+            flex-direction: column;
+            text-align: center;
+        }
+        .wallet-section .wallet-address .copy-btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
     @media (max-width: 480px) {
-        .deposit-options { grid-template-columns: 1fr; }
-        .detail-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+        .deposit-options {
+            grid-template-columns: 1fr;
+        }
+        .wallet-section .wallet-address .address-text {
+            font-size: 0.7rem;
+        }
     }
 </style>
 {% endblock %}
@@ -186,67 +247,79 @@
             <h1>Make a <span class="highlight">Deposit</span></h1>
             <p class="subtitle">Choose your deposit method and complete the transaction.</p>
 
+            <!-- Deposit Options -->
             <div class="deposit-options">
-                {% for option in deposit_options %}
-                <button type="button" class="deposit-option-btn"
-                    data-method="{{ option.method }}"
-                    data-name="{{ option.name }}"
-                    data-details='{{ option.details|safe }}'
-                    data-min="{{ option.min_amount }}"
-                    data-max="{{ option.max_amount }}">
-                    <span class="icon">
-                        {% if option.method == 'bank' %}🏦{% elif option.method == 'crypto' %}₿{% elif option.method == 'paypal' %}💳{% endif %}
-                    </span>
-                    {{ option.name }}
-                    <span class="minmax">Min: ${{ option.min_amount }} | Max: ${{ option.max_amount }}</span>
+                <button type="button" class="deposit-option-btn" data-method="bank" data-name="Bank Transfer" data-instructions="Please send the exact amount to our bank account and upload proof.">
+                    <span class="icon">🏦</span>
+                    Bank Transfer
                 </button>
-                {% empty %}
-                <p style="color:var(--gray-500);grid-column:1/-1;text-align:center;">No deposit options available.</p>
-                {% endfor %}
+                <button type="button" class="deposit-option-btn" data-method="crypto" data-name="Cryptocurrency" data-instructions="Send the exact amount to the wallet address below.">
+                    <span class="icon">₿</span>
+                    Cryptocurrency
+                </button>
+                <button type="button" class="deposit-option-btn" data-method="paypal" data-name="PayPal" data-instructions="Send the exact amount to our PayPal email below.">
+                    <span class="icon">💳</span>
+                    PayPal
+                </button>
             </div>
 
-            <!-- ===== WALLET ADDRESS WITH COPY BUTTON ===== -->
-            <div class="details-box" id="depositDetails">
-                <h4>📋 Payment Details</h4>
-                <div id="detailsContent"></div>
-                <div style="margin-top:12px; font-size:0.85rem; color:var(--gray-400);">
-                    💡 Copy the details and use them to complete your payment.
+            <!-- Wallet Address Section -->
+            <div class="wallet-section" id="walletSection">
+                <div class="wallet-label">📋 <span id="walletMethodLabel">Cryptocurrency</span> Wallet Address</div>
+                <div class="wallet-address">
+                    <span class="address-text" id="walletAddress">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</span>
+                    <button class="copy-btn" id="copyWalletBtn" onclick="copyWalletAddress()">
+                        <span class="copy-text">📋 Copy</span>
+                        <span class="checkmark">✅ Copied!</span>
+                    </button>
+                </div>
+                <div class="wallet-instructions" id="walletInstructions">
+                    <strong>Instructions:</strong> Send the exact amount to the wallet address above. Include your username in the memo/note.
                 </div>
             </div>
 
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.non_field_errors }}
+                
                 <div class="form-group">
                     <label for="{{ form.amount.id_for_label }}">Amount (USD)</label>
                     {{ form.amount }}
                     {{ form.amount.errors }}
                 </div>
+
                 <div class="form-group">
                     <label for="{{ form.method.id_for_label }}">Payment Method</label>
                     {{ form.method }}
                     {{ form.method.errors }}
                 </div>
+
                 <div class="form-group">
                     <label for="{{ form.method_name.id_for_label }}">Method Name</label>
                     {{ form.method_name }}
                     {{ form.method_name.errors }}
+                    <small style="color:var(--gray-500);font-size:0.75rem;">e.g., Bank Transfer, BTC, PayPal</small>
                 </div>
+
                 <div class="form-group">
                     <label for="{{ form.reference.id_for_label }}">Transaction Reference</label>
                     {{ form.reference }}
                     {{ form.reference.errors }}
+                    <small style="color:var(--gray-500);font-size:0.75rem;">Your transaction ID or reference number</small>
                 </div>
+
                 <div class="form-group">
                     <label for="{{ form.proof_image.id_for_label }}">Payment Proof (Screenshot/Receipt)</label>
                     {{ form.proof_image }}
                     {{ form.proof_image.errors }}
+                    <small style="color:var(--gray-500);font-size:0.75rem;">Upload a screenshot or photo of your payment receipt</small>
                 </div>
+
                 <div class="form-group">
                     <label for="{{ form.notes.id_for_label }}">Additional Notes (Optional)</label>
                     {{ form.notes }}
                     {{ form.notes.errors }}
                 </div>
+
                 <button type="submit" class="btn btn-primary form-submit">Submit Deposit</button>
             </form>
 
@@ -254,100 +327,98 @@
         </div>
     </div>
 </section>
-{% endblock %}
 
-{% block extra_js %}
 <script>
-    (function() {
-        const detailsBox = document.getElementById('depositDetails');
-        const contentDiv = document.getElementById('detailsContent');
+    // ===== DEPOSIT OPTION SELECTION =====
+    const depositOptions = document.querySelectorAll('.deposit-option-btn');
+    const walletSection = document.getElementById('walletSection');
+    const walletAddress = document.getElementById('walletAddress');
+    const walletMethodLabel = document.getElementById('walletMethodLabel');
+    const walletInstructions = document.getElementById('walletInstructions');
+    const methodSelect = document.getElementById('{{ form.method.id_for_label }}');
+    const methodNameInput = document.getElementById('{{ form.method_name.id_for_label }}');
 
-        function renderDetails(details) {
-            if (!details || Object.keys(details).length === 0) {
-                detailsBox.style.display = 'none';
-                return;
-            }
-            let html = '';
-            const labelMap = {
-                'bank_name': 'Bank Name',
-                'account_name': 'Account Name',
-                'account_number': 'Account Number',
-                'routing_number': 'Routing Number',
-                'swift_code': 'SWIFT Code',
-                'coin_name': 'Coin',
-                'wallet_address': 'Wallet Address',
-                'network': 'Network',
-                'paypal_email': 'PayPal Email',
-                'paypal_link': 'Payment Link'
-            };
-            for (const [key, value] of Object.entries(details)) {
-                if (value) {
-                    const label = labelMap[key] || key.replace('_', ' ').toUpperCase();
-                    html += `
-                        <div class="detail-row">
-                            <span class="label">${label}</span>
-                            <span class="value">
-                                <span>${value}</span>
-                                <button class="copy-btn" data-value="${value.replace(/"/g, '&quot;')}" title="Copy to clipboard">📋</button>
-                            </span>
-                        </div>
-                    `;
-                }
-            }
-            if (html) {
-                contentDiv.innerHTML = html;
-                detailsBox.style.display = 'block';
-                document.querySelectorAll('.copy-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const text = this.dataset.value;
-                        if (navigator.clipboard) {
-                            navigator.clipboard.writeText(text).then(() => {
-                                this.textContent = '✅';
-                                setTimeout(() => this.textContent = '📋', 2000);
-                            });
-                        } else {
-                            const textarea = document.createElement('textarea');
-                            textarea.value = text;
-                            document.body.appendChild(textarea);
-                            textarea.select();
-                            document.execCommand('copy');
-                            document.body.removeChild(textarea);
-                            this.textContent = '✅';
-                            setTimeout(() => this.textContent = '📋', 2000);
-                        }
-                    });
-                });
-            } else {
-                detailsBox.style.display = 'none';
-            }
+    // Wallet addresses for different methods
+    const walletData = {
+        bank: {
+            address: 'Account: 1234567890\nRouting: 021000021\nSWIFT: CHASUS33',
+            label: 'Bank Transfer',
+            instructions: 'Please send the exact amount to the bank account details above. Use your username as reference.'
+        },
+        crypto: {
+            address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+            label: 'Cryptocurrency (BTC)',
+            instructions: 'Send the exact amount in BTC to the wallet address above. Your transaction will be confirmed after 3 confirmations.'
+        },
+        paypal: {
+            address: 'payments@titanglobalfx.com',
+            label: 'PayPal',
+            instructions: 'Send the exact amount to the PayPal email above. Please select "Friends & Family" to avoid fees.'
         }
+    };
 
-        document.querySelectorAll('.deposit-option-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.deposit-option-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+    depositOptions.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            // Toggle active state
+            depositOptions.forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
 
-                const method = this.dataset.method;
-                const name = this.dataset.name;
-                const details = JSON.parse(this.dataset.details || '{}');
-                const min = this.dataset.min;
-                const max = this.dataset.max;
+            const method = this.dataset.method;
+            const name = this.dataset.name;
+            const instructions = this.dataset.instructions;
 
-                document.getElementById('id_method').value = method;
-                document.getElementById('id_method_name').value = name;
+            // Update form fields
+            if (methodSelect) {
+                methodSelect.value = method;
+            }
+            if (methodNameInput) {
+                methodNameInput.value = name;
+            }
 
-                const hint = document.querySelector('.form-group small');
-                if (hint) {
-                    hint.textContent = `Min: $${min} | Max: $${max}`;
-                }
-
-                renderDetails(details);
-            });
+            // Update wallet section
+            const data = walletData[method];
+            if (data) {
+                walletAddress.textContent = data.address;
+                walletMethodLabel.textContent = data.label;
+                walletInstructions.innerHTML = '<strong>Instructions:</strong> ' + data.instructions;
+                walletSection.classList.add('active');
+            } else {
+                walletSection.classList.remove('active');
+            }
         });
+    });
 
-        const selected = document.querySelector('.deposit-option-btn.active');
-        if (selected) { selected.click(); }
-    })();
+    // ===== COPY WALLET ADDRESS =====
+    function copyWalletAddress() {
+        const address = walletAddress.textContent;
+        const btn = document.getElementById('copyWalletBtn');
+        
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(address).then(function() {
+                btn.classList.add('copied');
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                }, 3000);
+            });
+        } else {
+            // Fallback
+            const textarea = document.createElement('textarea');
+            textarea.value = address;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            btn.classList.add('copied');
+            setTimeout(function() {
+                btn.classList.remove('copied');
+            }, 3000);
+        }
+    }
+
+    // ===== AUTO-SELECT FIRST DEPOSIT OPTION =====
+    // Select the first option by default (if exists)
+    if (depositOptions.length > 0) {
+        depositOptions[0].click();
+    }
 </script>
 {% endblock %}
