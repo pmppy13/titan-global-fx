@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Titan Global FX{% endblock %}</title>
-    <meta name="description" content="{% block description %}Institutional-grade trading infrastructure{% endblock %}" />
+    <title>{% block title %}Titan Global FX | Premium Forex & Trading{% endblock %}</title>
+    <meta name="description" content="{% block description %}Trade global markets with confidence at Titan Global FX. Institutional-grade trading platform with SEC compliance.{% endblock %}" />
+    {% load static %}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+
     <!-- ===== PRELOADER ===== -->
     <div id="preloader">
         <div class="loader-ring">
@@ -21,22 +22,13 @@
         <div class="loader-text">Titan Global FX</div>
     </div>
 
-    <!-- ===== MESSAGES ===== -->
-    {% if messages %}
-    <div class="messages-container">
-        {% for message in messages %}
-        <div class="message message-{{ message.tags }}">
-            {{ message }}
-            <button class="message-close">&times;</button>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <!-- ===== NAVIGATION ===== -->
     <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
         <div class="container">
-            <a href="{% url 'core:home' %}" class="logo">
+            <a href="{% url 'home' %}" class="logo">
                 <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2" y="2" width="28" height="28" rx="8" stroke="#C9A84C" stroke-width="2.5" />
                     <path d="M10 22L16 10L22 22L19 22L16 16L13 22L10 22Z" fill="#C9A84C" />
@@ -47,30 +39,23 @@
             </a>
 
             <ul class="nav-links" id="navLinks" role="menubar">
-                <li role="none"><a href="{% url 'core:home' %}" role="menuitem">Home</a></li>
-                <li role="none"><a href="{% url 'core:about' %}" role="menuitem">About</a></li>
-                <li role="none"><a href="{% url 'core:platforms' %}" role="menuitem">Platforms</a></li>
-                <li role="none"><a href="{% url 'core:markets' %}" role="menuitem">Markets</a></li>
-                <li role="none"><a href="{% url 'core:plans' %}" role="menuitem">Plans</a></li>
-                <li role="none"><a href="{% url 'core:contact' %}" role="menuitem">Contact</a></li>
-                {% if user.is_authenticated %}
-                <li role="none"><a href="{% url 'dashboard:index' %}" role="menuitem">Dashboard</a></li>
-                {% endif %}
-                {% if user.is_superuser or user.is_staff %}
-                <li role="none"><a href="{% url 'admin_dashboard:index' %}" role="menuitem" style="color: var(--gold);">⚙️ Admin</a></li>
-                {% endif %}
+                <li role="none"><a href="{% url 'home' %}#home" role="menuitem">Home</a></li>
+                <li role="none"><a href="{% url 'home' %}#about" role="menuitem">About</a></li>
+                <li role="none"><a href="{% url 'home' %}#platforms" role="menuitem">Platforms</a></li>
+                <li role="none"><a href="{% url 'home' %}#markets" role="menuitem">Markets</a></li>
+                <li role="none"><a href="{% url 'home' %}#plans" role="menuitem">Plans</a></li>
+                <li role="none"><a href="{% url 'home' %}#accounts" role="menuitem">Accounts</a></li>
+                <li role="none"><a href="{% url 'home' %}#analysis" role="menuitem">Analysis</a></li>
+                <li role="none"><a href="{% url 'home' %}#contact" role="menuitem">Contact</a></li>
             </ul>
 
             <div class="nav-actions">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard:index' %}" class="btn btn-secondary btn-sm">Dashboard</a>
-                    {% if user.is_superuser or user.is_staff %}
-                    <a href="{% url 'admin_dashboard:index' %}" class="btn btn-primary btn-sm">⚙️ Admin</a>
-                    {% endif %}
-                    <a href="{% url 'accounts:logout' %}" class="btn btn-secondary btn-sm">Logout</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm">Dashboard</a>
+                    <a href="{% url 'logout' %}" class="btn btn-secondary btn-sm">Logout</a>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}" class="btn btn-secondary btn-sm">Log In</a>
-                    <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-sm">Open Account</a>
+                    <a href="{% url 'login' %}" class="btn btn-secondary btn-sm">Log In</a>
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-sm">Open Account</a>
                 {% endif %}
                 <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
                     <span></span><span></span><span></span>
@@ -109,27 +94,27 @@
                 <div class="footer-col">
                     <h4>Company</h4>
                     <ul>
-                        <li><a href="{% url 'core:about' %}">About Us</a></li>
-                        <li><a href="{% url 'core:about' %}#leadership">Leadership</a></li>
+                        <li><a href="{% url 'home' %}#about">About Us</a></li>
+                        <li><a href="{% url 'home' %}#about">Leadership</a></li>
                         <li><a href="#">Careers</a></li>
-                        <li><a href="{% url 'core:about' %}#regulatory">Regulatory</a></li>
+                        <li><a href="#">Regulatory</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4>Trading</h4>
                     <ul>
-                        <li><a href="{% url 'core:platforms' %}">Platforms</a></li>
-                        <li><a href="{% url 'core:markets' %}">Markets</a></li>
-                        <li><a href="{% url 'core:plans' %}">Investment Plans</a></li>
-                        <li><a href="#">Account Types</a></li>
+                        <li><a href="{% url 'home' %}#platforms">Platforms</a></li>
+                        <li><a href="{% url 'home' %}#markets">Markets</a></li>
+                        <li><a href="{% url 'home' %}#plans">Investment Plans</a></li>
+                        <li><a href="{% url 'home' %}#accounts">Account Types</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4>Resources</h4>
                     <ul>
-                        <li><a href="#">Market Analysis</a></li>
+                        <li><a href="{% url 'home' %}#analysis">Market Analysis</a></li>
                         <li><a href="#">Economic Calendar</a></li>
-                        <li><a href="{% url 'core:contact' %}">Contact Support</a></li>
+                        <li><a href="{% url 'home' %}#contact">Contact Support</a></li>
                     </ul>
                 </div>
             </div>
@@ -145,17 +130,12 @@
         </div>
     </footer>
 
-    <!-- ===== TOAST CONTAINER (Only on homepage) ===== -->
-    <div class="toast-container" id="toastContainer"></div>
-
     <!-- ===== SCRIPTS ===== -->
     <script>
         // ===== PRELOADER =====
         window.addEventListener('load', function() {
             const preloader = document.getElementById('preloader');
-            setTimeout(function() {
-                preloader.classList.add('hide');
-            }, 800);
+            setTimeout(function() { preloader.classList.add('hide'); }, 800);
         });
 
         // ===== NAVBAR SCROLL =====
@@ -182,90 +162,250 @@
             });
         });
 
-        // ===== MESSAGE CLOSE =====
-        document.querySelectorAll('.message-close').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                this.parentElement.style.display = 'none';
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    const offset = 80;
+                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({ top: top, behavior: 'smooth' });
+                }
             });
         });
 
-        // ===== TOAST NOTIFICATIONS (Homepage Only) =====
-        // Check if we're on the homepage by looking for the hero section
-        const isHomepage = document.querySelector('.hero') !== null;
-
-        if (isHomepage) {
-            const firstNames = ['James', 'Sarah', 'Michael', 'Emma', 'David', 'Sophia', 'Daniel', 'Olivia', 'Matthew', 'Ava', 'Christopher', 'Isabella', 'Andrew', 'Mia', 'Joshua', 'Charlotte', 'Ryan', 'Amelia', 'John', 'Evelyn', 'William', 'Abigail', 'Thomas', 'Harper', 'Charles', 'Ella', 'Joseph', 'Grace', 'Samuel', 'Victoria'];
-            const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker'];
-            const assets = ['BTC/USD', 'ETH/USD', 'XAU/USD', 'EUR/USD', 'GBP/USD', 'AAPL', 'MSFT', 'TSLA', 'NVDA', 'AMZN', 'S&P 500', 'Nasdaq', 'Oil', 'Silver'];
-
-            function getRandomName() {
-                return firstNames[Math.floor(Math.random() * firstNames.length)] + ' ' + lastNames[Math.floor(Math.random() * lastNames.length)];
-            }
-
-            function getRandomAsset() {
-                return assets[Math.floor(Math.random() * assets.length)];
-            }
-
-            function getRandomAmount() {
-                const amounts = [250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 7500, 10000, 12500, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000];
-                return amounts[Math.floor(Math.random() * amounts.length)];
-            }
-
-            function createToast() {
-                const name = getRandomName();
-                const asset = getRandomAsset();
-                const amount = getRandomAmount();
-                const isBuy = Math.random() > 0.4;
-                const action = isBuy ? 'invested in' : 'sold';
-                const emoji = isBuy ? '📈' : '📉';
-                const iconClass = isBuy ? 'buy' : 'sell';
-                const amountClass = isBuy ? '' : 'sell';
-
-                const toastContainer = document.getElementById('toastContainer');
-                if (!toastContainer) return;
-
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.innerHTML = `
-                    <div class="toast-icon ${iconClass}">${emoji}</div>
-                    <div class="toast-content">
-                        <div class="toast-title"><span class="highlight">${name}</span> ${action} <span class="highlight">${asset}</span></div>
-                        <div class="toast-desc"><span class="amount ${amountClass}">$${amount.toLocaleString()}</span> • ${isBuy ? 'Buy' : 'Sell'} order</div>
-                    </div>
-                    <div class="toast-time">Just now</div>
-                `;
-
-                toastContainer.appendChild(toast);
-
-                const duration = 5000 + Math.random() * 3000;
-                setTimeout(() => {
-                    toast.classList.add('hide');
-                    setTimeout(() => {
-                        if (toast.parentNode) toast.remove();
-                    }, 400);
-                }, duration);
-
-                while (toastContainer.children.length > 6) {
-                    const first = toastContainer.firstChild;
-                    if (first) first.remove();
-                }
-            }
-
-            // Start toast notifications after 7 seconds
-            setTimeout(function() {
-                for (let i = 0; i < 3; i++) {
-                    setTimeout(createToast, i * 700 + 200);
-                }
-            }, 7000);
-
-            // Continuous stream every 4-7 seconds
-            setInterval(function() {
-                const count = Math.random() > 0.6 ? 2 : 1;
-                for (let i = 0; i < count; i++) {
-                    setTimeout(createToast, i * 500);
-                }
-            }, 4500 + Math.random() * 3000);
+        // ===== FAQ ACCORDION =====
+        document.querySelectorAll('.faq-item').forEach(function(item) {
+            const btn = item.querySelector('.faq-question');
+            btn.addEventListener('click', function() {
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(function(f) {
+                    f.classList.remove('active');
+                });
+                if (!isActive) { item.classList.add('active'); }
+            });
+        });
+        if (document.querySelectorAll('.faq-item').length) {
+            document.querySelectorAll('.faq-item')[0].classList.add('active');
         }
+
+        // ===== INTERSECTION OBSERVER =====
+        document.querySelectorAll('.section').forEach(function(section) {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            observer.observe(section);
+        });
+
+        // ===== TICKER =====
+        const tickerData = [
+            { symbol: 'EUR/USD', price: '1.08742', change: '+0.23%', up: true },
+            { symbol: 'GBP/USD', price: '1.26485', change: '-0.12%', up: false },
+            { symbol: 'USD/JPY', price: '149.62', change: '+0.31%', up: true },
+            { symbol: 'AAPL', price: '178.50', change: '+1.42%', up: true },
+            { symbol: 'MSFT', price: '415.32', change: '+0.87%', up: true },
+            { symbol: 'GOOGL', price: '141.80', change: '-0.34%', up: false },
+            { symbol: 'BTC/USD', price: '67,420', change: '+2.15%', up: true },
+            { symbol: 'ETH/USD', price: '3,520', change: '+1.87%', up: true },
+            { symbol: 'XAU/USD', price: '2,345.60', change: '+0.54%', up: true },
+            { symbol: 'US30', price: '38,745', change: '+0.32%', up: true },
+            { symbol: 'DE40', price: '18,220', change: '-0.18%', up: false },
+            { symbol: 'UK100', price: '7,980', change: '+0.41%', up: true },
+        ];
+
+        const tickerTrack = document.getElementById('tickerTrack');
+        function renderTicker() {
+            let html = '';
+            const items = [...tickerData, ...tickerData];
+            items.forEach(function(item) {
+                const cls = item.up ? 'up' : 'down';
+                html += `<div class="ticker-item"><span class="symbol">${item.symbol}</span><span class="price">${item.price}</span><span class="change ${cls}">${item.change}</span></div>`;
+            });
+            tickerTrack.innerHTML = html;
+        }
+        renderTicker();
+
+        // ===== CHART =====
+        const canvas = document.getElementById('chartCanvas');
+        const ctx = canvas.getContext('2d');
+        let chartData = [];
+        const points = 80;
+
+        function generateData() {
+            chartData = [];
+            let value = 1.0850;
+            for (let i = 0; i < points; i++) {
+                const change = (Math.random() - 0.48) * 0.0008;
+                value += change;
+                if (value > 1.0920) value -= 0.0005;
+                if (value < 1.0800) value += 0.0005;
+                chartData.push(value);
+            }
+        }
+
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+            ctx.scale(dpr, dpr);
+            drawChart(rect.width, rect.height);
+        }
+
+        function drawChart(width, height) {
+            const padding = { top: 12, bottom: 12, left: 4, right: 4 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+            ctx.clearRect(0, 0, width, height);
+            if (chartData.length === 0) return;
+            const min = Math.min(...chartData) - 0.001;
+            const max = Math.max(...chartData) + 0.001;
+            const range = max - min;
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < 5; i++) {
+                const y = padding.top + (i / 4) * chartHeight;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                ctx.stroke();
+            }
+
+            const grad = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+            grad.addColorStop(0, 'rgba(212, 175, 55, 0.15)');
+            grad.addColorStop(1, 'rgba(212, 175, 55, 0.01)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            const firstX = padding.left;
+            const firstY = padding.top + chartHeight - ((chartData[0] - min) / range) * chartHeight;
+            ctx.moveTo(firstX, height - padding.bottom);
+            ctx.lineTo(firstX, firstY);
+            for (let i = 1; i < chartData.length; i++) {
+                const x = padding.left + (i / (chartData.length - 1)) * chartWidth;
+                const y = padding.top + chartHeight - ((chartData[i] - min) / range) * chartHeight;
+                ctx.lineTo(x, y);
+            }
+            const lastX = padding.left + chartWidth;
+            ctx.lineTo(lastX, height - padding.bottom);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 2;
+            ctx.shadowColor = 'rgba(212, 175, 55, 0.3)';
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            for (let i = 0; i < chartData.length; i++) {
+                const x = padding.left + (i / (chartData.length - 1)) * chartWidth;
+                const y = padding.top + chartHeight - ((chartData[i] - min) / range) * chartHeight;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            const lastIdx = chartData.length - 1;
+            const lastX2 = padding.left + (lastIdx / (chartData.length - 1)) * chartWidth;
+            const lastY2 = padding.top + chartHeight - ((chartData[lastIdx] - min) / range) * chartHeight;
+            ctx.beginPath();
+            ctx.arc(lastX2, lastY2, 4, 0, Math.PI * 2);
+            ctx.fillStyle = '#d4af37';
+            ctx.shadowColor = 'rgba(212, 175, 55, 0.6)';
+            ctx.shadowBlur = 16;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        let priceValue = 1.08742;
+
+        function updatePrice() {
+            const change = (Math.random() - 0.48) * 0.00015;
+            priceValue += change;
+            if (priceValue > 1.0920) priceValue -= 0.0005;
+            if (priceValue < 1.0800) priceValue += 0.0005;
+            document.getElementById('livePrice').textContent = priceValue.toFixed(5);
+            const isUp = change >= 0;
+            const changeEl = document.getElementById('liveChange');
+            changeEl.textContent = (isUp ? '+' : '') + (change * 100).toFixed(2) + '%';
+            changeEl.className = 'change ' + (isUp ? 'up' : 'down');
+            chartData.push(priceValue);
+            if (chartData.length > points) chartData.shift();
+            resizeCanvas();
+        }
+
+        generateData();
+        resizeCanvas();
+        setInterval(updatePrice, 1500);
+
+        // ===== TOAST NOTIFICATIONS =====
+        const toastContainer = document.getElementById('toastContainer');
+        const firstNames = ['James', 'Sarah', 'Michael', 'Emma', 'David', 'Sophia', 'Daniel', 'Olivia', 'Matthew', 'Ava'];
+        const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+        const assets = ['BTC/USD', 'ETH/USD', 'XAU/USD', 'EUR/USD', 'GBP/USD', 'AAPL', 'MSFT', 'TSLA', 'NVDA', 'AMZN'];
+
+        function getRandomName() {
+            return firstNames[Math.floor(Math.random() * firstNames.length)] + ' ' + lastNames[Math.floor(Math.random() * lastNames.length)];
+        }
+
+        function getRandomAsset() {
+            return assets[Math.floor(Math.random() * assets.length)];
+        }
+
+        function getRandomAmount() {
+            const amounts = [250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000];
+            return amounts[Math.floor(Math.random() * amounts.length)];
+        }
+
+        function createToast() {
+            const name = getRandomName();
+            const asset = getRandomAsset();
+            const amount = getRandomAmount();
+            const isBuy = Math.random() > 0.4;
+            const action = isBuy ? 'invested in' : 'sold';
+            const emoji = isBuy ? '📈' : '📉';
+            const iconClass = isBuy ? 'buy' : 'sell';
+            const amountClass = isBuy ? '' : 'sell';
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="toast-icon ${iconClass}">${emoji}</div>
+                <div class="toast-content">
+                    <div class="toast-title"><span class="highlight">${name}</span> ${action} <span class="highlight">${asset}</span></div>
+                    <div class="toast-desc"><span class="amount ${amountClass}">$${amount.toLocaleString()}</span> • ${isBuy ? 'Buy' : 'Sell'} order</div>
+                </div>
+                <div class="toast-time">Just now</div>
+            `;
+            toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 400);
+            }, 5000 + Math.random() * 3000);
+            while (toastContainer.children.length > 6) {
+                const first = toastContainer.firstChild;
+                if (first) first.remove();
+            }
+        }
+
+        setTimeout(function() {
+            createToast();
+            setInterval(function() {
+                const count = Math.random() > 0.7 ? 2 : 1;
+                for (let i = 0; i < count; i++) {
+                    setTimeout(createToast, i * 400);
+                }
+            }, 10000);
+        }, 10000);
     </script>
     {% block extra_js %}{% endblock %}
 </body>
