@@ -1,269 +1,209 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import get_user_model
-from django.db import models
-from django.utils import timezone
-from django.http import HttpResponse
-from django.core.files.storage import default_storage
-import secrets
-import string
-
-# FIXED: Remove 'apps.' prefix since apps are in root
-from core.models import DepositOption, WithdrawOption, TermsAndConditions, WalletAddress
+from django.db.models import Sum
+from django.http import HttpResponseForbidden
 from transactions.models import Transaction
-from .forms import DepositOptionForm, WithdrawOptionForm, TermsForm, DisableWithdrawForm
+from core.models import DepositOption, WithdrawOption
 
-User = get_user_model()
-
-def admin_required(view_func):
-    decorated = user_passes_test(
-        lambda u: u.is_superuser or u.is_staff,
-        login_url='login'
-    )(view_func)
-    return decorated
-
-@admin_required
-def admin_dashboard(request):
-    total_users = User.objects.count()
-    total_transactions = Transaction.objects.count()
-    pending_transactions = Transaction.objects.filter(status='pending').count()
-    total_deposits = Transaction.objects.filter(transaction_type='deposit', status='completed').aggregate(total=models.Sum('amount'))['total'] or 0
-
-    recent_transactions = Transaction.objects.order_by('-created_at')[:10]
-
-    context = {
-        'total_users': total_users,
-        'total_transactions': total_transactions,
-        'pending_transactions': pending_transactions,
-        'total_deposits': total_deposits,
-        'recent_transactions': recent_transactions,
-    }
-    return render(request, 'admin_dashboard/index.html', context)
-
-@admin_required
-def admin_users(request):
-    users = User.objects.all().order_by('-date_joined')
-    return render(request, 'admin_dashboard/users.html', {'users': users})
-
-@admin_required
-def admin_user_detail(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    transactions = Transaction.objects.filter(user=user).order_by('-created_at')
-
-    if request.method == 'POST':
-        form = DisableWithdrawForm(request.POST)
-        if form.is_valid():
-            reason = form.cleaned_data['reason']
-            generate_code = form.cleaned_data.get('generate_code', False)
-            code = None
-            if generate_code:
-                code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-            user.disable_withdrawals(reason, code)
-            messages.success(request, f'Withdrawals disabled for {user.username}. Unlock code: {code}')
-            return redirect('admin_dashboard:user_detail', user_id=user_id)
-    else:
-        form = DisableWithdrawForm()
-
-    return render(request, 'admin_dashboard/user_detail.html', {
-        'user': user,
-        'transactions': transactions,
-        'form': form,
-    })
-
-@admin_required
-def admin_enable_withdraw(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if request.method == 'POST':
-        code = request.POST.get('unlock_code')
-        if user.enable_withdrawals(code):
-            messages.success(request, f'Withdrawals enabled for {user.username}')
-        else:
-            messages.error(request, 'Invalid unlock code.')
-    return redirect('admin_dashboard:user_detail', user_id=user_id)
-
-@admin_required
-def admin_transactions(request):
-    transactions = Transaction.objects.all().order_by('-created_at')
-    return render(request, 'admin_dashboard/transactions.html', {'transactions': transactions})
-
-@admin_required
-def admin_transaction_detail(request, transaction_id):
-    """View transaction details including proof image"""
-    transaction = get_object_or_404(Transaction, id=transaction_id)
-    return render(request, 'admin_dashboard/transaction_detail.html', {'transaction': transaction})
-
-@admin_required
-def admin_transaction_action(request, transaction_id):
-    transaction = get_object_or_404(Transaction, id=transaction_id)
-    if request.method == 'POST':
-        action = request.POST.get('action')
-        if action == 'approve':
-            transaction.status = 'approved'
-            transaction.processed_at = timezone.now()
-            messages.success(request, f'Transaction #{transaction.id} approved')
-        elif action == 'complete':
-            transaction.status = 'completed'
-            transaction.processed_at = timezone.now()
-            # Update user balance
-            if transaction.transaction_type == 'deposit':
-                transaction.user.usd_balance += transaction.amount
-                transaction.user.save()
-            elif transaction.transaction_type == 'withdraw':
-                transaction.user.usd_balance -= transaction.amount
-                transaction.user.save()
-            messages.success(request, f'Transaction #{transaction.id} completed and balance updated')
-        elif action == 'reject':
-            transaction.status = 'rejected'
-            transaction.processed_at = timezone.now()
-            messages.success(request, f'Transaction #{transaction.id} rejected')
-        elif action == 'cancel':
-            transaction.status = 'cancelled'
-            messages.success(request, f'Transaction #{transaction.id} cancelled')
-        transaction.save()
-    return redirect('admin_dashboard:transactions')
-
-@admin_required
-def admin_deposit_options(request):
-    options = DepositOption.objects.all()
-    if request.method == 'POST':
-        form = DepositOptionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Deposit option created successfully')
-            return redirect('admin_dashboard:deposit_options')
-    else:
-        form = DepositOptionForm()
-    return render(request, 'admin_dashboard/deposit_options.html', {
-        'options': options,
-        'form': form,
-    })
-
-@admin_required
-def admin_edit_deposit_option(request, option_id):
-    option = get_object_or_404(DepositOption, id=option_id)
-    if request.method == 'POST':
-        form = DepositOptionForm(request.POST, instance=option)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Deposit option updated successfully')
-            return redirect('admin_dashboard:deposit_options')
-    else:
-        form = DepositOptionForm(instance=option)
-    return render(request, 'admin_dashboard/deposit_options.html', {
-        'option': option,
-        'form': form,
-        'edit_mode': True,
-    })
-
-@admin_required
-def admin_delete_deposit_option(request, option_id):
-    option = get_object_or_404(DepositOption, id=option_id)
-    option.delete()
-    messages.success(request, 'Deposit option deleted successfully')
-    return redirect('admin_dashboard:deposit_options')
-
-@admin_required
-def admin_withdraw_options(request):
-    options = WithdrawOption.objects.all()
-    if request.method == 'POST':
-        form = WithdrawOptionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Withdraw option created successfully')
-            return redirect('admin_dashboard:withdraw_options')
-    else:
-        form = WithdrawOptionForm()
-    return render(request, 'admin_dashboard/withdraw_options.html', {
-        'options': options,
-        'form': form,
-    })
-
-@admin_required
-def admin_edit_withdraw_option(request, option_id):
-    option = get_object_or_404(WithdrawOption, id=option_id)
-    if request.method == 'POST':
-        form = WithdrawOptionForm(request.POST, instance=option)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Withdraw option updated successfully')
-            return redirect('admin_dashboard:withdraw_options')
-    else:
-        form = WithdrawOptionForm(instance=option)
-    return render(request, 'admin_dashboard/withdraw_options.html', {
-        'option': option,
-        'form': form,
-        'edit_mode': True,
-    })
-
-@admin_required
-def admin_delete_withdraw_option(request, option_id):
-    option = get_object_or_404(WithdrawOption, id=option_id)
-    option.delete()
-    messages.success(request, 'Withdraw option deleted successfully')
-    return redirect('admin_dashboard:withdraw_options')
-
-@admin_required
-def admin_terms(request):
-    terms = TermsAndConditions.objects.all().order_by('-created_at')
-    if request.method == 'POST':
-        form = TermsForm(request.POST)
-        if form.is_valid():
-            TermsAndConditions.objects.filter(is_active=True).update(is_active=False)
-            form.save()
-            messages.success(request, 'Terms and conditions updated successfully')
-            return redirect('admin_dashboard:terms')
-    else:
-        form = TermsForm()
-    return render(request, 'admin_dashboard/terms.html', {
-        'terms': terms,
-        'form': form,
-    })
-
-@admin_required
-def admin_edit_terms(request, terms_id):
-    term = get_object_or_404(TermsAndConditions, id=terms_id)
-    if request.method == 'POST':
-        form = TermsForm(request.POST, instance=term)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Terms updated successfully')
-            return redirect('admin_dashboard:terms')
-    else:
-        form = TermsForm(instance=term)
-    return render(request, 'admin_dashboard/terms.html', {
-        'term': term,
-        'form': form,
-        'edit_mode': True,
-    })
-
-@admin_required
-def admin_wallet_addresses(request):
-    """View and manage wallet addresses"""
-    wallet_addresses = WalletAddress.objects.all()
-    return render(request, 'admin_dashboard/wallet_addresses.html', {
-        'wallet_addresses': wallet_addresses,
-    })
-
-@admin_required
-def admin_edit_wallet_address(request, address_id):
-    """Edit a wallet address"""
-    wallet = get_object_or_404(WalletAddress, id=address_id)
-    if request.method == 'POST':
-        method = request.POST.get('method')
-        address = request.POST.get('address')
-        instructions = request.POST.get('instructions')
-        is_active = request.POST.get('is_active') == 'on'
-        
-        wallet.method = method
-        wallet.address = address
-        wallet.instructions = instructions
-        wallet.is_active = is_active
-        wallet.save()
-        
-        messages.success(request, f'Wallet address for {wallet.get_method_display()} updated successfully')
-        return redirect('admin_dashboard:wallet_addresses')
+@login_required
+def dashboard_index(request):
+    """User dashboard view"""
+    user = request.user
     
-    return render(request, 'admin_dashboard/edit_wallet_address.html', {
-        'wallet': wallet,
-    })
+    # Get recent transactions
+    recent_transactions = Transaction.objects.filter(user=user).order_by('-created_at')[:10]
+    
+    # Calculate totals
+    total_deposits = Transaction.objects.filter(
+        user=user, 
+        transaction_type='deposit', 
+        status='completed'
+    ).aggregate(total=Sum('amount'))['total'] or 0
+    
+    total_withdrawals = Transaction.objects.filter(
+        user=user, 
+        transaction_type='withdraw', 
+        status='completed'
+    ).aggregate(total=Sum('amount'))['total'] or 0
+    
+    # Get pending transactions count
+    pending_transactions = Transaction.objects.filter(
+        user=user, 
+        status='pending'
+    ).count()
+    
+    # Get trading stats from user model (admin controlled)
+    context = {
+        'user': user,
+        'recent_transactions': recent_transactions,
+        'total_deposits': total_deposits,
+        'total_withdrawals': total_withdrawals,
+        'pending_transactions': pending_transactions,
+        'total_pnl': getattr(user, 'total_pnl', 2450),
+        'win_rate': getattr(user, 'win_rate', 68),
+        'total_trades': getattr(user, 'total_trades', 142),
+        'roi': getattr(user, 'roi', 18.5),
+        'trade_progress': getattr(user, 'trade_progress', 68),
+        'signal_strength': getattr(user, 'signal_strength', 82),
+        'signal_direction': getattr(user, 'signal_direction', '📈 Bullish'),
+        'signal_direction_class': getattr(user, 'signal_direction_class', 'bullish'),
+        'signal_risk': getattr(user, 'signal_risk', '🟡 Medium'),
+        'signal_timeframe': getattr(user, 'signal_timeframe', '4H'),
+        'signal_active_bars': getattr(user, 'signal_active_bars', 5),
+    }
+    
+    return render(request, 'dashboard/index.html', context)
+
+
+@login_required
+def deposit_view(request):
+    """Deposit page"""
+    user = request.user
+    deposit_options = DepositOption.objects.filter(is_active=True)
+    
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        method = request.POST.get('method')
+        method_name = request.POST.get('method_name')
+        reference = request.POST.get('reference')
+        notes = request.POST.get('notes')
+        proof_image = request.FILES.get('proof_image')
+        
+        # Validation
+        if not amount or not method or not method_name:
+            messages.error(request, 'Please fill in all required fields.')
+            return redirect('transactions:deposit')
+        
+        try:
+            amount = float(amount)
+            if amount <= 0:
+                messages.error(request, 'Amount must be greater than 0.')
+                return redirect('transactions:deposit')
+        except ValueError:
+            messages.error(request, 'Invalid amount.')
+            return redirect('transactions:deposit')
+        
+        # Create transaction
+        transaction = Transaction.objects.create(
+            user=user,
+            transaction_type='deposit',
+            amount=amount,
+            currency='USD',
+            method=method,
+            method_name=method_name,
+            reference=reference or '',
+            notes=notes or '',
+            proof_image=proof_image,
+            status='pending'
+        )
+        
+        messages.success(request, f'Deposit request submitted! Reference: #{transaction.id}')
+        return redirect('transactions:list')
+    
+    context = {
+        'deposit_options': deposit_options,
+    }
+    return render(request, 'dashboard/deposit.html', context)
+
+
+@login_required
+def withdraw_view(request):
+    """Withdrawal page"""
+    user = request.user
+    
+    # Check if withdrawals are enabled
+    if not user.can_withdraw:
+        messages.error(request, 'Withdrawals are currently disabled for your account. Please contact support.')
+        return redirect('dashboard:index')
+    
+    withdraw_options = WithdrawOption.objects.filter(is_active=True)
+    
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        method = request.POST.get('method')
+        method_name = request.POST.get('method_name')
+        notes = request.POST.get('notes')
+        
+        # Validation
+        if not amount or not method or not method_name:
+            messages.error(request, 'Please fill in all required fields.')
+            return redirect('transactions:withdraw')
+        
+        try:
+            amount = float(amount)
+            if amount <= 0:
+                messages.error(request, 'Amount must be greater than 0.')
+                return redirect('transactions:withdraw')
+            
+            # Check minimum withdrawal
+            min_withdraw = 50
+            if amount < min_withdraw:
+                messages.error(request, f'Minimum withdrawal amount is ${min_withdraw}.')
+                return redirect('transactions:withdraw')
+            
+            # Check balance
+            if amount > user.usd_balance:
+                messages.error(request, 'Insufficient balance.')
+                return redirect('transactions:withdraw')
+                
+        except ValueError:
+            messages.error(request, 'Invalid amount.')
+            return redirect('transactions:withdraw')
+        
+        # Create transaction
+        transaction = Transaction.objects.create(
+            user=user,
+            transaction_type='withdraw',
+            amount=amount,
+            currency='USD',
+            method=method,
+            method_name=method_name,
+            notes=notes or '',
+            status='pending'
+        )
+        
+        messages.success(request, f'Withdrawal request submitted! Reference: #{transaction.id}')
+        return redirect('transactions:list')
+    
+    context = {
+        'withdraw_options': withdraw_options,
+        'user_balance': user.usd_balance,
+    }
+    return render(request, 'dashboard/withdraw.html', context)
+
+
+@login_required
+def transactions_list(request):
+    """Transaction history page"""
+    user = request.user
+    transactions = Transaction.objects.filter(user=user).order_by('-created_at')
+    
+    # Filter by type
+    tx_type = request.GET.get('type')
+    if tx_type:
+        transactions = transactions.filter(transaction_type=tx_type)
+    
+    # Filter by status
+    status = request.GET.get('status')
+    if status:
+        transactions = transactions.filter(status=status)
+    
+    context = {
+        'transactions': transactions,
+        'tx_type': tx_type,
+        'status': status,
+    }
+    return render(request, 'dashboard/transactions_list.html', context)
+
+
+@login_required
+def transaction_detail(request, transaction_id):
+    """View single transaction detail"""
+    user = request.user
+    transaction = get_object_or_404(Transaction, id=transaction_id, user=user)
+    
+    context = {
+        'transaction': transaction,
+    }
+    return render(request, 'dashboard/transaction_detail.html', context)
