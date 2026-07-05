@@ -31,12 +31,10 @@ class Migration(migrations.Migration):
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 
                 # ============================================================
-                # PERSONAL INFO
+                # PERSONAL INFO (Address removed)
                 # ============================================================
                 ('phone', models.CharField(blank=True, max_length=20)),
                 ('country', models.CharField(blank=True, max_length=100)),
-                ('city', models.CharField(blank=True, max_length=100)),
-                ('postal_code', models.CharField(blank=True, max_length=20)),
                 
                 # ============================================================
                 # SECURITY
