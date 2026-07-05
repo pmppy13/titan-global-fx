@@ -1,64 +1,60 @@
 from django import forms
-from transactions.models import Transaction
-from core.models import DepositOption, WithdrawOption
+from django.contrib.auth import get_user_model
+from core.models import DepositOption, WithdrawOption, TermsAndConditions
 
-class DepositForm(forms.ModelForm):
-    method = forms.ChoiceField(choices=[], required=True)
-    method_name = forms.CharField(max_length=100, required=True)
-    
+User = get_user_model()
+
+class DepositOptionForm(forms.ModelForm):
     class Meta:
-        model = Transaction
-        fields = ['amount', 'method', 'method_name', 'reference', 'proof_image', 'notes']  # ADDED proof_image
-        widgets = {
-            'amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '1'}),
-            'reference': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Transaction reference number'}),
-            'proof_image': forms.FileInput(attrs={'class': 'form-control'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Additional notes...'}),
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        deposit_options = DepositOption.objects.filter(is_active=True)
-        choices = [(opt.method, opt.name) for opt in deposit_options]
-        self.fields['method'].choices = [('', 'Select method...')] + choices
-        self.fields['method_name'].widget = forms.HiddenInput()
-    
-    def clean_amount(self):
-        amount = self.cleaned_data.get('amount')
-        if amount and amount > 0:
-            return amount
-        raise forms.ValidationError('Amount must be greater than 0.')
+        model = DepositOption
+        fields = '__all__'
 
-class WithdrawForm(forms.ModelForm):
-    method = forms.ChoiceField(choices=[], required=True)
-    method_name = forms.CharField(max_length=100, required=True)
-    account_details = forms.CharField(
-        widget=forms.Textarea(attrs={
-            'class': 'form-control', 
-            'rows': 4, 
-            'placeholder': 'Enter your bank account details (account name, number, bank, routing/SWIFT) OR your wallet address OR your PayPal email...'
-        }),
+class WithdrawOptionForm(forms.ModelForm):
+    class Meta:
+        model = WithdrawOption
+        fields = '__all__'
+
+class TermsForm(forms.ModelForm):
+    class Meta:
+        model = TermsAndConditions
+        fields = '__all__'
+
+class DisableWithdrawForm(forms.Form):
+    reason = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         required=True,
-        label='Your Account Details'
+        label='Reason for disabling withdrawals'
     )
-    
+    generate_code = forms.BooleanField(
+        required=False,
+        label='Generate unlock code'
+    )
+
+class BalanceUpdateForm(forms.Form):
+    ACTION_CHOICES = [
+        ('add', 'Add to Balance'),
+        ('subtract', 'Subtract from Balance'),
+        ('set', 'Set Balance To'),
+    ]
+    CURRENCY_CHOICES = [
+        ('usd_balance', 'USD'),
+        ('btc_balance', 'BTC'),
+        ('eth_balance', 'ETH'),
+        ('usdt_balance', 'USDT'),
+    ]
+    action = forms.ChoiceField(choices=ACTION_CHOICES)
+    currency = forms.ChoiceField(choices=CURRENCY_CHOICES)
+    amount = forms.DecimalField(max_digits=20, decimal_places=8, min_value=0)
+    reason = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 2}),
+        required=False
+    )
+
+class TradingStatsForm(forms.ModelForm):
     class Meta:
-        model = Transaction
-        fields = ['amount', 'method', 'method_name', 'notes']
-        widgets = {
-            'amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '1'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Additional notes...'}),
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        withdraw_options = WithdrawOption.objects.filter(is_active=True)
-        choices = [(opt.method, opt.name) for opt in withdraw_options]
-        self.fields['method'].choices = [('', 'Select method...')] + choices
-        self.fields['method_name'].widget = forms.HiddenInput()
-    
-    def clean_amount(self):
-        amount = self.cleaned_data.get('amount')
-        if amount and amount > 0:
-            return amount
-        raise forms.ValidationError('Amount must be greater than 0.')
+        model = User
+        fields = [
+            'total_pnl', 'win_rate', 'total_trades', 'roi', 'trade_progress',
+            'signal_strength', 'signal_direction', 'signal_direction_class',
+            'signal_risk', 'signal_timeframe', 'signal_active_bars',
+        ]
