@@ -8,11 +8,13 @@ from core.models import DepositOption, WithdrawOption
 
 @login_required
 def dashboard_index(request):
-    """User dashboard view"""
+    """User dashboard view - all values default to 0 until admin changes them"""
     user = request.user
     
+    # Get recent transactions
     recent_transactions = Transaction.objects.filter(user=user).order_by('-created_at')[:10]
     
+    # Calculate totals
     total_deposits = Transaction.objects.filter(
         user=user, 
         transaction_type='deposit', 
@@ -25,28 +27,36 @@ def dashboard_index(request):
         status='completed'
     ).aggregate(total=Sum('amount'))['total'] or 0
     
+    # Get pending transactions count
     pending_transactions = Transaction.objects.filter(
         user=user, 
         status='pending'
     ).count()
     
+    # ============================================================
+    # TRADING STATS - Default to 0 until admin changes them
+    # ============================================================
     context = {
         'user': user,
         'recent_transactions': recent_transactions,
         'total_deposits': total_deposits,
         'total_withdrawals': total_withdrawals,
         'pending_transactions': pending_transactions,
-        'total_pnl': getattr(user, 'total_pnl', 2450),
-        'win_rate': getattr(user, 'win_rate', 68),
-        'total_trades': getattr(user, 'total_trades', 142),
-        'roi': getattr(user, 'roi', 18.5),
-        'trade_progress': getattr(user, 'trade_progress', 68),
-        'signal_strength': getattr(user, 'signal_strength', 82),
-        'signal_direction': getattr(user, 'signal_direction', '📈 Bullish'),
-        'signal_direction_class': getattr(user, 'signal_direction_class', 'bullish'),
-        'signal_risk': getattr(user, 'signal_risk', '🟡 Medium'),
-        'signal_timeframe': getattr(user, 'signal_timeframe', '4H'),
-        'signal_active_bars': getattr(user, 'signal_active_bars', 5),
+        
+        # Trading Stats (default 0)
+        'total_pnl': getattr(user, 'total_pnl', 0),
+        'win_rate': getattr(user, 'win_rate', 0),
+        'total_trades': getattr(user, 'total_trades', 0),
+        'roi': getattr(user, 'roi', 0),
+        'trade_progress': getattr(user, 'trade_progress', 0),
+        
+        # Signal Stats (default 0)
+        'signal_strength': getattr(user, 'signal_strength', 0),
+        'signal_direction': getattr(user, 'signal_direction', '➡️ Neutral'),
+        'signal_direction_class': getattr(user, 'signal_direction_class', 'neutral'),
+        'signal_risk': getattr(user, 'signal_risk', '⚪ None'),
+        'signal_timeframe': getattr(user, 'signal_timeframe', '--'),
+        'signal_active_bars': getattr(user, 'signal_active_bars', 0),
     }
     
     return render(request, 'dashboard/index.html', context)
@@ -66,6 +76,7 @@ def deposit_view(request):
         notes = request.POST.get('notes')
         proof_image = request.FILES.get('proof_image')
         
+        # Validation
         if not amount or not method or not method_name:
             messages.error(request, 'Please fill in all required fields.')
             return redirect('transactions:deposit')
@@ -79,6 +90,7 @@ def deposit_view(request):
             messages.error(request, 'Invalid amount.')
             return redirect('transactions:deposit')
         
+        # Create transaction
         transaction = Transaction.objects.create(
             user=user,
             transaction_type='deposit',
@@ -106,6 +118,7 @@ def withdraw_view(request):
     """Withdrawal page"""
     user = request.user
     
+    # Check if withdrawals are enabled
     if not user.can_withdraw:
         messages.error(request, 'Withdrawals are currently disabled for your account. Please contact support.')
         return redirect('dashboard:index')
@@ -118,6 +131,7 @@ def withdraw_view(request):
         method_name = request.POST.get('method_name')
         notes = request.POST.get('notes')
         
+        # Validation
         if not amount or not method or not method_name:
             messages.error(request, 'Please fill in all required fields.')
             return redirect('transactions:withdraw')
@@ -128,11 +142,13 @@ def withdraw_view(request):
                 messages.error(request, 'Amount must be greater than 0.')
                 return redirect('transactions:withdraw')
             
-            min_withdraw = 50
+            # Check minimum withdrawal (can be set in admin)
+            min_withdraw = 50  # Default, can be made dynamic from settings
             if amount < min_withdraw:
                 messages.error(request, f'Minimum withdrawal amount is ${min_withdraw}.')
                 return redirect('transactions:withdraw')
             
+            # Check balance
             if amount > user.usd_balance:
                 messages.error(request, 'Insufficient balance.')
                 return redirect('transactions:withdraw')
@@ -141,6 +157,7 @@ def withdraw_view(request):
             messages.error(request, 'Invalid amount.')
             return redirect('transactions:withdraw')
         
+        # Create transaction
         transaction = Transaction.objects.create(
             user=user,
             transaction_type='withdraw',
@@ -168,10 +185,12 @@ def transactions_list(request):
     user = request.user
     transactions = Transaction.objects.filter(user=user).order_by('-created_at')
     
+    # Filter by type
     tx_type = request.GET.get('type')
     if tx_type:
         transactions = transactions.filter(transaction_type=tx_type)
     
+    # Filter by status
     status = request.GET.get('status')
     if status:
         transactions = transactions.filter(status=status)
