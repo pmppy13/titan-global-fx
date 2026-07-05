@@ -6,7 +6,7 @@ class User(AbstractUser):
     # Personal Info
     phone = models.CharField(max_length=20, blank=True)
     country = models.CharField(max_length=100, blank=True)
-    address = models.TextField(blank=True)
+    # address = models.TextField(blank=True)  # REMOVED - causing migration errors
     city = models.CharField(max_length=100, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
     
@@ -36,23 +36,23 @@ class User(AbstractUser):
     # TRADING STATS (Admin controllable)
     # ============================================================
     total_pnl = models.DecimalField(
-        max_digits=20, decimal_places=2, default=2450,
+        max_digits=20, decimal_places=2, default=0,
         help_text="Total Profit/Loss displayed on dashboard"
     )
     win_rate = models.IntegerField(
-        default=68,
+        default=0,
         help_text="Win rate percentage (0-100)"
     )
     total_trades = models.IntegerField(
-        default=142,
+        default=0,
         help_text="Total number of trades"
     )
     roi = models.DecimalField(
-        max_digits=10, decimal_places=2, default=18.5,
+        max_digits=10, decimal_places=2, default=0,
         help_text="Return on Investment percentage"
     )
     trade_progress = models.IntegerField(
-        default=68,
+        default=0,
         help_text="Trade progress percentage (0-100)"
     )
     
@@ -60,17 +60,17 @@ class User(AbstractUser):
     # SIGNAL STATS (Admin controllable)
     # ============================================================
     signal_strength = models.IntegerField(
-        default=82,
+        default=0,
         help_text="Signal strength percentage (0-100)"
     )
     signal_direction = models.CharField(
         max_length=50,
-        default='📈 Bullish',
+        default='➡️ Neutral',
         help_text="Signal direction text (e.g., 📈 Bullish, 📉 Bearish, ➡️ Neutral)"
     )
     signal_direction_class = models.CharField(
         max_length=20,
-        default='bullish',
+        default='neutral',
         choices=[
             ('bullish', 'Bullish'),
             ('bearish', 'Bearish'),
@@ -80,16 +80,16 @@ class User(AbstractUser):
     )
     signal_risk = models.CharField(
         max_length=50,
-        default='🟡 Medium',
+        default='⚪ None',
         help_text="Risk level (e.g., 🟢 Low, 🟡 Medium, 🔴 High)"
     )
     signal_timeframe = models.CharField(
         max_length=20,
-        default='4H',
+        default='--',
         help_text="Timeframe (e.g., 1H, 4H, 1D, 1W)"
     )
     signal_active_bars = models.IntegerField(
-        default=5,
+        default=0,
         help_text="Number of active bars in the signal meter (0-10)"
     )
     
