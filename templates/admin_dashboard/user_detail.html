@@ -439,6 +439,84 @@
         </div>
 
         <!-- ================================================================ -->
+        <!-- ===== TRADING STATS & SIGNAL MANAGEMENT ===== -->
+        <!-- ================================================================ -->
+        <div class="action-card" style="border-color: rgba(212, 175, 55, 0.2);">
+            <h3>📈 Manage Trading Stats & Signal</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ stats_form.non_field_errors }}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ stats_form.total_pnl.id_for_label }}">Total P&L ($)</label>
+                        {{ stats_form.total_pnl }}
+                        {{ stats_form.total_pnl.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ stats_form.win_rate.id_for_label }}">Win Rate (%)</label>
+                        {{ stats_form.win_rate }}
+                        {{ stats_form.win_rate.errors }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ stats_form.total_trades.id_for_label }}">Total Trades</label>
+                        {{ stats_form.total_trades }}
+                        {{ stats_form.total_trades.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ stats_form.roi.id_for_label }}">ROI (%)</label>
+                        {{ stats_form.roi }}
+                        {{ stats_form.roi.errors }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ stats_form.trade_progress.id_for_label }}">Trade Progress (%)</label>
+                    {{ stats_form.trade_progress }}
+                    {{ stats_form.trade_progress.errors }}
+                </div>
+                <hr style="border-color: rgba(255,255,255,0.06); margin: 16px 0;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ stats_form.signal_strength.id_for_label }}">Signal Strength (%)</label>
+                        {{ stats_form.signal_strength }}
+                        {{ stats_form.signal_strength.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ stats_form.signal_direction.id_for_label }}">Signal Direction Text</label>
+                        {{ stats_form.signal_direction }}
+                        {{ stats_form.signal_direction.errors }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ stats_form.signal_direction_class.id_for_label }}">Direction Class</label>
+                        {{ stats_form.signal_direction_class }}
+                        {{ stats_form.signal_direction_class.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ stats_form.signal_risk.id_for_label }}">Risk Level</label>
+                        {{ stats_form.signal_risk }}
+                        {{ stats_form.signal_risk.errors }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ stats_form.signal_timeframe.id_for_label }}">Timeframe</label>
+                        {{ stats_form.signal_timeframe }}
+                        {{ stats_form.signal_timeframe.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ stats_form.signal_active_bars.id_for_label }}">Active Bars (0-10)</label>
+                        {{ stats_form.signal_active_bars }}
+                        {{ stats_form.signal_active_bars.errors }}
+                    </div>
+                </div>
+                <button type="submit" name="stats_action" class="btn btn-primary">📈 Update Stats & Signal</button>
+            </form>
+        </div>
+
+        <!-- ================================================================ -->
         <!-- ===== DISABLE WITHDRAWALS ===== -->
         <!-- ================================================================ -->
         <div class="action-card">
