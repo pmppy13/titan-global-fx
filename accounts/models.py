@@ -6,7 +6,6 @@ class User(AbstractUser):
     # Personal Info
     phone = models.CharField(max_length=20, blank=True)
     country = models.CharField(max_length=100, blank=True)
-    date_of_birth = models.DateField(null=True, blank=True)
     address = models.TextField(blank=True)
     city = models.CharField(max_length=100, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
