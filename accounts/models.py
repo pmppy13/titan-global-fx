@@ -3,14 +3,17 @@ from django.db import models
 from django.utils import timezone
 
 class User(AbstractUser):
-    # Personal Info
+    # ============================================================
+    # PERSONAL INFO
+    # ============================================================
     phone = models.CharField(max_length=20, blank=True)
     country = models.CharField(max_length=100, blank=True)
-    # address = models.TextField(blank=True)  # REMOVED - causing migration errors
     city = models.CharField(max_length=100, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
     
-    # Security
+    # ============================================================
+    # SECURITY
+    # ============================================================
     security_pin = models.CharField(max_length=6, blank=True)
     email_verified = models.BooleanField(default=False)
     kyc_status = models.CharField(
@@ -33,7 +36,7 @@ class User(AbstractUser):
     usdt_balance = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     
     # ============================================================
-    # TRADING STATS (Admin controllable)
+    # TRADING STATS (Admin controllable - default 0)
     # ============================================================
     total_pnl = models.DecimalField(
         max_digits=20, decimal_places=2, default=0,
@@ -57,7 +60,7 @@ class User(AbstractUser):
     )
     
     # ============================================================
-    # SIGNAL STATS (Admin controllable)
+    # SIGNAL STATS (Admin controllable - default neutral)
     # ============================================================
     signal_strength = models.IntegerField(
         default=0,
@@ -112,7 +115,9 @@ class User(AbstractUser):
         help_text="Code required to re-enable withdrawals"
     )
     
-    # Timestamps
+    # ============================================================
+    # TIMESTAMPS
+    # ============================================================
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
