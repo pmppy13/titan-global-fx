@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Sum
@@ -11,10 +11,8 @@ def dashboard_index(request):
     """User dashboard view"""
     user = request.user
     
-    # Get recent transactions
     recent_transactions = Transaction.objects.filter(user=user).order_by('-created_at')[:10]
     
-    # Calculate totals
     total_deposits = Transaction.objects.filter(
         user=user, 
         transaction_type='deposit', 
@@ -27,13 +25,11 @@ def dashboard_index(request):
         status='completed'
     ).aggregate(total=Sum('amount'))['total'] or 0
     
-    # Get pending transactions count
     pending_transactions = Transaction.objects.filter(
         user=user, 
         status='pending'
     ).count()
     
-    # Get trading stats from user model (admin controlled)
     context = {
         'user': user,
         'recent_transactions': recent_transactions,
@@ -70,7 +66,6 @@ def deposit_view(request):
         notes = request.POST.get('notes')
         proof_image = request.FILES.get('proof_image')
         
-        # Validation
         if not amount or not method or not method_name:
             messages.error(request, 'Please fill in all required fields.')
             return redirect('transactions:deposit')
@@ -84,7 +79,6 @@ def deposit_view(request):
             messages.error(request, 'Invalid amount.')
             return redirect('transactions:deposit')
         
-        # Create transaction
         transaction = Transaction.objects.create(
             user=user,
             transaction_type='deposit',
@@ -112,7 +106,6 @@ def withdraw_view(request):
     """Withdrawal page"""
     user = request.user
     
-    # Check if withdrawals are enabled
     if not user.can_withdraw:
         messages.error(request, 'Withdrawals are currently disabled for your account. Please contact support.')
         return redirect('dashboard:index')
@@ -125,7 +118,6 @@ def withdraw_view(request):
         method_name = request.POST.get('method_name')
         notes = request.POST.get('notes')
         
-        # Validation
         if not amount or not method or not method_name:
             messages.error(request, 'Please fill in all required fields.')
             return redirect('transactions:withdraw')
@@ -136,13 +128,11 @@ def withdraw_view(request):
                 messages.error(request, 'Amount must be greater than 0.')
                 return redirect('transactions:withdraw')
             
-            # Check minimum withdrawal
             min_withdraw = 50
             if amount < min_withdraw:
                 messages.error(request, f'Minimum withdrawal amount is ${min_withdraw}.')
                 return redirect('transactions:withdraw')
             
-            # Check balance
             if amount > user.usd_balance:
                 messages.error(request, 'Insufficient balance.')
                 return redirect('transactions:withdraw')
@@ -151,7 +141,6 @@ def withdraw_view(request):
             messages.error(request, 'Invalid amount.')
             return redirect('transactions:withdraw')
         
-        # Create transaction
         transaction = Transaction.objects.create(
             user=user,
             transaction_type='withdraw',
@@ -179,12 +168,10 @@ def transactions_list(request):
     user = request.user
     transactions = Transaction.objects.filter(user=user).order_by('-created_at')
     
-    # Filter by type
     tx_type = request.GET.get('type')
     if tx_type:
         transactions = transactions.filter(transaction_type=tx_type)
     
-    # Filter by status
     status = request.GET.get('status')
     if status:
         transactions = transactions.filter(status=status)
