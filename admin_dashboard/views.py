@@ -9,8 +9,8 @@ from django.core.files.storage import default_storage
 import secrets
 import string
 
-from apps.core.models import DepositOption, WithdrawOption, TermsAndConditions, WalletAddress
-from apps.transactions.models import Transaction
+from core.models import DepositOption, WithdrawOption, TermsAndConditions, WalletAddress
+from transactions.models import Transaction
 from .forms import DepositOptionForm, WithdrawOptionForm, TermsForm, DisableWithdrawForm
 
 User = get_user_model()
@@ -18,7 +18,7 @@ User = get_user_model()
 def admin_required(view_func):
     decorated = user_passes_test(
         lambda u: u.is_superuser or u.is_staff,
-        login_url='login'
+        login_url='accounts:login'
     )(view_func)
     return decorated
 
@@ -104,7 +104,6 @@ def admin_transaction_action(request, transaction_id):
         elif action == 'complete':
             transaction.status = 'completed'
             transaction.processed_at = timezone.now()
-            # Update user balance
             if transaction.transaction_type == 'deposit':
                 transaction.user.usd_balance += transaction.amount
                 transaction.user.save()
